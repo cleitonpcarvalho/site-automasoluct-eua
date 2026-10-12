@@ -134,7 +134,7 @@ export function ContactPageContent() {
                 key={step.number}
               >
                 <div className="flex items-center justify-between">
-                  <span className="font-mono text-xs font-semibold text-primary md:text-sm">{step.number}</span>
+                  <span className="font-mono text-xs font-semibold text-primary-soft md:text-sm">{step.number}</span>
                   <span className="font-mono text-[11px] uppercase tracking-wider text-text-low">{step.label}</span>
                 </div>
                 <h3 className="mt-1 font-heading text-base font-bold tracking-wide text-white md:mt-0">{step.title}</h3>

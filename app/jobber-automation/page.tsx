@@ -1,12 +1,12 @@
-import type { Metadata } from "next";
-
 import { JobberAutomationContent } from "@/components/sections/jobber/JobberAutomationContent";
+import { createPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Custom Jobber Automation",
+export const metadata = createPageMetadata({
+  title: "Custom Jobber Automation | Automa Soluct",
   description:
-    "Custom Jobber automation, integrations, and software built around the workflow of U.S. service businesses.",
-};
+    "Custom Jobber automation and workflow solutions for service businesses that need more flexibility, integrations, and operational control.",
+  path: "/jobber-automation",
+});
 
 export default function JobberAutomationPage() {
   return <JobberAutomationContent />;

@@ -78,7 +78,7 @@ export function MobileBottomNav() {
               aria-current={isActive ? "page" : undefined}
               className={`flex min-h-11 min-w-11 flex-col items-center justify-center gap-0.5 py-1 text-[10px] leading-tight transition-colors focus-visible:outline-2 focus-visible:outline-inset focus-visible:outline-primary ${
                 isActive
-                  ? "font-semibold text-primary"
+                  ? "font-semibold text-primary-soft"
                   : "font-medium text-text-low hover:text-white"
               }`}
               href={item.href}

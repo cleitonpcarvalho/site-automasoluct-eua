@@ -1,12 +1,12 @@
-import type { Metadata } from "next";
-
 import { IntegrationsPageContent } from "@/components/sections/integrations/IntegrationsPageContent";
+import { createPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Custom Jobber Integrations",
+export const metadata = createPageMetadata({
+  title: "Custom Jobber Integrations | Automa Soluct",
   description:
-    "Connect Jobber to accounting, cloud storage, field documentation, CRM, and custom systems with integrations built around your workflow.",
-};
+    "Connect Jobber with accounting, CRM, cloud storage, field documentation, communications, and custom systems through tailored integrations.",
+  path: "/integrations",
+});
 
 export default function IntegrationsPage() {
   return <IntegrationsPageContent />;

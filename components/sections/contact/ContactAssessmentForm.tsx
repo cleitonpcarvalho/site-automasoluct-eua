@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 
 import { ContactIcon } from "./ContactIcon";
 
@@ -45,7 +45,7 @@ function TextField({
   return (
     <div className="flex flex-col gap-1.5 md:gap-2">
       <label className="text-sm font-semibold text-white md:font-medium" htmlFor={id}>
-        {label} <span className="text-primary">*</span>
+        {label} <span className="text-primary-soft">*</span>
       </label>
       <input
         autoComplete={autoComplete}
@@ -64,6 +64,13 @@ export function ContactAssessmentForm() {
   const [selectedBudget, setSelectedBudget] = useState<string>("");
   const [selectedSystems, setSelectedSystems] = useState<string[]>([]);
   const [submitted, setSubmitted] = useState(false);
+  const successRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (submitted) {
+      successRef.current?.focus();
+    }
+  }, [submitted]);
 
   function toggleSystem(system: string) {
     setSelectedSystems((current) =>
@@ -81,7 +88,10 @@ export function ContactAssessmentForm() {
   return (
     <div className="flex flex-col gap-6 md:rounded-lg md:border md:border-border-subtle md:bg-surface-1 md:p-8 lg:p-12">
       <div className="flex flex-col gap-1.5 md:mb-0 md:border-b md:border-border-subtle md:pb-8">
-        <h2 className="font-heading text-[22px] font-semibold leading-[30px] tracking-[-0.015em] text-white md:text-2xl md:font-bold">
+        <h2
+          className="font-heading text-[22px] font-semibold leading-[30px] tracking-[-0.015em] text-white md:text-2xl md:font-bold"
+          id="contact-assessment-heading"
+        >
           Tell us about your workflow.
         </h2>
         <p className="text-xs leading-[18px] text-text-medium md:text-sm md:text-text-low">
@@ -91,11 +101,14 @@ export function ContactAssessmentForm() {
 
       {submitted ? (
         <div
+          aria-atomic="true"
           aria-live="polite"
-          className="flex min-h-56 flex-col items-center justify-center gap-3 rounded-lg bg-surface-2 p-6 text-center md:min-h-72 md:border md:border-border-subtle md:p-12"
+          className="flex min-h-56 flex-col items-center justify-center gap-3 rounded-lg bg-surface-2 p-6 text-center focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary-soft md:min-h-72 md:border md:border-border-subtle md:p-12"
+          ref={successRef}
           role="status"
+          tabIndex={-1}
         >
-          <div className="mb-1 flex size-12 items-center justify-center rounded-full border border-primary/30 bg-primary/10 text-primary">
+          <div className="mb-1 flex size-12 items-center justify-center rounded-full border border-primary/30 bg-primary/10 text-primary-soft">
             <ContactIcon className="size-7" name="check" />
           </div>
           <h3 className="font-heading text-lg font-semibold text-white md:text-2xl md:font-bold">
@@ -106,7 +119,11 @@ export function ContactAssessmentForm() {
           </p>
         </div>
       ) : (
-        <form className="flex flex-col gap-4 md:gap-7" onSubmit={handleSubmit}>
+        <form
+          aria-labelledby="contact-assessment-heading"
+          className="flex flex-col gap-4 md:gap-7"
+          onSubmit={handleSubmit}
+        >
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
             <TextField
               autoComplete="name"
@@ -148,7 +165,7 @@ export function ContactAssessmentForm() {
 
           <fieldset className="flex flex-col gap-2.5">
             <legend className="text-sm font-semibold text-white md:font-medium">
-              Estimated Project Budget <span className="text-primary">*</span>
+              Estimated Project Budget <span className="text-primary-soft">*</span>
             </legend>
             <div className="mt-2 grid grid-cols-2 gap-2 md:mt-0 md:grid-cols-4 md:gap-3">
               {budgetOptions.map((budget) => {
@@ -157,7 +174,7 @@ export function ContactAssessmentForm() {
                 return (
                   <label
                     className={[
-                      "flex min-h-12 cursor-pointer items-center justify-between gap-2 rounded border p-2 transition-colors md:p-3.5",
+                      "flex min-h-12 cursor-pointer items-center justify-between gap-2 rounded border p-2 transition-colors has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-primary-soft md:p-3.5",
                       selected
                         ? "border-primary bg-primary/10"
                         : "border-transparent bg-surface-2 hover:border-border-strong md:border-border-subtle",
@@ -193,12 +210,18 @@ export function ContactAssessmentForm() {
             </div>
           </fieldset>
 
-          <fieldset className="relative flex flex-col gap-2">
+          <fieldset
+            aria-describedby="systems-help"
+            className="relative flex flex-col gap-2"
+          >
             <legend className="text-sm font-semibold text-white md:font-medium">
               Which systems are involved?{" "}
               <span className="text-xs font-normal text-text-low">(Optional)</span>
             </legend>
-            <span className="text-xs text-text-low sm:absolute sm:right-0 sm:top-0">
+            <span
+              className="text-xs text-text-low sm:absolute sm:right-0 sm:top-0"
+              id="systems-help"
+            >
               Select any that apply to your current workflow.
             </span>
             <div className="flex flex-wrap gap-1 pt-1 md:gap-2">
@@ -228,7 +251,7 @@ export function ContactAssessmentForm() {
           <div className="flex flex-col gap-1.5 md:gap-2">
             <label className="text-sm font-semibold leading-5 text-white md:font-medium" htmlFor="workflow">
               What would you like to automate, integrate, or improve in your Jobber workflow?{" "}
-              <span className="text-primary">*</span>
+              <span className="text-primary-soft">*</span>
             </label>
             <textarea
               className="min-h-36 w-full resize-y rounded border border-transparent bg-surface-2 p-4 text-sm leading-[22px] text-white outline-none transition-colors placeholder:text-text-low focus:border-primary focus:ring-1 focus:ring-primary md:min-h-40 md:border-border-subtle md:bg-[#08080A]"

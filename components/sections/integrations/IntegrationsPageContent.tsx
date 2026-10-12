@@ -194,7 +194,7 @@ type SectionHeadingProps = {
 function SectionHeading({ eyebrow, title, description }: SectionHeadingProps) {
   return (
     <div className="flex max-w-3xl flex-col gap-1.5 md:gap-3">
-      <span className="font-mono text-[11px] font-medium uppercase tracking-wider text-primary md:text-xs">
+      <span className="font-mono text-[11px] font-medium uppercase tracking-wider text-primary-soft md:text-xs">
         {eyebrow}
       </span>
       <h2 className="font-heading text-[28px] font-semibold leading-9 tracking-[-0.02em] text-white md:text-3xl md:leading-10 lg:text-[40px] lg:font-bold lg:leading-12">
@@ -248,7 +248,7 @@ export function IntegrationsPageContent() {
               </a>
             </div>
 
-            <div className="flex flex-col gap-1 pt-1 font-mono text-[11px] leading-4 text-[#71747E] md:flex-row md:flex-wrap md:items-center md:gap-2 md:pt-2 md:text-xs">
+            <div className="flex flex-col gap-1 pt-1 font-mono text-[11px] leading-4 text-text-low md:flex-row md:flex-wrap md:items-center md:gap-2 md:pt-2 md:text-xs">
               <span className="flex flex-wrap items-center gap-2">
                 <a className="transition-colors hover:text-white" href="mailto:hello@automasoluct.com">
                   hello@automasoluct.com
@@ -266,7 +266,7 @@ export function IntegrationsPageContent() {
           <aside className="hidden rounded-xl border border-white/[0.08] bg-surface-1 p-6 lg:col-span-5 lg:flex lg:flex-col lg:gap-6">
             <div className="flex items-center justify-between gap-4 font-mono text-xs uppercase tracking-wider text-[#9CA3AF]">
               <span>Integration Overview</span>
-              <span className="text-primary">Custom Integration</span>
+              <span className="text-primary-soft">Custom Integration</span>
             </div>
 
             <div className="flex items-center gap-4 rounded-lg border border-white/[0.08] bg-surface-2 p-4">
@@ -379,7 +379,7 @@ export function IntegrationsPageContent() {
                       <span className="md:hidden">Jobber</span>
                       <span className="hidden md:inline">Jobber Core Hub</span>
                     </h3>
-                    <span className="rounded bg-surface-1 px-1.5 py-0.5 font-mono text-[10px] text-primary md:hidden">
+                    <span className="rounded bg-surface-1 px-1.5 py-0.5 font-mono text-[10px] text-primary-soft md:hidden">
                       Core Hub
                     </span>
                   </div>
@@ -412,7 +412,7 @@ export function IntegrationsPageContent() {
                       <span className="hidden md:inline">{platform.name}</span>
                     </h3>
                   </div>
-                  <p className="text-xs leading-[18px] text-[#71747E] md:text-[#C5C7CE]">
+                  <p className="text-xs leading-[18px] text-text-low md:text-[#C5C7CE]">
                     <span className="md:hidden">{platform.mobileDescription}</span>
                     <span className="hidden md:inline">{platform.description}</span>
                   </p>
@@ -421,7 +421,7 @@ export function IntegrationsPageContent() {
             </div>
 
             <div className="flex flex-col gap-1.5 pt-1 md:flex-row md:flex-wrap md:items-center md:gap-2">
-              <span className="mr-2 font-mono text-[11px] uppercase tracking-wider text-[#71747E] md:text-xs">
+              <span className="mr-2 font-mono text-[11px] uppercase tracking-wider text-text-low md:text-xs">
                 Supported Domains
               </span>
               <div className="flex flex-wrap gap-2">
@@ -441,7 +441,7 @@ export function IntegrationsPageContent() {
                 Don’t see your software here? If it has a usable API, webhook,
                 data export, or another reliable integration path, we can evaluate it.
               </p>
-              <span className="inline-flex shrink-0 self-start items-center gap-1.5 rounded border border-blue-500/30 bg-blue-500/10 px-3 py-1 text-xs font-semibold text-primary sm:self-auto">
+              <span className="inline-flex shrink-0 self-start items-center gap-1.5 rounded border border-blue-500/30 bg-blue-500/10 px-3 py-1 text-xs font-semibold text-[#5C8BF7] sm:self-auto">
                 <IntegrationsIcon className="size-4" name="verified" />
                 Custom Evaluation
               </span>
@@ -496,7 +496,7 @@ export function IntegrationsPageContent() {
                 key={useCase.title}
               >
                 <div className="flex items-center justify-between gap-3 md:flex-col md:items-start md:gap-3">
-                  <span className="order-2 shrink-0 font-mono text-[10px] uppercase tracking-wider text-[#71747E] md:order-1 md:rounded md:border md:border-white/[0.08] md:bg-surface-2 md:px-2.5 md:py-0.5 md:text-xs">
+                  <span className="order-2 shrink-0 font-mono text-[10px] uppercase tracking-wider text-text-low md:order-1 md:rounded md:border md:border-white/[0.08] md:bg-surface-2 md:px-2.5 md:py-0.5 md:text-xs">
                     {useCase.label}
                   </span>
                   <h3 className="order-1 font-heading text-lg font-semibold leading-[26px] text-white md:order-2">
@@ -533,7 +533,7 @@ export function IntegrationsPageContent() {
                 <div className="flex flex-col gap-1 md:gap-4">
                   <span
                     className={`font-mono text-xs uppercase tracking-wider ${
-                      tier.featured ? "text-primary" : "text-[#71747E]"
+                      tier.featured ? "text-primary-soft" : "text-text-low"
                     }`}
                   >
                     {tier.tier}
@@ -548,7 +548,7 @@ export function IntegrationsPageContent() {
                 </div>
                 <span
                   className={`hidden font-mono text-xs lg:block ${
-                    tier.featured ? "text-primary" : "text-[#71747E]"
+                    tier.featured ? "text-primary-soft" : "text-text-low"
                   }`}
                 >
                   {tier.detail}
@@ -576,7 +576,7 @@ export function IntegrationsPageContent() {
                   0{index + 1}
                 </div>
                 <div className="flex flex-col gap-1 md:gap-4">
-                  <span className="hidden font-mono text-xs tracking-wider text-primary md:block">
+                  <span className="hidden font-mono text-xs tracking-wider text-primary-soft md:block">
                     STEP 0{index + 1}
                   </span>
                   <h3 className="font-heading text-lg font-semibold leading-[26px] text-white">
@@ -619,7 +619,7 @@ export function IntegrationsPageContent() {
             </div>
 
             <div className="flex flex-col gap-1.5 md:items-center">
-              <span className="font-mono text-[11px] text-[#71747E] md:hidden">
+              <span className="font-mono text-[11px] text-text-low md:hidden">
                 Systems to Connect
               </span>
               <div className="flex max-w-xl flex-wrap gap-1.5 md:justify-center md:gap-2.5">
@@ -651,10 +651,10 @@ export function IntegrationsPageContent() {
               </a>
             </div>
 
-            <div className="flex flex-col gap-1 pt-1 text-center font-mono text-[11px] text-[#71747E] md:pt-2 md:text-xs">
+            <div className="flex flex-col gap-1 pt-1 text-center font-mono text-[11px] text-text-low md:pt-2 md:text-xs">
               <span>
                 Direct Email:{" "}
-                <a className="text-white transition-colors hover:text-primary" href="mailto:hello@automasoluct.com">
+                <a className="text-white transition-colors hover:text-primary-soft" href="mailto:hello@automasoluct.com">
                   hello@automasoluct.com
                 </a>
               </span>

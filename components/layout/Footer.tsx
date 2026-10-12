@@ -37,30 +37,23 @@ export function Footer() {
             </p>
           </div>
 
-          <div className="flex flex-col gap-2 lg:col-span-4">
+          <nav
+            aria-label="Footer navigation"
+            className="flex flex-col gap-2 lg:col-span-4"
+          >
             <span className="font-mono text-xs font-medium uppercase tracking-wider text-text-low">
               Navigation
             </span>
-            {footerNavigation.map((item) =>
-              item.href === "#" ? (
-                <a
-                  className="w-fit text-xs text-text-medium transition-colors hover:text-white"
-                  href={item.href}
-                  key={item.label}
-                >
-                  {item.label}
-                </a>
-              ) : (
-                <Link
-                  className="w-fit text-xs text-text-medium transition-colors hover:text-white"
-                  href={item.href}
-                  key={item.href}
-                >
-                  {item.label}
-                </Link>
-              ),
-            )}
-          </div>
+            {footerNavigation.map((item) => (
+              <Link
+                className="w-fit text-xs text-text-medium transition-colors hover:text-white focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary-soft"
+                href={item.href}
+                key={item.href}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
 
           <div className="flex flex-col gap-2 lg:col-span-3">
             <span className="font-mono text-xs font-medium uppercase tracking-wider text-text-low">

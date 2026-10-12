@@ -36,7 +36,7 @@
   --primary-soft: #3d78f5;
   --text-high: #ffffff;
   --text-medium: #c5c7ce;
-  --text-low: #71747e;
+  --text-low: #81848e;
   --border-subtle: #1b1d24;
   --border-strong: #2a2d38;
   --header-height: 4rem;
@@ -69,6 +69,15 @@ input,
 textarea,
 select {
   -webkit-tap-highlight-color: transparent;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--primary-soft);
+  outline-offset: 3px;
 }
 
 ::selection {
@@ -228,6 +237,15 @@ select {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
   }
 
   .home-motion-root[data-motion-ready="true"] [data-reveal],

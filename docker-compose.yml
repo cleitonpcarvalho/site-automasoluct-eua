@@ -1,0 +1,12 @@
+services:
+  site:
+    image: automasoluct-site:local
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: automasoluct-site
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+    ports:
+      - "3000:3000"

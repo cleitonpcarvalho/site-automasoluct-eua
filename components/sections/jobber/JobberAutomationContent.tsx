@@ -222,7 +222,7 @@ function SectionHeading({
         centered ? "lg:mx-auto lg:items-center lg:text-center" : ""
       }`}
     >
-      <span className="font-heading text-[11px] font-bold uppercase tracking-wider text-primary md:text-xs">
+      <span className="font-heading text-[11px] font-bold uppercase tracking-wider text-primary-soft md:text-xs">
         {eyebrow}
       </span>
       <h2 className="font-heading text-[28px] font-semibold leading-9 tracking-[-0.02em] text-white md:text-3xl md:font-bold md:leading-10">
@@ -282,7 +282,7 @@ export function JobberAutomationContent() {
               </a>
             </div>
 
-            <div className="flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[11px] leading-4 text-[#71747E] lg:text-xs">
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[11px] leading-4 text-text-low lg:text-xs">
               <a className="transition-colors hover:text-white" href="mailto:hello@automasoluct.com">
                 hello@automasoluct.com
               </a>
@@ -443,7 +443,7 @@ export function JobberAutomationContent() {
                     {item.description}
                   </p>
                 </div>
-                <div className="hidden items-center gap-2 border-t border-white/[0.06] pt-3 text-xs text-[#71747E] lg:flex">
+                <div className="hidden items-center gap-2 border-t border-white/[0.06] pt-3 text-xs text-text-low lg:flex">
                   <JobberIcon className="size-3.5 text-[#9CA3AF]" name={item.detailIcon} />
                   <span>{item.detail}</span>
                 </div>
@@ -523,7 +523,7 @@ export function JobberAutomationContent() {
           <div className="mx-auto flex max-w-3xl items-start gap-2 rounded-md border border-white/[0.08] border-l-2 border-l-primary bg-surface-1 p-4 md:items-center md:gap-4 md:rounded-lg md:border-l-4 md:p-5">
             <JobberIcon className="mt-0.5 size-[22px] shrink-0 text-primary md:mt-0 md:size-7" name="verified" />
             <p className="text-xs leading-[18px] text-white md:text-sm md:leading-[22px] md:text-[#D1D5DB]">
-              Built by <strong className="font-bold text-primary md:font-semibold md:text-white">Cleiton Carvalho</strong>, Founder of Automa Soluct, with hands-on experience building custom solutions around real Jobber operations.
+              Built by <strong className="font-bold text-primary-soft md:font-semibold md:text-white">Cleiton Carvalho</strong>, Founder of Automa Soluct, with hands-on experience building custom solutions around real Jobber operations.
             </p>
           </div>
         </Container>
@@ -557,10 +557,13 @@ export function JobberAutomationContent() {
         <Container className="max-w-7xl py-10 md:py-14 lg:py-20">
           <div className="mx-auto max-w-[800px]">
             <div className="mb-6 flex flex-col items-center gap-1.5 text-center md:mb-8">
-              <span className="font-heading text-[11px] font-bold uppercase tracking-wider text-primary md:text-xs">
+              <span className="font-heading text-[11px] font-bold uppercase tracking-wider text-primary-soft md:text-xs">
                 Get Started
               </span>
-              <h2 className="font-heading text-[28px] font-semibold leading-9 tracking-[-0.02em] text-white md:text-3xl md:font-bold md:leading-10">
+              <h2
+                className="font-heading text-[28px] font-semibold leading-9 tracking-[-0.02em] text-white md:text-3xl md:font-bold md:leading-10"
+                id="jobber-assessment-heading"
+              >
                 What do you wish Jobber could do?
               </h2>
               <p className="text-sm leading-[22px] text-[#9CA3AF]">

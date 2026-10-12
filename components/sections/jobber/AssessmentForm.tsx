@@ -12,20 +12,29 @@ const budgetOptions = [
 ] as const;
 
 const fieldClassName =
-  "h-10 w-full rounded-md border border-white/[0.08] bg-[#08080A] px-3.5 text-sm text-white outline-none transition-colors placeholder:text-[#71747E] focus:border-primary md:rounded-lg";
+  "h-10 w-full rounded-md border border-white/[0.08] bg-[#08080A] px-3.5 text-sm text-white outline-none transition-colors placeholder:text-text-low focus:border-primary md:rounded-lg";
 
 export function AssessmentForm() {
   const [submitted, setSubmitted] = useState(false);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    if (submitted) {
+      return;
+    }
+
     setSubmitted(true);
   }
 
   return (
     <>
       <div className="rounded-lg border border-white/[0.08] bg-surface-1 p-6 md:rounded-2xl md:p-8">
-        <form className="flex flex-col gap-4 md:gap-5" onSubmit={handleSubmit}>
+        <form
+          aria-labelledby="jobber-assessment-heading"
+          className="flex flex-col gap-4 md:gap-5"
+          onSubmit={handleSubmit}
+        >
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-medium text-[#C5C7CE]" htmlFor="full-name">
@@ -97,7 +106,7 @@ export function AssessmentForm() {
             <div className="grid grid-cols-2 gap-1.5 md:grid-cols-4 md:gap-3">
               {budgetOptions.map((option, index) => (
                 <label
-                  className="flex min-h-10 cursor-pointer items-center gap-2 rounded-md border border-white/[0.08] bg-[#08080A] p-2 transition-colors hover:border-white/[0.15] has-[:checked]:border-primary has-[:checked]:bg-blue-500/10 md:rounded-lg md:p-3"
+                  className="flex min-h-10 cursor-pointer items-center gap-2 rounded-md border border-white/[0.08] bg-[#08080A] p-2 transition-colors hover:border-white/[0.15] has-[:checked]:border-primary has-[:checked]:bg-blue-500/10 has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-primary-soft md:rounded-lg md:p-3"
                   key={option.value}
                 >
                   <input
@@ -120,7 +129,7 @@ export function AssessmentForm() {
               What would you like to automate or improve in your Jobber workflow?
             </label>
             <textarea
-              className="min-h-28 w-full resize-y rounded-md border border-white/[0.08] bg-[#08080A] px-3.5 py-3 text-sm text-white outline-none transition-colors placeholder:text-[#71747E] focus:border-primary md:rounded-lg"
+              className="min-h-28 w-full resize-y rounded-md border border-white/[0.08] bg-[#08080A] px-3.5 py-3 text-sm text-white outline-none transition-colors placeholder:text-text-low focus:border-primary md:rounded-lg"
               id="workflow-needs"
               name="workflowNeeds"
               placeholder="Describe your manual bottleneck, required integration, or missing feature..."
@@ -130,11 +139,11 @@ export function AssessmentForm() {
           </div>
 
           <button
-            className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md bg-primary px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-soft disabled:cursor-default disabled:bg-primary-active md:min-h-12 md:rounded-lg"
-            disabled={submitted}
+            aria-disabled={submitted}
+            className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md bg-primary px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-soft aria-disabled:cursor-default aria-disabled:bg-primary-active md:min-h-12 md:rounded-lg"
             type="submit"
           >
-            <span aria-live="polite">
+            <span aria-atomic="true" aria-live="polite">
               {submitted ? "Request Received ✓" : "Request Free Assessment"}
             </span>
             {!submitted ? <JobberIcon name="send" /> : null}
@@ -150,7 +159,7 @@ export function AssessmentForm() {
           <JobberIcon className="size-4 text-primary" name="sms" />
           <span>Text an engineer: +1 (307) 622-4973</span>
         </a>
-        <span className="hidden text-[#71747E] sm:inline">•</span>
+        <span className="hidden text-text-low sm:inline">•</span>
         <a
           className="inline-flex items-center gap-1.5 transition-colors hover:text-white"
           href="mailto:hello@automasoluct.com"

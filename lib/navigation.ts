@@ -17,6 +17,6 @@ export const footerNavigation = [
   { label: "Jobber Automation", href: "/jobber-automation" },
   { label: "Integrations", href: "/integrations" },
   { label: "Contact", href: "/contact" },
-  // TODO: Replace this placeholder with the approved legal route and content.
-  { label: "Privacy & Terms", href: "#" },
+  { label: "Privacy", href: "/privacy" },
+  { label: "Terms", href: "/terms" },
 ] as const;

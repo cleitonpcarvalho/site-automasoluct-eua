@@ -167,7 +167,7 @@ function SectionHeading({
 }: SectionHeadingProps) {
   return (
     <div className={["flex flex-col gap-1.5", className].filter(Boolean).join(" ")}>
-      <span className="font-heading text-[11px] font-bold uppercase tracking-wider text-primary">
+      <span className="font-heading text-[11px] font-bold uppercase tracking-wider text-primary-soft">
         {eyebrow}
       </span>
       <h2 className="max-w-4xl font-heading text-xl font-bold leading-tight text-white md:text-[28px] md:leading-9 lg:text-[32px] lg:leading-10">
@@ -469,7 +469,7 @@ function MobileHomeContent() {
                   <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-white md:size-9 md:text-sm">
                     {index + 1}
                   </div>
-                  <span className="hidden font-mono text-[10px] uppercase tracking-wider text-[#71747E] md:block">
+                  <span className="hidden font-mono text-[10px] uppercase tracking-wider text-text-low md:block">
                     Phase 0{index + 1}
                   </span>
                   {index < processSteps.length - 1 ? (
@@ -518,7 +518,7 @@ function MobileHomeContent() {
                 <h3 className="truncate font-heading text-base font-bold text-white">
                   Cleiton Carvalho
                 </h3>
-                <span className="text-xs font-semibold text-primary">
+                <span className="text-xs font-semibold text-primary-soft">
                   Founder, Automa Soluct
                 </span>
                 <span className="text-[11px] text-[#9CA3AF]">
@@ -568,7 +568,7 @@ function MobileHomeContent() {
 
             <div className="col-span-7 flex flex-col gap-6">
               <div className="flex flex-col gap-1.5">
-                <span className="font-heading text-[11px] font-bold uppercase tracking-wider text-primary">
+                <span className="font-heading text-[11px] font-bold uppercase tracking-wider text-primary-soft">
                   Engineering Leadership
                 </span>
                 <h2 className="font-heading text-[32px] font-bold leading-10 text-white">
@@ -580,7 +580,7 @@ function MobileHomeContent() {
                 <h3 className="font-heading text-xl font-bold text-white">
                   Cleiton Carvalho
                 </h3>
-                <span className="text-sm font-semibold text-primary">
+                <span className="text-sm font-semibold text-primary-soft">
                   Founder, Automa Soluct
                 </span>
                 <span className="text-xs text-[#9CA3AF]">
@@ -620,7 +620,7 @@ function MobileHomeContent() {
         <Container className="max-w-7xl py-8 md:py-14 lg:py-20">
           <div className="flex max-w-3xl flex-col gap-4 rounded-xl border border-white/[0.1] bg-surface-1 p-5 md:mx-auto md:max-w-none md:gap-5 md:p-8 md:text-center lg:gap-8 lg:rounded-2xl lg:p-12">
             <div className="flex flex-col gap-1.5 md:mx-auto md:max-w-3xl">
-              <div className="flex items-center gap-1.5 text-primary md:justify-center">
+              <div className="flex items-center gap-1.5 text-primary-soft md:justify-center">
                 <HomeIcon name="clipboard-check" />
                 <span className="font-heading text-[11px] font-bold uppercase tracking-wider">
                   Technical Assessment
@@ -823,7 +823,7 @@ function DesktopSectionHeading({
       data-reveal
       data-reveal-delay="0"
     >
-      <span className="font-heading text-[11px] font-bold uppercase tracking-wider text-primary">
+      <span className="font-heading text-[11px] font-bold uppercase tracking-wider text-primary-soft">
         {eyebrow}
       </span>
       <h2 className="font-heading text-[28px] font-bold leading-9 tracking-[-0.02em] text-white lg:text-[30px] lg:leading-10">
@@ -865,7 +865,7 @@ function DesktopHomeContent() {
         <Container className="grid max-w-7xl grid-cols-1 items-center gap-12 py-16 lg:grid-cols-12 lg:py-20 xl:pb-24">
           <div className="flex flex-col gap-8 lg:col-span-7">
             <span
-              className="font-mono text-[11px] font-medium uppercase tracking-wider text-[#71747E]"
+              className="font-mono text-[11px] font-medium uppercase tracking-wider text-text-low"
               data-reveal
               data-reveal-delay="0"
             >
@@ -873,16 +873,18 @@ function DesktopHomeContent() {
             </span>
 
             <div className="flex flex-col gap-5">
-              <h1
+              <div
+                aria-level={1}
                 className="font-heading text-[38px] font-bold leading-[46px] tracking-[-0.025em] text-white lg:text-[40px] lg:leading-[48px] xl:text-[42px] xl:leading-[50px]"
                 data-reveal
                 data-reveal-delay="1"
+                role="heading"
               >
                 Need <span className="text-primary">Jobber</span> to do more?
                 <span className="block text-[#E5E7EB]">
                   We build custom solutions around it.
                 </span>
-              </h1>
+              </div>
               <p
                 className="max-w-xl text-base leading-relaxed text-[#9CA3AF]"
                 data-reveal
@@ -906,7 +908,7 @@ function DesktopHomeContent() {
                   {trade}
                 </span>
               ))}
-              <span className="pl-1 font-mono text-[#71747E]">
+              <span className="pl-1 font-mono text-text-low">
                 + more service businesses
               </span>
             </div>
@@ -936,7 +938,7 @@ function DesktopHomeContent() {
             </div>
 
             <p
-              className="font-mono text-xs text-[#71747E]"
+              className="font-mono text-xs text-text-low"
               data-reveal
               data-reveal-delay="5"
             >
@@ -965,7 +967,7 @@ function DesktopHomeContent() {
                   <h3 className="font-heading text-sm font-bold text-white">
                     Jobber
                   </h3>
-                  <span className="font-mono text-[11px] text-[#71747E]">
+                  <span className="font-mono text-[11px] text-text-low">
                     Central Platform
                   </span>
                 </div>
@@ -998,7 +1000,7 @@ function DesktopHomeContent() {
                       {"heroName" in system ? system.heroName : system.name}
                     </span>
                   </div>
-                  <span className="shrink-0 font-mono text-[10px] text-[#71747E] xl:text-[11px]">
+                  <span className="shrink-0 font-mono text-[10px] text-text-low xl:text-[11px]">
                     {system.heroDescription}
                   </span>
                 </div>
@@ -1036,7 +1038,7 @@ function DesktopHomeContent() {
                   <h3 className="font-heading text-base font-bold text-white">
                     Jobber
                   </h3>
-                  <span className="font-mono text-xs text-[#71747E]">
+                  <span className="font-mono text-xs text-text-low">
                     Core Operational Platform
                   </span>
                 </div>
@@ -1061,7 +1063,7 @@ function DesktopHomeContent() {
                       <h3 className="text-sm font-semibold text-white">
                         {system.name}
                       </h3>
-                      <span className="font-mono text-[11px] text-[#71747E]">
+                      <span className="font-mono text-[11px] text-text-low">
                         {system.category}
                       </span>
                     </div>
@@ -1157,10 +1159,10 @@ function DesktopHomeContent() {
                 key={step.title}
               >
                 <div className="flex items-center justify-between">
-                  <span className="font-mono text-sm font-semibold text-primary">
+                  <span className="font-mono text-sm font-semibold text-primary-soft">
                     0{index + 1}
                   </span>
-                  <span className="font-mono text-[11px] uppercase text-[#71747E]">
+                  <span className="font-mono text-[11px] uppercase text-text-low">
                     Phase 0{index + 1}
                   </span>
                 </div>
@@ -1200,7 +1202,7 @@ function DesktopHomeContent() {
 
             <div className="flex flex-col gap-5 lg:col-span-7">
               <div className="flex flex-col gap-1.5">
-                <span className="font-heading text-xs font-bold uppercase tracking-wider text-primary">
+                <span className="font-heading text-xs font-bold uppercase tracking-wider text-primary-soft">
                   Engineering Leadership
                 </span>
                 <h2 className="font-heading text-2xl font-bold leading-tight text-white">
@@ -1213,10 +1215,10 @@ function DesktopHomeContent() {
                   Cleiton Carvalho
                 </h3>
                 <div className="mt-0.5 flex flex-wrap items-center gap-2">
-                  <span className="text-sm font-semibold text-primary">
+                  <span className="text-sm font-semibold text-primary-soft">
                     Founder, Automa Soluct
                   </span>
-                  <span className="text-xs text-[#71747E]">•</span>
+                  <span className="text-xs text-text-low">•</span>
                   <span className="text-xs text-[#9CA3AF]">
                     Carvalho Technologies LLC
                   </span>
@@ -1259,7 +1261,7 @@ function DesktopHomeContent() {
             data-reveal-delay="0"
           >
             <div className="flex max-w-2xl flex-col items-center gap-3">
-              <div className="flex items-center gap-2 text-primary">
+              <div className="flex items-center gap-2 text-primary-soft">
                 <HomeIcon name="clipboard-check" />
                 <span className="font-heading text-xs font-bold uppercase tracking-wider">
                   Technical Assessment
