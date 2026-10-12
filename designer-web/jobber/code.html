@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Automa Soluct - Custom Jobber Automation Built Around Your Workflow</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style>
+    @layer base {
+      html, body {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        background-color: #000000;
+        color: #FFFFFF;
+        font-family: 'Inter', sans-serif;
+      }
+      .font-headline {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+      }
+      .font-mono-tech {
+        font-family: 'JetBrains Mono', monospace;
+      }
+    }
+    ::-webkit-scrollbar {
+      display: none;
+    }
+  </style>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-dim": "#050507",
+            "surface": "#000000",
+            "surface-container": "#0B0B0D",
+            "surface-container-low": "#08080A",
+            "surface-container-high": "#111216",
+            "surface-container-highest": "#17181F",
+            "primary": "#0A4EE4",
+            "primary-hover": "#0C59FF",
+            "outline": "#1B1D24",
+            "outline-variant": "rgba(255, 255, 255, 0.08)"
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "2xl": "1rem"
+          },
+          fontFamily: {
+            "headline": ["Plus Jakarta Sans", "sans-serif"],
+            "body": ["Inter", "sans-serif"],
+            "mono": ["JetBrains Mono", "monospace"]
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-black text-white antialiased selection:bg-[#0A4EE4] selection:text-white min-h-screen flex flex-col">
+<!-- DESKTOP HEADER -->
+<header class="sticky top-0 z-50 w-full bg-black/90 backdrop-blur-md border-b border-white/[0.08]">
+<div class="max-w-[1280px] mx-auto px-8 h-20 flex items-center justify-between">
+<!-- LEFT: Official Automa Soluct Logo only -->
+<a class="flex items-center shrink-0" href="#">
+<img alt="Automa Soluct Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZMQGwYBkvzWv1A6gyZ1ZN_NXfqIof_xl3m7pLcLdwoHpWc81X0z4EOL15-i7DDiYvryjGctEvRtWFjJ33rFEdeYhXzv0b-M_xWfFdNV1tcEVgU1kXuhMxRmAy7oHYyRjG9Qb9-rBgvSoXR6lhnZvHb7RU4MHUg9GgUMwdJVXWJssBPyWT8VQQUTAdntzGUasIen3AfNvqk9Mx_0uEADRnVIi9ajyZB0ZrVUmifOgvg-wI3mG3QwIijzeCmvz4EAvX2w"/>
+</a>
+<!-- RIGHT: Text Us CTA button -->
+<a class="px-3.5 py-1.5 bg-[#0A4EE4] hover:bg-[#0C59FF] text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all shadow-sm shadow-blue-900/20 active:scale-[0.98]" href="/contact">
+<span class="material-symbols-outlined text-[16px]">chat</span>
+<span>Text Us</span>
+</a>
+</div>
+</header>
+<!-- MAIN VIEWPORT -->
+<main class="flex-1 flex flex-col w-full bg-black">
+<!-- SECTION 1 — HERO -->
+<section class="w-full max-w-[1280px] mx-auto px-8 pt-16 pb-20">
+<div class="grid grid-cols-12 gap-12 items-center">
+<!-- LEFT COLUMN -->
+<div class="col-span-7 flex flex-col items-start gap-6">
+<div class="inline-flex items-center gap-2 self-start bg-[#111216] border border-white/[0.08] px-3.5 py-1.5 rounded-full">
+<span class="w-1.5 h-1.5 rounded-full bg-[#0A4EE4]"></span>
+<span class="text-xs font-semibold text-gray-300 tracking-wider uppercase font-headline">
+              CUSTOM JOBBER AUTOMATION
+            </span>
+</div>
+<div class="flex flex-col gap-4">
+<h1 class="text-[48px] leading-[54px] font-extrabold text-white tracking-tight font-headline">
+              Custom Jobber automation built around your workflow.
+            </h1>
+<p class="text-lg leading-relaxed text-gray-400 max-w-xl">
+              When Jobber doesn’t cover a process, integration, or business rule your operation needs, we build the custom solution around it.
+            </p>
+</div>
+<div class="flex items-center gap-4 pt-2">
+<a class="min-h-[50px] px-6 py-3.5 bg-[#0A4EE4] hover:bg-[#0C59FF] text-white rounded-lg text-sm font-semibold flex items-center justify-center gap-2.5 shadow-lg shadow-blue-900/25 active:scale-[0.99] transition-all" href="/contact">
+<span>Get a Free Assessment</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</a>
+<a class="min-h-[50px] px-6 py-3.5 bg-[#111216] hover:bg-[#17181F] border border-white/[0.1] text-white rounded-lg text-sm font-semibold flex items-center justify-center gap-2.5 transition-colors" href="sms:+13076224973">
+<span class="material-symbols-outlined text-[#0A4EE4] text-[18px]">chat</span>
+<span>Text Us</span>
+</a>
+</div>
+<div class="flex items-center gap-2 text-xs text-gray-400 pt-1">
+<a class="hover:text-white transition-colors" href="mailto:hello@automasoluct.com">hello@automasoluct.com</a>
+<span class="text-gray-500">•</span>
+<a class="hover:text-white transition-colors" href="tel:+13076224973">+1 (307) 622-4973</a>
+<span class="text-gray-500">•</span>
+<span>Carvalho Technologies LLC</span>
+</div>
+</div>
+<!-- RIGHT COLUMN: Workflow Blueprint Card -->
+<div class="col-span-5 w-full">
+<div class="bg-[#0B0B0D] border border-white/[0.08] rounded-xl p-6 relative flex flex-col gap-5">
+<!-- Header -->
+<div class="flex items-center justify-between pb-4 border-b border-white/[0.08]">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-white p-1.5 flex items-center justify-center shrink-0">
+<img alt="Jobber Workflow" class="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQh_hrhuqzJvqjPai167mnZik04yclobo7cMxqbJIz8tm3JdlyQCzVF5PYas-luZPBpEJ2yi03ip0YWPjV6KtODK9XfbhrLEw8xeyF0cvAI1tX-OcKSBknrjK8KaWDhhjN0P0MtBT-hwXoYTRm35Y1JLyTVrIBHRrwBAuHHCrnCjk1TYbSTPjIqBTdjblzNWjhvEvZqW3d469JIMU9g6rvQVyKhIy2gxpIUIS4PM2Cm6Df8tWdcpysoONH_WSzcTTmEg"/>
+</div>
+<div>
+<h3 class="text-base font-bold text-white font-headline">Jobber Workflow</h3>
+<p class="text-xs text-gray-400">Field Operations Hub</p>
+</div>
+</div>
+<span class="px-2.5 py-1 bg-[#111216] border border-white/[0.08] rounded text-xs font-medium text-gray-300">
+                Custom Automation
+              </span>
+</div>
+<!-- Vertical Connected Steps -->
+<div class="space-y-2.5 text-xs">
+<!-- Step 1 -->
+<div class="flex items-center justify-between p-3 rounded-lg bg-[#111216] border border-white/[0.06]">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-[#0A4EE4] text-[18px]">alt_route</span>
+<span class="text-white font-medium">1. Dispatch &amp; Field Workflows</span>
+</div>
+<span class="text-gray-400 font-medium">Custom Workflow</span>
+</div>
+<!-- Connector -->
+<div class="flex justify-center -my-1 text-gray-600">
+<span class="material-symbols-outlined text-[14px]">south</span>
+</div>
+<!-- Step 2 -->
+<div class="flex items-center justify-between p-3 rounded-lg bg-[#111216] border border-white/[0.06]">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-[#0A4EE4] text-[18px]">drive_file_move</span>
+<span class="text-white font-medium">2. Document &amp; Drive Automation</span>
+</div>
+<span class="text-gray-400 font-medium">Document Flow</span>
+</div>
+<!-- Connector -->
+<div class="flex justify-center -my-1 text-gray-600">
+<span class="material-symbols-outlined text-[14px]">south</span>
+</div>
+<!-- Step 3 -->
+<div class="flex items-center justify-between p-3 rounded-lg bg-[#111216] border border-white/[0.06]">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-[#0A4EE4] text-[18px]">receipt_long</span>
+<span class="text-white font-medium">3. Accounting Integration</span>
+</div>
+<span class="text-gray-400 font-medium">Accounting Sync</span>
+</div>
+<!-- Connector -->
+<div class="flex justify-center -my-1 text-gray-600">
+<span class="material-symbols-outlined text-[14px]">south</span>
+</div>
+<!-- Step 4 -->
+<div class="flex items-center justify-between p-3 rounded-lg bg-[#111216] border border-white/[0.06]">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-[#0A4EE4] text-[18px]">hub</span>
+<span class="text-white font-medium">4. CRM &amp; Lead Attribution</span>
+</div>
+<span class="text-gray-400 font-medium">Lead Tracking</span>
+</div>
+</div>
+<!-- Bottom summary bar -->
+<div class="pt-3 border-t border-white/[0.08] flex items-center justify-between text-xs text-gray-400">
+<span class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-[#0A4EE4]"></span>
+                Custom integration built around your operation.
+              </span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 2 — CORE PROBLEM (OPERATIONAL REALITY) -->
+<section class="w-full bg-[#08080A] border-y border-white/[0.08] py-20">
+<div class="max-w-[1280px] mx-auto px-8">
+<div class="max-w-2xl mb-12 flex flex-col gap-2">
+<span class="text-[12px] font-bold text-[#0A4EE4] uppercase tracking-wider font-headline">OPERATIONAL REALITY</span>
+<h2 class="text-3xl font-bold text-white font-headline leading-tight">
+            Jobber may run your business. But your workflow is still unique.
+          </h2>
+<p class="text-sm leading-relaxed text-gray-400">
+            Jobber is a reliable field engine, but growing operations inevitably hit edge cases across office dispatch, sales, and accounting.
+          </p>
+</div>
+<div class="grid grid-cols-2 gap-6">
+<!-- Card 1 -->
+<div class="bg-[#0B0B0D] border border-white/[0.08] hover:border-white/[0.15] p-6 rounded-xl transition-colors flex flex-col gap-3">
+<div class="w-10 h-10 rounded-lg bg-[#111216] flex items-center justify-center text-[#0A4EE4] border border-white/[0.08]">
+<span class="material-symbols-outlined text-[20px]">content_copy</span>
+</div>
+<h3 class="text-base font-bold text-white font-headline">Manual Double-Entry</h3>
+<p class="text-sm text-gray-400 leading-relaxed">
+              Copying data between Jobber, spreadsheets, and other tools manually creates daily administrative drag and human error.
+            </p>
+</div>
+<!-- Card 2 -->
+<div class="bg-[#0B0B0D] border border-white/[0.08] hover:border-white/[0.15] p-6 rounded-xl transition-colors flex flex-col gap-3">
+<div class="w-10 h-10 rounded-lg bg-[#111216] flex items-center justify-center text-[#0A4EE4] border border-white/[0.08]">
+<span class="material-symbols-outlined text-[20px]">link_off</span>
+</div>
+<h3 class="text-base font-bold text-white font-headline">Disconnected Systems</h3>
+<p class="text-sm text-gray-400 leading-relaxed">
+              Jobber isolated from cloud drives, accounting software, or inbound ad lead generation channels.
+            </p>
+</div>
+<!-- Card 3 -->
+<div class="bg-[#0B0B0D] border border-white/[0.08] hover:border-white/[0.15] p-6 rounded-xl transition-colors flex flex-col gap-3">
+<div class="w-10 h-10 rounded-lg bg-[#111216] flex items-center justify-center text-[#0A4EE4] border border-white/[0.08]">
+<span class="material-symbols-outlined text-[20px]">rule_folder</span>
+</div>
+<h3 class="text-base font-bold text-white font-headline">Unsupported Native Rules</h3>
+<p class="text-sm text-gray-400 leading-relaxed">
+              Custom pricing logic, tiered approval rules, dynamic markups, or delayed triggers that Jobber lacks natively.
+            </p>
+</div>
+<!-- Card 4 -->
+<div class="bg-[#0B0B0D] border border-white/[0.08] hover:border-white/[0.15] p-6 rounded-xl transition-colors flex flex-col gap-3">
+<div class="w-10 h-10 rounded-lg bg-[#111216] flex items-center justify-center text-[#0A4EE4] border border-white/[0.08]">
+<span class="material-symbols-outlined text-[20px]">perm_media</span>
+</div>
+<h3 class="text-base font-bold text-white font-headline">Fragmented Field Data</h3>
+<p class="text-sm text-gray-400 leading-relaxed">
+              Job inspection photos, signed contracts, and client SMS history scattered across independent apps without unified records.
+            </p>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 3 — CAPABILITIES -->
+<section class="w-full max-w-[1280px] mx-auto px-8 py-20">
+<div class="max-w-2xl mb-12 flex flex-col gap-2">
+<span class="text-[12px] font-bold text-[#0A4EE4] uppercase tracking-wider font-headline">CAPABILITIES</span>
+<h2 class="text-3xl font-bold text-white font-headline leading-tight">
+          Custom solutions built around the way your business actually works.
+        </h2>
+<p class="text-sm leading-relaxed text-gray-400">
+          We bridge the gaps with tailored engineering so your team doesn't have to compromise with software limitations.
+        </p>
+</div>
+<div class="grid grid-cols-2 gap-6">
+<!-- Capability 1 -->
+<div class="bg-[#0B0B0D] border border-white/[0.08] hover:border-white/[0.15] p-6 rounded-xl transition-colors flex flex-col gap-3">
+<div class="w-10 h-10 rounded-lg bg-[#111216] flex items-center justify-center text-[#0A4EE4] border border-white/[0.08]">
+<span class="material-symbols-outlined text-[20px]">autorenew</span>
+</div>
+<h3 class="text-base font-bold text-white font-headline">Automate Repetitive Work</h3>
+<p class="text-sm text-gray-400 leading-relaxed">
+            Eliminate manual office tasks, auto-generate quotes and invoices, and sync scheduling updates across your entire staff instantly.
+          </p>
+</div>
+<!-- Capability 2 -->
+<div class="bg-[#0B0B0D] border border-white/[0.08] hover:border-white/[0.15] p-6 rounded-xl transition-colors flex flex-col gap-3">
+<div class="w-10 h-10 rounded-lg bg-[#111216] flex items-center justify-center text-[#0A4EE4] border border-white/[0.08]">
+<span class="material-symbols-outlined text-[20px]">sync_alt</span>
+</div>
+<h3 class="text-base font-bold text-white font-headline">Connect Jobber to Other Systems</h3>
+<p class="text-sm text-gray-400 leading-relaxed">
+            Sync Jobber seamlessly with accounting, cloud storage, CRM, and field documentation platforms in real time.
+          </p>
+</div>
+<!-- Capability 3 -->
+<div class="bg-[#0B0B0D] border border-white/[0.08] hover:border-white/[0.15] p-6 rounded-xl transition-colors flex flex-col gap-3">
+<div class="w-10 h-10 rounded-lg bg-[#111216] flex items-center justify-center text-[#0A4EE4] border border-white/[0.08]">
+<span class="material-symbols-outlined text-[20px]">account_tree</span>
+</div>
+<h3 class="text-base font-bold text-white font-headline">Build Custom Workflows</h3>
+<p class="text-sm text-gray-400 leading-relaxed">
+            Implement business-specific logic, tiered approval triggers, dynamic margin calculators, and real-time operational alerts.
+          </p>
+</div>
+<!-- Capability 4 -->
+<div class="bg-[#0B0B0D] border border-white/[0.08] hover:border-white/[0.15] p-6 rounded-xl transition-colors flex flex-col gap-3">
+<div class="w-10 h-10 rounded-lg bg-[#111216] flex items-center justify-center text-[#0A4EE4] border border-white/[0.08]">
+<span class="material-symbols-outlined text-[20px]">terminal</span>
+</div>
+<h3 class="text-base font-bold text-white font-headline">Create What’s Missing</h3>
+<p class="text-sm text-gray-400 leading-relaxed">
+            Develop bespoke internal tools, custom sub-contractor portals, or proprietary software Jobber doesn't offer out of the box.
+          </p>
+</div>
+</div>
+</section>
+<!-- SECTION 4 — FIELD-PROVEN EXAMPLES -->
+<section class="w-full bg-[#08080A] border-y border-white/[0.08] py-20">
+<div class="max-w-[1280px] mx-auto px-8">
+<div class="max-w-2xl mb-12 flex flex-col gap-2">
+<span class="text-[12px] font-bold text-[#0A4EE4] uppercase tracking-wider font-headline">FIELD-PROVEN EXAMPLES</span>
+<h2 class="text-3xl font-bold text-white font-headline leading-tight">
+            Examples of what can be built around Jobber.
+          </h2>
+<p class="text-sm leading-relaxed text-gray-400">
+            Examples of custom engineering — not fixed rigid packages.
+          </p>
+</div>
+<div class="grid grid-cols-3 gap-6">
+<!-- Blueprint 1 -->
+<div class="bg-[#0B0B0D] border border-white/[0.08] hover:border-white/[0.15] p-5 rounded-xl flex flex-col justify-between transition-colors">
+<div class="flex flex-col gap-3">
+<div class="flex items-center gap-2.5 text-[#0A4EE4]">
+<span class="material-symbols-outlined text-[20px]">ads_click</span>
+<h3 class="text-sm font-bold text-white font-headline">Referral &amp; Lead-Source Tracking</h3>
+</div>
+<p class="text-xs text-gray-400 leading-relaxed">
+                Capture UTM tags, paid ad sources, and form metadata into Jobber custom fields to preserve marketing attribution on every invoice.
+              </p>
+</div>
+<div class="mt-5 pt-3 border-t border-white/[0.06] flex items-center gap-2 text-xs text-gray-500">
+<span class="material-symbols-outlined text-[14px] text-gray-400">tune</span>
+<span>Attribution Preservation</span>
+</div>
+</div>
+<!-- Blueprint 2 -->
+<div class="bg-[#0B0B0D] border border-white/[0.08] hover:border-white/[0.15] p-5 rounded-xl flex flex-col justify-between transition-colors">
+<div class="flex flex-col gap-3">
+<div class="flex items-center gap-2.5 text-[#0A4EE4]">
+<span class="material-symbols-outlined text-[20px]">payments</span>
+<h3 class="text-sm font-bold text-white font-headline">Payment-Triggered Automation</h3>
+</div>
+<p class="text-xs text-gray-400 leading-relaxed">
+                Auto-trigger review requests, notify regional managers, or release lien waivers the moment a Jobber invoice is marked paid.
+              </p>
+</div>
+<div class="mt-5 pt-3 border-t border-white/[0.06] flex items-center gap-2 text-xs text-gray-500">
+<span class="material-symbols-outlined text-[14px] text-gray-400">flash_on</span>
+<span>Immediate Webhooks</span>
+</div>
+</div>
+<!-- Blueprint 3 -->
+<div class="bg-[#0B0B0D] border border-white/[0.08] hover:border-white/[0.15] p-5 rounded-xl flex flex-col justify-between transition-colors">
+<div class="flex flex-col gap-3">
+<div class="flex items-center gap-2.5 text-[#0A4EE4]">
+<span class="material-symbols-outlined text-[20px]">account_balance</span>
+<h3 class="text-sm font-bold text-white font-headline">Accounting Integrations</h3>
+</div>
+<p class="text-xs text-gray-400 leading-relaxed">
+                Deep two-way sync between Jobber and Xero or QuickBooks with custom item mapping, multi-rate tax handling, and deposit matching.
+              </p>
+</div>
+<div class="mt-5 pt-3 border-t border-white/[0.06] flex items-center gap-2 text-xs text-gray-500">
+<span class="material-symbols-outlined text-[14px] text-gray-400">sync</span>
+<span>Two-Way Ledgers</span>
+</div>
+</div>
+<!-- Blueprint 4 -->
+<div class="bg-[#0B0B0D] border border-white/[0.08] hover:border-white/[0.15] p-5 rounded-xl flex flex-col justify-between transition-colors">
+<div class="flex flex-col gap-3">
+<div class="flex items-center gap-2.5 text-[#0A4EE4]">
+<span class="material-symbols-outlined text-[20px]">folder_shared</span>
+<h3 class="text-sm font-bold text-white font-headline">Google Workspace / Document Automation</h3>
+</div>
+<p class="text-xs text-gray-400 leading-relaxed">
+                Auto-generate customer folders, contracts, and job archives in Google Drive upon quote conversion, linking them directly in Jobber.
+              </p>
+</div>
+<div class="mt-5 pt-3 border-t border-white/[0.06] flex items-center gap-2 text-xs text-gray-500">
+<span class="material-symbols-outlined text-[14px] text-gray-400">cloud_sync</span>
+<span>Drive Auto-Structure</span>
+</div>
+</div>
+<!-- Blueprint 5 -->
+<div class="bg-[#0B0B0D] border border-white/[0.08] hover:border-white/[0.15] p-5 rounded-xl flex flex-col justify-between transition-colors">
+<div class="flex flex-col gap-3">
+<div class="flex items-center gap-2.5 text-[#0A4EE4]">
+<span class="material-symbols-outlined text-[20px]">tune</span>
+<h3 class="text-sm font-bold text-white font-headline">CRM &amp; Custom Business Rules</h3>
+</div>
+<p class="text-xs text-gray-400 leading-relaxed">
+                Sync leads with CRMs like HighLevel, execute tiered markup rules, and enforce custom technician qualification filters before booking.
+              </p>
+</div>
+<div class="mt-5 pt-3 border-t border-white/[0.06] flex items-center gap-2 text-xs text-gray-500">
+<span class="material-symbols-outlined text-[14px] text-gray-400">rule</span>
+<span>HighLevel Sync + Gates</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 5 — CONNECTED SYSTEMS STRIP -->
+<section class="w-full bg-black border-b border-white/[0.08] py-16">
+<div class="max-w-[1280px] mx-auto px-8">
+<div class="text-center max-w-2xl mx-auto mb-10 flex flex-col gap-2">
+<span class="text-[12px] font-bold text-[#0A4EE4] uppercase tracking-wider font-headline">CONNECTED SYSTEMS</span>
+<p class="text-lg font-bold text-white font-headline">
+            Jobber is only one part of your operation. We connect it to the systems your business already relies on.
+          </p>
+</div>
+<div class="grid grid-cols-5 gap-4">
+<!-- Jobber -->
+<div class="bg-[#0B0B0D] border border-white/[0.08] p-5 rounded-xl flex flex-col items-center justify-center text-center gap-3 hover:border-white/[0.15] transition-colors">
+<div class="w-12 h-12 rounded-lg bg-white p-2 flex items-center justify-center shrink-0 shadow-sm">
+<img alt="Jobber" class="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAh3vt1N8sMbgyz3PnoP0mi5Yh0Th1yfpHuiNT57y8HuK1YwUiEHQaPacPigi6pXkJimOfnOVDr9tRzs2NWd0e0u55UHEoLm8dXRq4gCGpxRQ1rM3EP2jOYCPVLMi4GGnfau7EJPP4tkil8aTkrS_0DJh6wQbJ8gbVhoVGmrcLtgMBk47K1Q7QOf9j-ca7-4OqZItmMFbCmhV5YiSIp6R944miS89U9WdTLIhJ5cERDqLtTaMEg2ATjMAw123r9y_-3Cw"/>
+</div>
+<span class="text-sm font-medium text-white font-headline">Jobber</span>
+</div>
+<!-- Google Workspace -->
+<div class="bg-[#0B0B0D] border border-white/[0.08] p-5 rounded-xl flex flex-col items-center justify-center text-center gap-3 hover:border-white/[0.15] transition-colors">
+<div class="w-12 h-12 rounded-lg bg-[#111216] border border-white/[0.06] p-2 flex items-center justify-center shrink-0">
+<img alt="Google Workspace" class="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCofFmqTMu56ybvCpFn7iwFH3v9XnqjP3aQ6Q9wiWDH1Fcsi83K4yGcFaqK9bITQN5MqJ54-lh4sAzxCiAZYAX1xymKgV1ruid8HhKbUA7wb3P2s-t7bhl1MaUqJ_qkYvb_F8N5fsruuMeOb8S4045FDPsToV6Fma0kQVXQaEQq57xLKjve_azbSnYFdeYRvMG07IsnRO4rSef1mqVv5_1nYCINE2tqp1puDNYFXkVh03glAoxWHa1S9DXGB8GNMEZCDA"/>
+</div>
+<span class="text-sm font-medium text-white font-headline">Google Workspace</span>
+</div>
+<!-- CompanyCam -->
+<div class="bg-[#0B0B0D] border border-white/[0.08] p-5 rounded-xl flex flex-col items-center justify-center text-center gap-3 hover:border-white/[0.15] transition-colors">
+<div class="w-12 h-12 rounded-lg bg-[#111216] border border-white/[0.06] p-2 flex items-center justify-center shrink-0">
+<img alt="CompanyCam" class="w-full h-full object-contain rounded" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAe40WzNpGtQXAR_i38Kk49FlNhrJzp4HOf7vNDRikfpbYnKfdRD6e3OpZoLAZcnyizYVhjcrHu0Y8ZDmc_535krTjUhl8MEtUOyv5s2_ki69Z_9PaF0krLmnp6-xUciVNXrapFGQtVT9GJeEhXIPQ9cNEqbbLKhKYjCvEcUlNMGNj5N6HhMx8KPxkj13VjpjAxPS1KtQrBSQEdI9A6_45KakarPJI4Nyi7IUixH5vOTcA77ncKU9Y51cJc_j0rkNtnBg"/>
+</div>
+<span class="text-sm font-medium text-white font-headline">CompanyCam</span>
+</div>
+<!-- Xero -->
+<div class="bg-[#0B0B0D] border border-white/[0.08] p-5 rounded-xl flex flex-col items-center justify-center text-center gap-3 hover:border-white/[0.15] transition-colors">
+<div class="w-12 h-12 rounded-lg bg-[#111216] border border-white/[0.06] p-2 flex items-center justify-center shrink-0">
+<img alt="Xero" class="w-full h-full object-contain rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUVFm8fYoevoLCDKgUIpcqf9EMq-LvVdAmq_c4rY7bw-fTM0hoxE4Z_N3cKK373qbZcHuvF6TYG4uFEEJ3UFJHbqiZ6Tsr4xo6eEKQt7BaFNwzQGJGGkQ_CuwwnRHq8CRnupZxveDiM5vSeiLNRgmoarsOy6Watjjo2CAyV0x4hjjnMS7_QK5lwkCuo_D43GdOP0xQ6a16y5bgouqoYZaB8JO0YqN_ffU7xuSX5qWBbOelYdJzsQlR7m7PeXBxKEGDDQ"/>
+</div>
+<span class="text-sm font-medium text-white font-headline">Xero</span>
+</div>
+<!-- HighLevel -->
+<div class="bg-[#0B0B0D] border border-white/[0.08] p-5 rounded-xl flex flex-col items-center justify-center text-center gap-3 hover:border-white/[0.15] transition-colors">
+<div class="w-12 h-12 rounded-lg bg-[#111216] border border-white/[0.06] p-2 flex items-center justify-center shrink-0">
+<img alt="HighLevel" class="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAw9m69tarYWzRkp-VcOrl-bXAKnLwct-HyXiLWk7PkYBDY96m45CMvzPpk_x7D0375WmPfWYmccUM1SY3HeVz9gFRdPwIcUuviRzcAuExBqxaB0E4Xk6AmDbxhzh8ZLkiaQ1CNjB9toSj68JeVneG1KWO45Q4PMipxVBOU6ZxPtrCJ1rAqvpPr2j-ximKm4Akhp5THtT8QAHeb2yYow_XwDL7XouSV6Sn6AI5w8GMH1Xsp08SK53nv2-XEQXn45zvC4Q"/>
+</div>
+<span class="text-sm font-medium text-white font-headline">HighLevel</span>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 6 — PROCESS -->
+<section class="w-full max-w-[1280px] mx-auto px-8 py-20">
+<div class="max-w-2xl mb-12 flex flex-col gap-2">
+<span class="text-[12px] font-bold text-[#0A4EE4] uppercase tracking-wider font-headline">SIMPLE 3-STEP PROCESS</span>
+<h2 class="text-3xl font-bold text-white font-headline leading-tight">
+          Tell us what you wish Jobber could do.
+        </h2>
+<p class="text-sm leading-relaxed text-gray-400">
+          We handle the technical heavy lifting from architecture to production deployment.
+        </p>
+</div>
+<div class="grid grid-cols-3 gap-8">
+<!-- Step 1 -->
+<div class="bg-[#0B0B0D] border border-white/[0.08] p-6 rounded-xl flex flex-col gap-4 hover:border-white/[0.15] transition-colors">
+<div class="w-9 h-9 rounded-full bg-[#0A4EE4] text-white text-sm font-bold flex items-center justify-center">
+            1
+          </div>
+<div class="flex flex-col gap-2">
+<h3 class="text-base font-bold text-white font-headline">Tell us the problem</h3>
+<p class="text-sm text-gray-400 leading-relaxed">
+              Explain what your office or field crew is doing manually, what system needs to connect, or what workflow Jobber doesn’t handle natively.
+            </p>
+</div>
+</div>
+<!-- Step 2 -->
+<div class="bg-[#0B0B0D] border border-white/[0.08] p-6 rounded-xl flex flex-col gap-4 hover:border-white/[0.15] transition-colors">
+<div class="w-9 h-9 rounded-full bg-[#0A4EE4] text-white text-sm font-bold flex items-center justify-center">
+            2
+          </div>
+<div class="flex flex-col gap-2">
+<h3 class="text-base font-bold text-white font-headline">We design the solution</h3>
+<p class="text-sm text-gray-400 leading-relaxed">
+              We review your operational flow, map out the data schemas and API requirements, and architect a reliable custom solution.
+            </p>
+</div>
+</div>
+<!-- Step 3 -->
+<div class="bg-[#0B0B0D] border border-white/[0.08] p-6 rounded-xl flex flex-col gap-4 hover:border-white/[0.15] transition-colors">
+<div class="w-9 h-9 rounded-full bg-[#0A4EE4] text-white text-sm font-bold flex items-center justify-center">
+            3
+          </div>
+<div class="flex flex-col gap-2">
+<h3 class="text-base font-bold text-white font-headline">We build and deploy</h3>
+<p class="text-sm text-gray-400 leading-relaxed">
+              We engineer, test in staging, and deploy the automation smoothly into your daily operations without disrupting active crews.
+            </p>
+</div>
+</div>
+</div>
+<!-- SECTION 7 — CREDIBILITY BLOCK -->
+<div class="bg-[#0B0B0D] border border-white/[0.08] border-l-4 border-l-[#0A4EE4] p-5 rounded-lg flex items-center gap-4 max-w-3xl mx-auto mt-12">
+<span class="material-symbols-outlined text-[#0A4EE4] text-[28px] shrink-0">verified</span>
+<p class="text-sm text-gray-300 leading-relaxed">
+          Built by <strong class="text-white font-semibold">Cleiton Carvalho</strong>, Founder of Automa Soluct, with hands-on experience building custom solutions around real Jobber operations.
+        </p>
+</div>
+</section>
+<!-- SECTION 8 — FAQ -->
+<section class="w-full bg-[#08080A] border-y border-white/[0.08] py-20">
+<div class="max-w-[1280px] mx-auto px-8">
+<div class="max-w-2xl mb-12 flex flex-col gap-2">
+<span class="text-[12px] font-bold text-[#0A4EE4] uppercase tracking-wider font-headline">FAQ</span>
+<h2 class="text-3xl font-bold text-white font-headline leading-tight">
+            Frequently Asked Questions
+          </h2>
+</div>
+<div class="grid grid-cols-2 gap-6">
+<!-- FAQ 1 -->
+<div class="bg-[#0B0B0D] border border-white/[0.08] p-6 rounded-xl flex flex-col gap-2">
+<h3 class="text-base font-bold text-white font-headline">Can you build custom automations for Jobber?</h3>
+<p class="text-sm text-gray-400 leading-relaxed">
+              Yes. We build custom software, webhooks, and automation pipelines that extend what Jobber can do for your specific field operation.
+            </p>
+</div>
+<!-- FAQ 2 -->
+<div class="bg-[#0B0B0D] border border-white/[0.08] p-6 rounded-xl flex flex-col gap-2">
+<h3 class="text-base font-bold text-white font-headline">Can you integrate Jobber with other software?</h3>
+<p class="text-sm text-gray-400 leading-relaxed">
+              Yes. We connect Jobber with accounting platforms (Xero, QBO), field media tools (CompanyCam), Google Workspace, CRMs (HighLevel), and custom internal databases.
+            </p>
+</div>
+<!-- FAQ 3 -->
+<div class="bg-[#0B0B0D] border border-white/[0.08] p-6 rounded-xl flex flex-col gap-2">
+<h3 class="text-base font-bold text-white font-headline">Can you build something Jobber does not support natively?</h3>
+<p class="text-sm text-gray-400 leading-relaxed">
+              Yes. When standard Jobber features or third-party Zapier connections don’t meet your business logic requirements, we engineer custom scripts and tools to handle it.
+            </p>
+</div>
+<!-- FAQ 4 -->
+<div class="bg-[#0B0B0D] border border-white/[0.08] p-6 rounded-xl flex flex-col gap-2">
+<h3 class="text-base font-bold text-white font-headline">Do I need to replace my current Jobber setup?</h3>
+<p class="text-sm text-gray-400 leading-relaxed">
+              No. Everything we build works alongside and enhances your existing Jobber account without disrupting active day-to-day dispatch or invoicing.
+            </p>
+</div>
+<!-- FAQ 5 -->
+<div class="bg-[#0B0B0D] border border-white/[0.08] p-6 rounded-xl flex flex-col gap-2 col-span-2">
+<h3 class="text-base font-bold text-white font-headline">Do you only work with specific service industries?</h3>
+<p class="text-sm text-gray-400 leading-relaxed">
+              We work with small to medium-sized U.S. service businesses across all trades that use Jobber — including HVAC, plumbing, landscaping, roofing, cleaning, electrical, and pressure washing.
+            </p>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 9 — FINAL QUALIFICATION FORM / CTA -->
+<section class="w-full max-w-[1280px] mx-auto px-8 py-20" id="assessment-form">
+<div class="max-w-[800px] mx-auto">
+<div class="text-center mb-8 flex flex-col items-center gap-2">
+<span class="text-[12px] font-bold text-[#0A4EE4] uppercase tracking-wider font-headline">GET STARTED</span>
+<h2 class="text-3xl font-bold text-white font-headline leading-tight">
+            What do you wish Jobber could do?
+          </h2>
+<p class="text-sm text-gray-400 leading-relaxed">
+            Tell us what is slowing your team down, what system needs to connect, or what process you want to improve.
+          </p>
+</div>
+<div class="bg-[#0B0B0D] border border-white/[0.08] p-8 rounded-2xl">
+<form class="space-y-5" onsubmit="event.preventDefault(); const btn = document.getElementById('submitBtn'); btn.innerHTML='&lt;span&gt;Request Received ✓&lt;/span&gt;'; btn.classList.add('bg-emerald-600');">
+<!-- Row 1 -->
+<div class="grid grid-cols-2 gap-4">
+<div>
+<label class="block text-xs font-medium text-gray-400 mb-1.5" for="full-name">Full Name</label>
+<input class="w-full bg-[#111216] border border-white/[0.08] focus:border-[#0A4EE4] focus:outline-none text-white px-3.5 py-2.5 rounded-lg text-sm placeholder:text-gray-600 transition-colors" id="full-name" placeholder="e.g. John Miller" required="" type="text"/>
+</div>
+<div>
+<label class="block text-xs font-medium text-gray-400 mb-1.5" for="biz-name">Business Name</label>
+<input class="w-full bg-[#111216] border border-white/[0.08] focus:border-[#0A4EE4] focus:outline-none text-white px-3.5 py-2.5 rounded-lg text-sm placeholder:text-gray-600 transition-colors" id="biz-name" placeholder="e.g. Miller Heating &amp; Air" required="" type="text"/>
+</div>
+</div>
+<!-- Row 2 -->
+<div class="grid grid-cols-2 gap-4">
+<div>
+<label class="block text-xs font-medium text-gray-400 mb-1.5" for="biz-email">Business Email</label>
+<input class="w-full bg-[#111216] border border-white/[0.08] focus:border-[#0A4EE4] focus:outline-none text-white px-3.5 py-2.5 rounded-lg text-sm placeholder:text-gray-600 transition-colors" id="biz-email" placeholder="john@millerhvac.com" required="" type="email"/>
+</div>
+<div>
+<label class="block text-xs font-medium text-gray-400 mb-1.5" for="biz-phone">Phone Number</label>
+<input class="w-full bg-[#111216] border border-white/[0.08] focus:border-[#0A4EE4] focus:outline-none text-white px-3.5 py-2.5 rounded-lg text-sm placeholder:text-gray-600 transition-colors" id="biz-phone" placeholder="+1 (555) 000-0000" required="" type="tel"/>
+</div>
+</div>
+<!-- Row 3: Budget Selector -->
+<div>
+<label class="block text-xs font-medium text-gray-400 mb-1.5">Estimated Project Budget</label>
+<div class="grid grid-cols-4 gap-3">
+<label class="flex items-center gap-2 p-3 bg-[#111216] border border-white/[0.08] rounded-lg cursor-pointer hover:border-white/[0.15] transition-colors has-[:checked]:border-[#0A4EE4] has-[:checked]:bg-[#0A4EE4]/10">
+<input checked="" class="accent-[#0A4EE4]" name="budget" type="radio" value="1k-2.5k"/>
+<span class="text-xs font-medium text-white">$1k – $2.5k</span>
+</label>
+<label class="flex items-center gap-2 p-3 bg-[#111216] border border-white/[0.08] rounded-lg cursor-pointer hover:border-white/[0.15] transition-colors has-[:checked]:border-[#0A4EE4] has-[:checked]:bg-[#0A4EE4]/10">
+<input class="accent-[#0A4EE4]" name="budget" type="radio" value="2.5k-5k"/>
+<span class="text-xs font-medium text-white">$2.5k – $5k</span>
+</label>
+<label class="flex items-center gap-2 p-3 bg-[#111216] border border-white/[0.08] rounded-lg cursor-pointer hover:border-white/[0.15] transition-colors has-[:checked]:border-[#0A4EE4] has-[:checked]:bg-[#0A4EE4]/10">
+<input class="accent-[#0A4EE4]" name="budget" type="radio" value="5k-10k"/>
+<span class="text-xs font-medium text-white">$5k – $10k</span>
+</label>
+<label class="flex items-center gap-2 p-3 bg-[#111216] border border-white/[0.08] rounded-lg cursor-pointer hover:border-white/[0.15] transition-colors has-[:checked]:border-[#0A4EE4] has-[:checked]:bg-[#0A4EE4]/10">
+<input class="accent-[#0A4EE4]" name="budget" type="radio" value="10k+"/>
+<span class="text-xs font-medium text-white">$10k+</span>
+</label>
+</div>
+</div>
+<!-- Row 4: Bottleneck Description -->
+<div>
+<label class="block text-xs font-medium text-gray-400 mb-1.5" for="workflow-needs">What would you like to automate or improve in your Jobber workflow?</label>
+<textarea class="w-full bg-[#111216] border border-white/[0.08] focus:border-[#0A4EE4] focus:outline-none text-white px-3.5 py-3 rounded-lg text-sm placeholder:text-gray-600 transition-colors" id="workflow-needs" placeholder="Describe your manual bottleneck, required integration, or missing feature..." required="" rows="4"></textarea>
+</div>
+<!-- Submit Button -->
+<button class="w-full min-h-[48px] bg-[#0A4EE4] hover:bg-[#0C59FF] text-white font-semibold text-sm rounded-lg flex items-center justify-center gap-2 transition-all shadow-lg shadow-blue-900/25 active:scale-[0.99]" id="submitBtn" type="submit">
+<span>Request Free Assessment</span>
+<span class="material-symbols-outlined text-[18px]">send</span>
+</button>
+</form>
+</div>
+<!-- Secondary Direct Contact Row -->
+<div class="mt-6 flex items-center justify-center gap-6 text-xs text-gray-400">
+<a class="hover:text-white transition-colors flex items-center gap-1.5" href="sms:+13076224973">
+<span class="material-symbols-outlined text-[16px] text-[#0A4EE4]">chat</span>
+<span>Text an engineer: +1 (307) 622-4973</span>
+</a>
+<span class="text-gray-600">•</span>
+<a class="hover:text-white transition-colors flex items-center gap-1.5" href="mailto:hello@automasoluct.com">
+<span class="material-symbols-outlined text-[16px] text-[#0A4EE4]">mail</span>
+<span>Email: hello@automasoluct.com</span>
+</a>
+</div>
+</div>
+</section>
+</main>
+<!-- DESKTOP 3-COLUMN FOOTER MATCHING HOME -->
+<footer class="w-full bg-[#08080A] border-t border-white/[0.08] py-16">
+<div class="max-w-[1280px] mx-auto px-8 flex flex-col gap-12">
+<div class="grid grid-cols-12 gap-8">
+<!-- Column 1: Identity (5 cols) -->
+<div class="col-span-5 flex flex-col gap-4">
+<a class="inline-block" href="#">
+<img alt="Automa Soluct" class="h-7 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNVvhlj2sQR2aSrjy5EtJKb_xeSCOF-2R3lV2vxvgdkk_RlIOvPvBc3YZoKbwUiaig1d2gb10FWlTCsivOB4k8ZK7O3FcQwix6XJbjwtkljFpF1fyba2pjujFtnCQay-JuIt_V5I7FC2czYduJhCK7O4LpBnMWL4anlVbaeffDDRg3EuXHk2WxepN_CTN_07Wo4yJSXG5kOzaDr7McWIPg9HlfN0SzvSfZVjLj5LGtujAKowfLWP6XWbNCEDgKLyhm_g"/>
+</a>
+<p class="text-sm text-gray-400 leading-relaxed max-w-sm">
+            Engineering enterprise workflows &amp; custom software around Jobber for trade businesses.
+          </p>
+<span class="text-xs text-gray-500 font-mono-tech">Automa Soluct | Carvalho Technologies LLC</span>
+</div>
+<!-- Column 2: Navigation (4 cols) -->
+<div class="col-span-4 flex flex-col gap-3">
+<span class="text-xs font-bold text-gray-300 uppercase tracking-wider font-headline">Navigation</span>
+<div class="flex flex-col gap-2.5 text-sm text-gray-400">
+<a class="text-white font-medium hover:text-white transition-colors" href="/jobber-automation">Jobber Automation</a>
+<a class="hover:text-white transition-colors" href="/integrations">Integrations</a>
+<a class="hover:text-white transition-colors" href="/contact">Contact</a>
+<a class="hover:text-white transition-colors" href="#">Privacy &amp; Terms</a>
+</div>
+</div>
+<!-- Column 3: Direct Engineering (3 cols) -->
+<div class="col-span-3 flex flex-col gap-3">
+<span class="text-xs font-bold text-gray-300 uppercase tracking-wider font-headline">Direct Engineering</span>
+<div class="flex flex-col gap-3 text-sm text-gray-300">
+<a class="flex items-center gap-2.5 hover:text-white transition-colors" href="mailto:hello@automasoluct.com">
+<span class="material-symbols-outlined text-[18px] text-[#0A4EE4]">mail</span>
+<span>hello@automasoluct.com</span>
+</a>
+<a class="flex items-center gap-2.5 hover:text-white transition-colors" href="tel:+13076224973">
+<span class="material-symbols-outlined text-[18px] text-[#0A4EE4]">call</span>
+<span>+1 (307) 622-4973</span>
+</a>
+</div>
+</div>
+</div>
+<!-- Copyright Bar -->
+<div class="pt-8 border-t border-white/[0.06] flex items-center justify-between text-xs text-gray-500">
+<span>© 2026 Carvalho Technologies LLC. All rights reserved.</span>
+<span class="font-mono-tech text-[11px] text-gray-500">Precision Engineering for Trade Operations</span>
+</div>
+</div>
+</footer>
+</body></html>

@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free Assessment & Contact — Automa Soluct</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            'canvas': '#000000',
+            'surface-1': '#0B0B0D',
+            'surface-2': '#111216',
+            'surface-3': '#16181F',
+            'primary-brand': '#0A4EE4',
+            'primary-hover': '#0C59FF',
+            'primary-active': '#083EBA',
+            'border-subtle': '#1B1D24',
+            'border-medium': '#2A2D38',
+            'text-high': '#FFFFFF',
+            'text-medium': '#C5C7CE',
+            'text-muted': '#71747E',
+          },
+          fontFamily: {
+            headline: ['Plus Jakarta Sans', 'sans-serif'],
+            body: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    @layer base {
+      html, body {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        background-color: #000000;
+        color: #C5C7CE;
+        font-family: 'Inter', sans-serif;
+      }
+    }
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover, 
+    input:-webkit-autofill:focus,
+    textarea:-webkit-autofill {
+      -webkit-text-fill-color: #FFFFFF;
+      -webkit-box-shadow: 0 0 0px 1000px #08080A inset;
+      transition: background-color 5000s ease-in-out 0s;
+    }
+  </style>
+</head>
+<body class="bg-black text-text-medium min-h-screen flex flex-col antialiased selection:bg-primary-brand selection:text-white">
+
+  <!-- GLOBAL DESKTOP HEADER (Identical to Home, Jobber Automation, Integrations) -->
+  <header class="fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-md border-b border-[#1B1D24]">
+    <div class="max-w-[1280px] mx-auto h-20 px-8 flex items-center justify-between">
+      <a href="/" class="flex items-center">
+        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDDcGUMaCH-MnATEdQQdOc-3CRbBo5Lg3EwP5q738IXQnJpzkj755qU1bUKb9ikBRr7UBUhAlTkgg9kXSKpseNaWRF5GYYv6JXYfN0C2i7jkBJTuhnYtR0QufVb-6WL0Qdhnr8n8u9BrIQ_3T2Ddt1asJPkC1D2CGOi0x50ZIFumKz6Z3kH_IdefQ3dpJykE1StGeGjy2NHRQRHX1Svp7IEEFhPYsAd97SdZDah1eGTFP6ZsZDNBNvyH9Mwasgo7--Pqw" alt="Automa Soluct" class="h-7 w-auto object-contain">
+      </a>
+      <a href="/contact" class="inline-flex items-center justify-center gap-2 h-10 px-5 rounded bg-primary-brand hover:bg-primary-hover active:bg-primary-active text-white text-sm font-semibold transition-colors duration-150">
+        <span class="material-symbols-outlined text-[18px]">chat</span>
+        <span>Text Us</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="flex-1 flex flex-col pt-20">
+    <div class="max-w-[1280px] mx-auto w-full px-8 py-16 flex flex-col gap-20">
+
+      <!-- SECTION 1 — HERO -->
+      <section class="max-w-3xl flex flex-col items-start gap-4">
+        <!-- Eyebrow Pill -->
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded bg-surface-2 border border-border-subtle">
+          <span class="w-1.5 h-1.5 rounded-full bg-primary-brand"></span>
+          <span class="font-mono text-xs font-medium uppercase tracking-wider text-text-medium">Free Assessment</span>
+        </div>
+        
+        <!-- Headline -->
+        <h1 class="font-headline text-4xl sm:text-5xl font-extrabold text-white tracking-tight leading-[1.15]">
+          Tell us what you need Jobber to do.
+        </h1>
+
+        <!-- Supporting Copy -->
+        <div class="flex flex-col gap-1 text-base text-text-medium leading-relaxed max-w-2xl">
+          <p>Describe what is slowing your operation down, what system needs to connect, or what you wish Jobber could handle differently.</p>
+          <p class="text-text-muted">We’ll review the problem and determine the most practical way to approach it.</p>
+        </div>
+      </section>
+
+      <!-- SECTION 2 — MAIN QUALIFICATION FORM -->
+      <section id="assessment-form" class="w-full">
+        <div class="bg-surface-1 border border-border-subtle rounded-lg p-8 sm:p-12 shadow-2xl">
+          
+          <!-- Form Header -->
+          <div class="flex flex-col gap-1.5 pb-8 border-b border-border-subtle mb-8">
+            <h2 class="font-headline text-2xl font-bold text-white tracking-tight">
+              Tell us about your workflow.
+            </h2>
+            <p class="text-sm text-text-muted font-body">
+              Complete technical scope request. Direct engineer evaluation.
+            </p>
+          </div>
+
+          <!-- Form Element -->
+          <form id="workflow-assessment-form" class="flex flex-col gap-7" onsubmit="event.preventDefault(); showSuccessState();">
+            
+            <!-- Row 1: Full Name | Business Name -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="flex flex-col gap-2">
+                <label for="fullName" class="text-sm font-medium text-white flex items-center gap-1">
+                  Full Name <span class="text-primary-brand">*</span>
+                </label>
+                <input 
+                  type="text" 
+                  id="fullName" 
+                  required 
+                  placeholder="John Miller" 
+                  class="h-11 px-4 bg-[#08080A] border border-border-subtle rounded text-sm text-white placeholder-text-muted focus:outline-none focus:border-primary-brand focus:ring-1 focus:ring-primary-brand transition-colors"
+                >
+              </div>
+
+              <div class="flex flex-col gap-2">
+                <label for="bizName" class="text-sm font-medium text-white flex items-center gap-1">
+                  Business Name <span class="text-primary-brand">*</span>
+                </label>
+                <input 
+                  type="text" 
+                  id="bizName" 
+                  required 
+                  placeholder="Miller Heating & Air" 
+                  class="h-11 px-4 bg-[#08080A] border border-border-subtle rounded text-sm text-white placeholder-text-muted focus:outline-none focus:border-primary-brand focus:ring-1 focus:ring-primary-brand transition-colors"
+                >
+              </div>
+            </div>
+
+            <!-- Row 2: Business Email | Phone Number -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="flex flex-col gap-2">
+                <label for="bizEmail" class="text-sm font-medium text-white flex items-center gap-1">
+                  Business Email <span class="text-primary-brand">*</span>
+                </label>
+                <input 
+                  type="email" 
+                  id="bizEmail" 
+                  required 
+                  placeholder="john@millerhvac.com" 
+                  class="h-11 px-4 bg-[#08080A] border border-border-subtle rounded text-sm text-white placeholder-text-muted focus:outline-none focus:border-primary-brand focus:ring-1 focus:ring-primary-brand transition-colors"
+                >
+              </div>
+
+              <div class="flex flex-col gap-2">
+                <label for="phoneNum" class="text-sm font-medium text-white flex items-center gap-1">
+                  Phone Number <span class="text-primary-brand">*</span>
+                </label>
+                <input 
+                  type="tel" 
+                  id="phoneNum" 
+                  required 
+                  placeholder="+1 (555) 000-0000" 
+                  class="h-11 px-4 bg-[#08080A] border border-border-subtle rounded text-sm text-white placeholder-text-muted focus:outline-none focus:border-primary-brand focus:ring-1 focus:ring-primary-brand transition-colors"
+                >
+              </div>
+            </div>
+
+            <!-- Row 3: Industry / What does business do -->
+            <div class="flex flex-col gap-2">
+              <label for="industry" class="text-sm font-medium text-white flex items-center gap-1">
+                What does your business do? <span class="text-primary-brand">*</span>
+              </label>
+              <input 
+                type="text" 
+                id="industry" 
+                required 
+                placeholder="HVAC, cleaning, landscaping, plumbing, roofing, electrical, etc." 
+                class="h-11 px-4 bg-[#08080A] border border-border-subtle rounded text-sm text-white placeholder-text-muted focus:outline-none focus:border-primary-brand focus:ring-1 focus:ring-primary-brand transition-colors w-full"
+              >
+            </div>
+
+            <!-- Row 4: Estimated Project Budget -->
+            <div class="flex flex-col gap-2.5">
+              <span class="text-sm font-medium text-white flex items-center gap-1">
+                Estimated Project Budget <span class="text-primary-brand">*</span>
+              </span>
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <label class="budget-option cursor-pointer flex items-center justify-between p-3.5 bg-surface-2 border border-border-subtle rounded hover:border-border-medium transition-all" onclick="selectBudget(this)">
+                  <input type="radio" name="budget" value="1000-2500" required class="sr-only">
+                  <span class="text-sm font-medium text-text-medium">$1,000 – $2,500</span>
+                  <span class="radio-indicator w-4 h-4 rounded-full border border-border-medium bg-[#08080A] flex items-center justify-center shrink-0"></span>
+                </label>
+                
+                <label class="budget-option cursor-pointer flex items-center justify-between p-3.5 bg-surface-2 border border-border-subtle rounded hover:border-border-medium transition-all" onclick="selectBudget(this)">
+                  <input type="radio" name="budget" value="2500-5000" class="sr-only">
+                  <span class="text-sm font-medium text-text-medium">$2,500 – $5,000</span>
+                  <span class="radio-indicator w-4 h-4 rounded-full border border-border-medium bg-[#08080A] flex items-center justify-center shrink-0"></span>
+                </label>
+                
+                <label class="budget-option cursor-pointer flex items-center justify-between p-3.5 bg-surface-2 border border-border-subtle rounded hover:border-border-medium transition-all" onclick="selectBudget(this)">
+                  <input type="radio" name="budget" value="5000-10000" class="sr-only">
+                  <span class="text-sm font-medium text-text-medium">$5,000 – $10,000</span>
+                  <span class="radio-indicator w-4 h-4 rounded-full border border-border-medium bg-[#08080A] flex items-center justify-center shrink-0"></span>
+                </label>
+                
+                <label class="budget-option cursor-pointer flex items-center justify-between p-3.5 bg-surface-2 border border-border-subtle rounded hover:border-border-medium transition-all" onclick="selectBudget(this)">
+                  <input type="radio" name="budget" value="10000+" class="sr-only">
+                  <span class="text-sm font-medium text-text-medium">$10,000+</span>
+                  <span class="radio-indicator w-4 h-4 rounded-full border border-border-medium bg-[#08080A] flex items-center justify-center shrink-0"></span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Row 5: Systems Selection (Chips) -->
+            <div class="flex flex-col gap-2">
+              <div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
+                <label class="text-sm font-medium text-white">
+                  Which systems are involved? <span class="text-xs text-text-muted font-normal">(Optional)</span>
+                </label>
+                <span class="text-xs text-text-muted">Select any that apply to your current workflow.</span>
+              </div>
+              <div class="flex flex-wrap gap-2 pt-1" id="system-chips">
+                <button type="button" class="system-chip px-3.5 py-1.5 rounded bg-surface-2 border border-border-subtle text-text-medium text-xs font-mono hover:border-border-medium transition-colors" onclick="toggleChip(this)">Jobber</button>
+                <button type="button" class="system-chip px-3.5 py-1.5 rounded bg-surface-2 border border-border-subtle text-text-medium text-xs font-mono hover:border-border-medium transition-colors" onclick="toggleChip(this)">Xero</button>
+                <button type="button" class="system-chip px-3.5 py-1.5 rounded bg-surface-2 border border-border-subtle text-text-medium text-xs font-mono hover:border-border-medium transition-colors" onclick="toggleChip(this)">QuickBooks</button>
+                <button type="button" class="system-chip px-3.5 py-1.5 rounded bg-surface-2 border border-border-subtle text-text-medium text-xs font-mono hover:border-border-medium transition-colors" onclick="toggleChip(this)">Google Workspace</button>
+                <button type="button" class="system-chip px-3.5 py-1.5 rounded bg-surface-2 border border-border-subtle text-text-medium text-xs font-mono hover:border-border-medium transition-colors" onclick="toggleChip(this)">CompanyCam</button>
+                <button type="button" class="system-chip px-3.5 py-1.5 rounded bg-surface-2 border border-border-subtle text-text-medium text-xs font-mono hover:border-border-medium transition-colors" onclick="toggleChip(this)">HighLevel</button>
+                <button type="button" class="system-chip px-3.5 py-1.5 rounded bg-surface-2 border border-border-subtle text-text-medium text-xs font-mono hover:border-border-medium transition-colors" onclick="toggleChip(this)">CRM</button>
+                <button type="button" class="system-chip px-3.5 py-1.5 rounded bg-surface-2 border border-border-subtle text-text-medium text-xs font-mono hover:border-border-medium transition-colors" onclick="toggleChip(this)">Custom API</button>
+                <button type="button" class="system-chip px-3.5 py-1.5 rounded bg-surface-2 border border-border-subtle text-text-medium text-xs font-mono hover:border-border-medium transition-colors" onclick="toggleChip(this)">Internal System</button>
+                <button type="button" class="system-chip px-3.5 py-1.5 rounded bg-surface-2 border border-border-subtle text-text-medium text-xs font-mono hover:border-border-medium transition-colors" onclick="toggleChip(this)">Other</button>
+              </div>
+            </div>
+
+            <!-- Row 6: Workflow Bottleneck Textarea -->
+            <div class="flex flex-col gap-2">
+              <label for="bottleneck" class="text-sm font-medium text-white flex items-center gap-1">
+                What would you like to automate, integrate, or improve in your Jobber workflow? <span class="text-primary-brand">*</span>
+              </label>
+              <textarea 
+                id="bottleneck" 
+                rows="5" 
+                required 
+                placeholder="Tell us what happens today, what your team is doing manually, what systems are involved, and what you would like to happen instead." 
+                class="p-4 bg-[#08080A] border border-border-subtle rounded text-sm text-white placeholder-text-muted focus:outline-none focus:border-primary-brand focus:ring-1 focus:ring-primary-brand transition-colors w-full leading-relaxed"
+              ></textarea>
+            </div>
+
+            <!-- Row 7: Action & Assurance -->
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-border-subtle">
+              <button 
+                type="submit" 
+                id="submit-btn" 
+                class="w-full sm:w-auto inline-flex items-center justify-center gap-2 h-12 px-8 rounded bg-primary-brand hover:bg-primary-hover active:bg-primary-active text-white text-sm font-semibold transition-colors shadow-lg shadow-blue-900/20"
+              >
+                <span>Request Free Assessment</span>
+                <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+              </button>
+              <p class="text-xs text-text-muted font-body">
+                We’ll review your request before reaching out.
+              </p>
+            </div>
+          </form>
+
+          <!-- Feedback Success State (Hidden by default) -->
+          <div id="form-success" class="hidden p-8 sm:p-12 bg-surface-2 border border-border-subtle rounded-lg text-center flex-col items-center justify-center gap-3">
+            <div class="w-12 h-12 rounded-full bg-primary-brand/10 border border-primary-brand/30 flex items-center justify-center text-primary-brand mb-1">
+              <span class="material-symbols-outlined text-[28px]">check_circle</span>
+            </div>
+            <h3 class="font-headline text-2xl font-bold text-white tracking-tight">Assessment Request Received</h3>
+            <p class="text-sm text-text-medium max-w-md leading-relaxed">
+              We’ve received your request and will review the workflow and information you provided.
+            </p>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- SECTION 3 — DIRECT CONTACT -->
+      <section class="flex flex-col gap-6">
+        <div class="flex flex-col gap-1.5">
+          <span class="font-mono text-xs uppercase tracking-wider text-text-muted font-medium">PREFER TO CONTACT US DIRECTLY?</span>
+          <h2 class="font-headline text-3xl font-bold text-white tracking-tight">Start with a quick message.</h2>
+          <p class="text-sm text-text-medium">For quick questions, SMS is the fastest way to start a conversation.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Card 1: SMS -->
+          <div class="bg-surface-1 border border-border-subtle rounded-lg p-6 flex flex-col justify-between gap-6 hover:border-border-medium transition-colors">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded bg-surface-2 border border-border-subtle flex items-center justify-center shrink-0 text-primary-brand">
+                <span class="material-symbols-outlined text-[24px]">chat</span>
+              </div>
+              <div class="flex flex-col min-w-0">
+                <span class="text-base font-semibold text-white">SMS / Text Message</span>
+                <span class="font-mono text-xs text-text-muted truncate mt-0.5">+1 (307) 622-4973</span>
+              </div>
+            </div>
+            <a href="sms:+13076224973" class="inline-flex items-center justify-center gap-2 h-10 px-5 rounded bg-surface-2 border border-border-subtle hover:border-border-medium hover:bg-surface-3 text-white text-xs font-semibold tracking-wide transition-colors">
+              <span class="material-symbols-outlined text-[16px] text-primary-brand">sms</span>
+              <span>Text Us</span>
+            </a>
+          </div>
+
+          <!-- Card 2: Email -->
+          <div class="bg-surface-1 border border-border-subtle rounded-lg p-6 flex flex-col justify-between gap-6 hover:border-border-medium transition-colors">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded bg-surface-2 border border-border-subtle flex items-center justify-center shrink-0 text-primary-brand">
+                <span class="material-symbols-outlined text-[24px]">mail</span>
+              </div>
+              <div class="flex flex-col min-w-0">
+                <span class="text-base font-semibold text-white">Direct Email</span>
+                <span class="font-mono text-xs text-text-muted truncate mt-0.5">hello@automasoluct.com</span>
+              </div>
+            </div>
+            <a href="mailto:hello@automasoluct.com" class="inline-flex items-center justify-center gap-2 h-10 px-5 rounded bg-surface-2 border border-border-subtle hover:border-border-medium hover:bg-surface-3 text-white text-xs font-semibold tracking-wide transition-colors">
+              <span class="material-symbols-outlined text-[16px] text-primary-brand">send</span>
+              <span>Send an Email</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 4 — WHAT HAPPENS NEXT -->
+      <section class="flex flex-col gap-6">
+        <div class="flex flex-col gap-1.5">
+          <h2 class="font-headline text-3xl font-bold text-white tracking-tight">What happens after you submit?</h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Step 1 -->
+          <div class="bg-surface-1 border border-border-subtle rounded-lg p-6 flex flex-col gap-3">
+            <div class="flex items-center justify-between">
+              <span class="font-mono text-sm font-semibold text-primary-brand">01</span>
+              <span class="font-mono text-[11px] uppercase tracking-wider text-text-muted">ANALYSIS</span>
+            </div>
+            <h3 class="font-headline text-base font-bold text-white tracking-wide mt-1">WE REVIEW THE REQUEST</h3>
+            <p class="text-xs text-text-medium leading-relaxed">
+              We look at the workflow, systems involved, and what you are trying to improve.
+            </p>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="bg-surface-1 border border-border-subtle rounded-lg p-6 flex flex-col gap-3">
+            <div class="flex items-center justify-between">
+              <span class="font-mono text-sm font-semibold text-primary-brand">02</span>
+              <span class="font-mono text-[11px] uppercase tracking-wider text-text-muted">ALIGNMENT</span>
+            </div>
+            <h3 class="font-headline text-base font-bold text-white tracking-wide mt-1">WE CONTACT YOU</h3>
+            <p class="text-xs text-text-medium leading-relaxed">
+              If the project looks like a fit, we reach out directly to discuss the problem.
+            </p>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="bg-surface-1 border border-border-subtle rounded-lg p-6 flex flex-col gap-3">
+            <div class="flex items-center justify-between">
+              <span class="font-mono text-sm font-semibold text-primary-brand">03</span>
+              <span class="font-mono text-[11px] uppercase tracking-wider text-text-muted">EXECUTION</span>
+            </div>
+            <h3 class="font-headline text-base font-bold text-white tracking-wide mt-1">WE DEFINE THE NEXT STEP</h3>
+            <p class="text-xs text-text-medium leading-relaxed">
+              Depending on the project, that may be a short conversation, a technical review, or a meeting before a proposal.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 5 — SMALL COMPANY TRUST BLOCK -->
+      <section class="w-full">
+        <div class="bg-surface-1 border border-border-subtle rounded-lg p-5 flex items-center gap-3.5">
+          <span class="material-symbols-outlined text-primary-brand text-[22px] shrink-0">verified_user</span>
+          <p class="text-xs text-text-medium leading-relaxed">
+            Automa Soluct is operated by Carvalho Technologies LLC, a U.S.-registered company working with clients in the United States, Brazil, and Europe.
+          </p>
+        </div>
+      </section>
+
+      <!-- SECTION 6 — FINAL DIRECT CTA -->
+      <section class="w-full bg-surface-1 border border-border-subtle rounded-lg p-10 sm:p-12 flex flex-col items-center text-center gap-6">
+        <div class="flex flex-col items-center gap-2 max-w-xl">
+          <h2 class="font-headline text-2xl sm:text-3xl font-bold text-white tracking-tight">
+            Have a Jobber problem you haven’t been able to solve?
+          </h2>
+          <p class="text-sm text-text-medium">
+            Send us the workflow. We’ll take a look.
+          </p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-center gap-4">
+          <a href="sms:+13076224973" class="inline-flex items-center justify-center gap-2 h-11 px-8 rounded bg-primary-brand hover:bg-primary-hover active:bg-primary-active text-white text-sm font-semibold transition-colors shadow-lg shadow-blue-900/20">
+            <span class="material-symbols-outlined text-[18px]">chat</span>
+            <span>Text Us</span>
+          </a>
+          <a href="mailto:hello@automasoluct.com" class="font-mono text-xs text-text-muted hover:text-white transition-colors underline-offset-4 hover:underline">
+            hello@automasoluct.com
+          </a>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- FOOTER (Exact match to Home, Jobber Automation, Integrations) -->
+  <footer class="w-full bg-black border-t border-border-subtle mt-16">
+    <div class="max-w-[1280px] mx-auto px-8 py-16 flex flex-col gap-12">
+      <!-- 3-Column Layout -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-10 items-start">
+        
+        <!-- Column 1: Identity -->
+        <div class="flex flex-col gap-2 max-w-sm">
+          <span class="font-headline text-base font-bold text-white">Automa Soluct</span>
+          <span class="font-mono text-xs text-text-muted">Carvalho Technologies LLC</span>
+          <p class="text-xs text-text-muted mt-2 leading-relaxed">
+            Engineering enterprise workflows & custom software around Jobber for trade businesses.
+          </p>
+        </div>
+
+        <!-- Column 2: Navigation -->
+        <div class="flex flex-col gap-2.5">
+          <span class="font-mono text-xs uppercase tracking-wider text-text-muted font-medium mb-1">NAVIGATION</span>
+          <a href="/jobber-automation" class="text-xs text-text-medium hover:text-white transition-colors">Jobber Automation</a>
+          <a href="/integrations" class="text-xs text-text-medium hover:text-white transition-colors">Integrations</a>
+          <a href="/contact" class="text-xs text-text-medium hover:text-white transition-colors">Contact</a>
+          <a href="#" class="text-xs text-text-medium hover:text-white transition-colors">Privacy & Terms</a>
+        </div>
+
+        <!-- Column 3: Direct Engineering -->
+        <div class="flex flex-col gap-2.5">
+          <span class="font-mono text-xs uppercase tracking-wider text-text-muted font-medium mb-1">DIRECT ENGINEERING</span>
+          <a href="mailto:hello@automasoluct.com" class="text-xs text-text-medium hover:text-white transition-colors flex items-center gap-2">
+            <span class="material-symbols-outlined text-[16px] text-primary-brand">mail</span>
+            <span>hello@automasoluct.com</span>
+          </a>
+          <a href="tel:+13076224973" class="text-xs text-text-medium hover:text-white transition-colors flex items-center gap-2">
+            <span class="material-symbols-outlined text-[16px] text-primary-brand">call</span>
+            <span>+1 (307) 622-4973</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Copyright Bar -->
+      <div class="pt-6 border-t border-border-subtle flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs text-text-muted">
+        <div>© 2026 Carvalho Technologies LLC. All rights reserved.</div>
+        <div>Precision Engineering for Trade Operations</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Micro-interactions Script -->
+  <script>
+    function selectBudget(selectedLabel) {
+      const allLabels = document.querySelectorAll('.budget-option');
+      allLabels.forEach(label => {
+        label.classList.remove('bg-surface-3', 'border-primary-brand');
+        label.classList.add('bg-surface-2', 'border-border-subtle');
+        const text = label.querySelector('span:first-of-type');
+        if (text) {
+          text.classList.remove('text-white');
+          text.classList.add('text-text-medium');
+        }
+        const indicator = label.querySelector('.radio-indicator');
+        if (indicator) {
+          indicator.classList.remove('border-primary-brand', 'bg-primary-brand');
+          indicator.classList.add('border-border-medium', 'bg-[#08080A]');
+          indicator.innerHTML = '';
+        }
+      });
+      
+      selectedLabel.classList.remove('bg-surface-2', 'border-border-subtle');
+      selectedLabel.classList.add('bg-surface-3', 'border-primary-brand');
+      const text = selectedLabel.querySelector('span:first-of-type');
+      if (text) {
+        text.classList.remove('text-text-medium');
+        text.classList.add('text-white');
+      }
+      const indicator = selectedLabel.querySelector('.radio-indicator');
+      if (indicator) {
+        indicator.classList.remove('border-border-medium', 'bg-[#08080A]');
+        indicator.classList.add('border-primary-brand', 'bg-primary-brand');
+        indicator.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-white"></span>';
+      }
+      const radio = selectedLabel.querySelector('input[type="radio"]');
+      if (radio) radio.checked = true;
+    }
+
+    function toggleChip(button) {
+      const isSelected = button.classList.contains('bg-primary-brand');
+      if (isSelected) {
+        button.classList.remove('bg-primary-brand', 'text-white', 'border-primary-brand');
+        button.classList.add('bg-surface-2', 'text-text-medium', 'border-border-subtle');
+      } else {
+        button.classList.remove('bg-surface-2', 'text-text-medium', 'border-border-subtle');
+        button.classList.add('bg-primary-brand', 'text-white', 'border-primary-brand');
+      }
+    }
+
+    function showSuccessState() {
+      const form = document.getElementById('workflow-assessment-form');
+      const success = document.getElementById('form-success');
+      if (form && success) {
+        form.classList.add('hidden');
+        success.classList.remove('hidden');
+        success.classList.add('flex');
+      }
+    }
+  </script>
+
+</body>
+</html>

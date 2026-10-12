@@ -1,0 +1,462 @@
+<!DOCTYPE html><html class="dark" lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"><meta content="mobile_tab" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{width:100%;margin:0;padding:0;background-color:#131315;color:#e5e1e4;}body{overscroll-behavior-y:none;-webkit-tap-highlight-color:transparent;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "on-secondary": "#2f3035", "tertiary-container": "#5c5d65", "surface": "#131315", "tertiary-fixed-dim": "#c5c6cf", "on-error-container": "#ffdad6", "secondary-fixed": "#e3e2e7", "on-primary-fixed-variant": "#003ab3", "on-secondary-fixed-variant": "#46464b", "surface-tint": "#b6c4ff", "surface-dim": "#131315", "on-background": "#e5e1e4", "on-primary-fixed": "#001550", "surface-bright": "#39393b", "on-secondary-container": "#b5b4ba", "on-surface-variant": "#c3c5d8", "secondary-container": "#46464b", "on-tertiary-container": "#d6d6e0", "on-primary-container": "#ced6ff", "on-primary": "#002780", "outline": "#8d90a1", "on-tertiary": "#2e3038", "surface-container-lowest": "#0e0e10", "inverse-surface": "#e5e1e4", "on-tertiary-fixed-variant": "#45464e", "error": "#ffb4ab", "tertiary": "#c5c6cf", "surface-container": "#201f21", "surface-container-low": "#1c1b1d", "surface-container-highest": "#353437", "outline-variant": "#434655", "secondary": "#c7c6cb", "primary-container": "#0a4ee4", "on-tertiary-fixed": "#191b22", "primary": "#b6c4ff", "secondary-fixed-dim": "#c7c6cb", "on-secondary-fixed": "#1a1b20", "surface-container-high": "#2a2a2c", "surface-variant": "#353437", "background": "#131315", "primary-fixed-dim": "#b6c4ff", "inverse-on-surface": "#313032", "on-surface": "#e5e1e4", "tertiary-fixed": "#e2e2ec", "error-container": "#93000a", "inverse-primary": "#0c4fe5", "primary-fixed": "#dce1ff", "on-error": "#690005" }, borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, spacing: { "margin": "3rem", "space-xl": "2.5rem", "margin-mobile": "1rem", "space-lg": "1.5rem", "space-sm": "0.5rem", "space-xs": "0.25rem", "gutter": "1.5rem", "space-md": "1rem", "gutter-mobile": "1rem" }, fontFamily: { "headline-xl-mobile": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "body-md": ["Inter"], "label-code": ["JetBrains Mono"], "label-lg": ["Inter"], "body-sm": ["Inter"], "headline-lg": ["Plus Jakarta Sans"], "headline-xl": ["Plus Jakarta Sans"], "headline-sm": ["Plus Jakarta Sans"], "display-lg": ["Plus Jakarta Sans"], "body-lg": ["Inter"], "label-md": ["Inter"], "display-lg-mobile": ["Plus Jakarta Sans"] }, fontSize: { "headline-xl-mobile": ["28px", { lineHeight: "36px", letterSpacing: "-0.02em", fontWeight: "700" }], "headline-md": ["22px", { lineHeight: "30px", letterSpacing: "-0.015em", fontWeight: "600" }], "body-md": ["14px", { lineHeight: "22px", letterSpacing: "0em", fontWeight: "400" }], "label-code": ["12px", { lineHeight: "16px", letterSpacing: "0.02em", fontWeight: "500" }], "label-lg": ["14px", { lineHeight: "20px", letterSpacing: "0.01em", fontWeight: "600" }], "body-sm": ["12px", { lineHeight: "18px", letterSpacing: "0.01em", fontWeight: "400" }], "headline-lg": ["28px", { lineHeight: "36px", letterSpacing: "-0.02em", fontWeight: "600" }], "headline-xl": ["40px", { lineHeight: "48px", letterSpacing: "-0.025em", fontWeight: "700" }], "headline-sm": ["18px", { lineHeight: "26px", letterSpacing: "-0.01em", fontWeight: "600" }], "display-lg": ["56px", { lineHeight: "64px", letterSpacing: "-0.03em", fontWeight: "700" }], "body-lg": ["16px", { lineHeight: "26px", letterSpacing: "-0.005em", fontWeight: "400" }], "label-md": ["12px", { lineHeight: "16px", letterSpacing: "0.02em", fontWeight: "600" }], "display-lg-mobile": ["36px", { lineHeight: "44px", letterSpacing: "-0.02em", fontWeight: "700" }] } } } };</script></head><body class="bg-surface font-body-md text-on-surface antialiased flex flex-col min-h-screen" style="background-color: rgb(0, 0, 0) !important;"><header class="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.4)] pt-safe"><div class="h-16 px-space-md flex items-center justify-between gap-space-sm"><div class="flex items-center gap-space-sm"><img alt="Automa Soluct" class="h-7 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB4DMFknoVo-zeNbg9pAQHt0IJSRAHAAITcunMV2zzoxK4Iy6d1WpoD8JxHBtvsBtawIzS4YbQuk0GiVnBLWvuTW53Z7YL7zGIIvqJawvkVgJ64UzTM1T4J7qECIhUo8nE8aRGuE8u7uufAx9W7AJZZFDjuykZBqLozuB-4fKNQkaWhEhmKfB9WnpEmVEm1lxxrXoM252NxKRPImNl0Qi0D6buK-GO9gbjRkTU23gRFYqgC7pdpRC2C6b-BYyx617QeDLA"></div><div class="flex items-center gap-space-sm"><a class="inline-flex items-center justify-center gap-space-xs min-h-[44px] px-space-md py-space-xs rounded-lg bg-primary-container text-white font-label-lg text-label-lg transition-colors duration-150" href="sms:+13076224973"><span class="material-symbols-outlined text-[18px]">chat</span><span class="">Text Us</span></a></div></div></header><main class="flex-1 flex flex-col relative w-full pt-16 pb-20 bg-surface" style="background-color: rgb(0, 0, 0) !important;"><div class="flex flex-col w-full text-on-surface">
+<!-- SECTION 1 — HERO -->
+<section class="w-full px-margin-mobile pt-space-lg pb-space-xl">
+<div class="flex flex-col gap-space-md">
+<!-- Eyebrow Pill -->
+<div class="inline-flex items-center gap-space-xs self-start px-space-sm py-1 rounded bg-surface-container-high text-primary">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span>
+<span class="font-label-code text-label-code uppercase tracking-wider text-primary">Custom Jobber Integrations</span>
+</div>
+<!-- Headline & Subtext -->
+<h1 class="font-headline-xl-mobile text-headline-xl-mobile text-white tracking-tight">
+        Make Jobber work with the rest of your business.
+      </h1>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+        Connect Jobber to the systems your team already uses — with custom integrations built around your actual workflow.
+      </p>
+<!-- Action Buttons -->
+<div class="flex flex-col gap-space-sm pt-space-xs">
+<a class="inline-flex items-center justify-center gap-space-xs min-h-[44px] w-full px-space-md py-space-xs rounded bg-primary-container text-white font-label-lg text-label-lg active:opacity-90 transition-opacity" href="#assessment">
+<span class="">Get a Free Assessment</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</a>
+<a class="inline-flex items-center justify-center gap-space-xs min-h-[44px] w-full px-space-md py-space-xs rounded bg-surface-container-high text-white font-label-lg text-label-lg active:bg-surface-container-highest transition-colors" href="sms:+13076224973">
+<span class="material-symbols-outlined text-[18px]">chat</span>
+<span class="">Text Us</span>
+</a>
+</div>
+<!-- Contact Metadata -->
+<div class="flex flex-col gap-1 pt-space-xs font-label-code text-label-code text-outline">
+<div class="flex flex-wrap items-center gap-x-2">
+<a class="text-on-surface-variant hover:text-white transition-colors" href="mailto:hello@automasoluct.com">hello@automasoluct.com</a>
+<span class="">•</span>
+<a class="text-on-surface-variant hover:text-white transition-colors" href="tel:+13076224973">+1 (307) 622-4973</a>
+</div>
+<span class="text-outline">Carvalho Technologies LLC</span>
+</div>
+</div>
+</section>
+<!-- SECTION 2 — THE PROBLEM (DISCONNECTED SYSTEMS) -->
+<section class="w-full px-margin-mobile py-space-xl bg-surface-container-lowest">
+<div class="flex flex-col gap-space-lg">
+<div class="flex flex-col gap-space-xs">
+<span class="font-label-code text-label-code uppercase tracking-wider text-outline">Disconnected Systems</span>
+<h2 class="font-headline-lg text-headline-lg text-white">
+          Your operation shouldn’t depend on copying data between apps.
+        </h2>
+<p class="font-body-md text-body-md text-on-surface-variant pt-space-xs">
+          Service companies often rely on multiple software tools: Jobber, accounting, CRM, cloud storage, field documentation, and email. When these tools don't talk to each other, operations grind to a halt.
+        </p>
+</div>
+<!-- Friction Points -->
+<div class="grid grid-cols-1 gap-space-sm">
+<div class="flex items-start gap-space-sm p-space-md rounded bg-surface-container-low">
+<span class="material-symbols-outlined text-outline text-[20px] shrink-0 mt-0.5">content_copy</span>
+<span class="font-body-md text-body-md text-on-surface">Copying information manually between apps</span>
+</div>
+<div class="flex items-start gap-space-sm p-space-md rounded bg-surface-container-low">
+<span class="material-symbols-outlined text-outline text-[20px] shrink-0 mt-0.5">sync_problem</span>
+<span class="font-body-md text-body-md text-on-surface">Updating multiple platforms after jobs change</span>
+</div>
+<div class="flex items-start gap-space-sm p-space-md rounded bg-surface-container-low">
+<span class="material-symbols-outlined text-outline text-[20px] shrink-0 mt-0.5">folder_shared</span>
+<span class="font-body-md text-body-md text-on-surface">Recreating files and customer folders by hand</span>
+</div>
+<div class="flex items-start gap-space-sm p-space-md rounded bg-surface-container-low">
+<span class="material-symbols-outlined text-outline text-[20px] shrink-0 mt-0.5">find_in_page</span>
+<span class="font-body-md text-body-md text-on-surface">Checking multiple systems for a single customer</span>
+</div>
+<div class="flex items-start gap-space-sm p-space-md rounded bg-surface-container-low">
+<span class="material-symbols-outlined text-outline text-[20px] shrink-0 mt-0.5">schedule_send</span>
+<span class="font-body-md text-body-md text-on-surface">Manually triggering follow-up actions and reminders</span>
+</div>
+<div class="flex items-start gap-space-sm p-space-md rounded bg-surface-container-low">
+<span class="material-symbols-outlined text-outline text-[20px] shrink-0 mt-0.5">rule</span>
+<span class="font-body-md text-body-md text-on-surface">Reconciling data and correcting discrepancies later</span>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 3 — INTEGRATION ECOSYSTEM -->
+<section class="w-full px-margin-mobile py-space-xl">
+<div class="flex flex-col gap-space-lg">
+<div class="flex flex-col gap-space-xs">
+<span class="font-label-code text-label-code uppercase tracking-wider text-outline">Supported Platforms</span>
+<h2 class="font-headline-lg text-headline-lg text-white">
+          Connect Jobber to the tools your business already relies on.
+        </h2>
+</div>
+<!-- Hub & Integration Grid -->
+<div class="flex flex-col gap-space-md">
+<!-- Central Hub: Jobber -->
+<div class="flex items-center gap-space-md p-space-md rounded bg-surface-container-high">
+<div class="w-12 h-12 rounded bg-surface-container-highest flex items-center justify-center shrink-0 overflow-hidden p-1">
+<img alt="Jobber logo" class="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBzkzjnXNueIfvvmBlzqFIsaisVA0Uuzu8yrZdulUAurXoSF73xonF8vn3oWF3vlGBgkmfta8ghgxUupoQxZYwm2F1uFZrbmmGr6x8awHi-jmT6ooc_2oCBFkQoubfF0lanNBY1b6yvdMcuTo8JZ82Lj75cG3MF0-_5RemSvt0dOnKfvatIPTiq2Xsqm-kjz9CZhq6k1kZXxQ84v-2vqMgtCfxZ5MRWDLtUEeh_NVD8xj-d2WBX4J1fTaTYddi7Q4uBehA">
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-sm text-headline-sm text-white font-semibold">Jobber</span>
+<span class="text-primary font-label-code text-label-code bg-surface-container px-1.5 py-0.5 rounded">Core Hub</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Central field operations, schedules, and quotes</span>
+</div>
+</div>
+<!-- Connected Platforms Grid -->
+<div class="grid grid-cols-2 gap-space-sm">
+<!-- Xero -->
+<div class="flex flex-col gap-space-sm p-space-md rounded bg-surface-container-low">
+<div class="w-10 h-10 rounded bg-surface-container-high flex items-center justify-center overflow-hidden p-1">
+<img alt="Xero logo" class="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDe5-1-x7Ph8FziU6hra6BqtjfsvH5uwK1UjhA4G5pBWQbcqNpEIbCdKGPkUzPCq2KKRGmn8JBH__rLvZMH8B_aYOnQI1tWlcKdGgSXKmjqo9-M951c400zEEsT_ZTlKKgF77FWh9WDp-eucm92mhESuwsqcReqyv8ytKLJHb2Il9NVi5EMD4KQoTNT4t7CNRpD5JDROf3i_SAFLMNKgcOexUUSuFCmrpJZ4X-w76XFk1Ue8FUYmC6XILEvmjQ9vwHr11c">
+</div>
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-white">Xero</span>
+<span class="font-body-sm text-body-sm text-outline">Accounting</span>
+</div>
+</div>
+<!-- Google Workspace -->
+<div class="flex flex-col gap-space-sm p-space-md rounded bg-surface-container-low">
+<div class="w-10 h-10 rounded bg-surface-container-high flex items-center justify-center overflow-hidden p-1">
+<img alt="Google Workspace logo" class="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhABwa7whWhrl4x646pkpiWj3wxhlWjtnaAFAgyFEAXvA1lje8Cq1YPSTLTBhP0zX5Dt-UHIEMXbEAxchOjecUK2X7E3yoWSPl-6e3Vj8VQQXoGtWzkypxKSNumKbtqXPO9c_fDzyRJFUTuujxU0cRCJrneCpb7vRw-7HmKRNpBehFeZh2s30vgfRWLXw22cAdXGS3CNlD_3F3fvF-DGh-Y0yWlI_HM_s8XUJIds-y5Uvz58bwzL6tMnIDJKNXu1zMPFQ">
+</div>
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-white">Google</span>
+<span class="font-body-sm text-body-sm text-outline">Drive &amp; Docs</span>
+</div>
+</div>
+<!-- CompanyCam -->
+<div class="flex flex-col gap-space-sm p-space-md rounded bg-surface-container-low">
+<div class="w-10 h-10 rounded bg-surface-container-high flex items-center justify-center overflow-hidden p-1">
+<img alt="CompanyCam logo" class="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA33LXnxmBI5aedyxytmaP0EoG8Erey4SWklWAB1NhTkAwPNaukzig2jY1c6DqW-18neF5HhQBAa-MZ9k25GvVBWEluhpinfVx1mkQer0gBeG2wIRyIqc7C84XlEeLDYERIGouNKD66P3FRgVXujpG7-MThCxUXyBZ8iV5WNX9YHAqf4XI_PUsp1aZQMSx7DhqCyvLCzZPN5freRghKegJ-Moij1Sur5mSwgFRisdD1M5dcE8B_KK6wQyCLqVguEO75tCg">
+</div>
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-white">CompanyCam</span>
+<span class="font-body-sm text-body-sm text-outline">Field Photos</span>
+</div>
+</div>
+<!-- HighLevel -->
+<div class="flex flex-col gap-space-sm p-space-md rounded bg-surface-container-low">
+<div class="w-10 h-10 rounded bg-surface-container-high flex items-center justify-center overflow-hidden p-1">
+<img alt="HighLevel logo" class="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbbTWMwMnxGvzQUBDrT0kveo-iqX-9V9H1wggplc2frzLJsU45-lG2CWF_p5qMH2LtD-febTOZysEb9zXfC0qFuA2bUHe9yXokyBYa0cs89RRfXYeHhN0U_3Som_WC3MX7iZqjq-2YA7aSkFo3FRCqGlfXiVk0gtFN11rL3LXg_sv-XIOyMIM-5J7RM2ICu77_5sP9ubfkQPP7Ci2bfDH2hGzYqB55cBDzr07tQsXcj0_RWqx-D1n_YswJeKBcWxX22m0">
+</div>
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-white">HighLevel</span>
+<span class="font-body-sm text-body-sm text-outline">CRM &amp; Pipeline</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Generic Categories -->
+<div class="flex flex-col gap-space-xs pt-space-xs">
+<span class="font-label-code text-label-code uppercase tracking-wider text-outline">Supported Domains</span>
+<div class="flex flex-wrap gap-2 pt-1">
+<span class="font-label-code text-label-code px-2 py-1 rounded bg-surface-container-low text-on-surface-variant">Accounting</span>
+<span class="font-label-code text-label-code px-2 py-1 rounded bg-surface-container-low text-on-surface-variant">CRM</span>
+<span class="font-label-code text-label-code px-2 py-1 rounded bg-surface-container-low text-on-surface-variant">Cloud Storage</span>
+<span class="font-label-code text-label-code px-2 py-1 rounded bg-surface-container-low text-on-surface-variant">Email</span>
+<span class="font-label-code text-label-code px-2 py-1 rounded bg-surface-container-low text-on-surface-variant">Marketing</span>
+<span class="font-label-code text-label-code px-2 py-1 rounded bg-surface-container-low text-on-surface-variant">Internal Systems</span>
+<span class="font-label-code text-label-code px-2 py-1 rounded bg-surface-container-low text-on-surface-variant">Custom APIs</span>
+</div>
+</div>
+<!-- Scope Statement Callout -->
+<div class="p-space-md rounded bg-surface-container-low flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-xs text-primary">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+<span class="font-label-code text-label-code font-semibold text-primary">Custom Evaluation</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+          Don’t see your software here? If it has a usable API, webhook, data export, or another reliable integration path, we can evaluate it.
+        </p>
+</div>
+</div>
+</section>
+<!-- SECTION 4 — WHAT CAN MOVE BETWEEN SYSTEMS -->
+<section class="w-full px-margin-mobile py-space-xl bg-surface-container-lowest">
+<div class="flex flex-col gap-space-lg">
+<div class="flex flex-col gap-space-xs">
+<span class="font-label-code text-label-code uppercase tracking-wider text-outline">Capabilities</span>
+<h2 class="font-headline-lg text-headline-lg text-white">
+          The right data, in the right place, at the right time.
+        </h2>
+</div>
+<div class="grid grid-cols-1 gap-space-sm">
+<!-- Card 1 -->
+<div class="flex flex-col gap-space-xs p-space-md rounded bg-surface-container">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[20px]">swap_horiz</span>
+<span class="font-label-code text-label-code font-semibold text-white uppercase tracking-wider">Customer &amp; Job Data</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Synchronize customer, quote, job, invoice, or operational information between systems.
+          </p>
+</div>
+<!-- Card 2 -->
+<div class="flex flex-col gap-space-xs p-space-md rounded bg-surface-container">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[20px]">bolt</span>
+<span class="font-label-code text-label-code font-semibold text-white uppercase tracking-wider">Event-Based Automation</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Trigger workflows when something happens — such as a new lead, approved quote, completed job, or payment event.
+          </p>
+</div>
+<!-- Card 3 -->
+<div class="flex flex-col gap-space-xs p-space-md rounded bg-surface-container">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[20px]">snippet_folder</span>
+<span class="font-label-code text-label-code font-semibold text-white uppercase tracking-wider">Document &amp; File Workflows</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Create, organize, transfer, or link documents and operational files automatically.
+          </p>
+</div>
+<!-- Card 4 -->
+<div class="flex flex-col gap-space-xs p-space-md rounded bg-surface-container">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[20px]">tune</span>
+<span class="font-label-code text-label-code font-semibold text-white uppercase tracking-wider">Custom Business Logic</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Apply rules specific to the company before information is sent, transformed, or acted upon.
+          </p>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 5 — EXAMPLE CONNECTIONS (REAL-WORLD USE CASES) -->
+<section class="w-full px-margin-mobile py-space-xl">
+<div class="flex flex-col gap-space-lg">
+<div class="flex flex-col gap-space-xs">
+<span class="font-label-code text-label-code uppercase tracking-wider text-outline">Real-World Use Cases</span>
+<h2 class="font-headline-lg text-headline-lg text-white">
+          What a custom integration can look like.
+        </h2>
+</div>
+<div class="flex flex-col gap-space-sm">
+<!-- Case 1 -->
+<div class="p-space-md rounded bg-surface-container-low flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-headline-sm text-white">Jobber + Xero</span>
+<span class="font-label-code text-label-code text-outline">Financial Sync</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Send or synchronize relevant accounting information based on the company’s workflow.
+          </p>
+</div>
+<!-- Case 2 -->
+<div class="p-space-md rounded bg-surface-container-low flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-headline-sm text-white">Jobber + Google Workspace</span>
+<span class="font-label-code text-label-code text-outline">File Archive</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Automatically create and organize customer folders, operational documents, and related files.
+          </p>
+</div>
+<!-- Case 3 -->
+<div class="p-space-md rounded bg-surface-container-low flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-headline-sm text-white">Jobber + CompanyCam</span>
+<span class="font-label-code text-label-code text-outline">Field Assets</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Connect field documentation and photo workflows to customer or job processes.
+          </p>
+</div>
+<!-- Case 4 -->
+<div class="p-space-md rounded bg-surface-container-low flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-headline-sm text-white">Jobber + CRM / HighLevel</span>
+<span class="font-label-code text-label-code text-outline">Lead Pipeline</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Keep lead, customer, or pipeline information aligned with operational activity.
+          </p>
+</div>
+<!-- Case 5 -->
+<div class="p-space-md rounded bg-surface-container-low flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-headline-sm text-white">Jobber + Custom System</span>
+<span class="font-label-code text-label-code text-primary">Direct API</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Connect Jobber to an internal application, database, API, or company-specific tool.
+          </p>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 6 — NOT JUST OFF-THE-SHELF CONNECTORS -->
+<section class="w-full px-margin-mobile py-space-xl bg-surface-container-lowest">
+<div class="flex flex-col gap-space-lg">
+<div class="flex flex-col gap-space-xs">
+<span class="font-label-code text-label-code uppercase tracking-wider text-outline">Engineering Depth</span>
+<h2 class="font-headline-lg text-headline-lg text-white">
+          When a standard integration isn’t enough.
+        </h2>
+<p class="font-body-md text-body-md text-on-surface-variant pt-space-xs">
+          Simple native integrations and off-the-shelf tools work great for basic triggers. But when your business requires custom rules, unusual data mappings, multi-system coordination, or conditional workflows, standard connectors hit their limit.
+        </p>
+</div>
+<!-- 3 Structural Highlights -->
+<div class="flex flex-col gap-space-sm">
+<div class="p-space-md rounded bg-surface-container flex flex-col gap-1">
+<span class="font-label-code text-label-code text-outline uppercase tracking-wider">Tier 1: Native Apps</span>
+<span class="font-headline-sm text-headline-sm text-white font-semibold">Basic Point-to-Point Sync</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Simple native apps handle standard fields well, but provide zero control over nuanced company-specific logic.
+          </p>
+</div>
+<div class="p-space-md rounded bg-surface-container flex flex-col gap-1">
+<span class="font-label-code text-label-code text-outline uppercase tracking-wider">Tier 2: Generic No-Code Tools</span>
+<span class="font-headline-sm text-headline-sm text-white font-semibold">Logic &amp; Maintenance Ceilings</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Off-the-shelf automations break under complex payload transformations, rate limits, and nested relational schemas.
+          </p>
+</div>
+<div class="p-space-md rounded bg-surface-container flex flex-col gap-1">
+<div class="flex items-center gap-space-xs">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span class="font-label-code text-label-code text-primary uppercase tracking-wider font-semibold">Tier 3: Automa Soluct</span>
+</div>
+<span class="font-headline-sm text-headline-sm text-white font-semibold">Custom Integration Engineering</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Purpose-built connectors engineered specifically around your business rules, edge cases, and continuous reliability.
+          </p>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 7 — SIMPLE PROCESS -->
+<section class="w-full px-margin-mobile py-space-xl">
+<div class="flex flex-col gap-space-lg">
+<div class="flex flex-col gap-space-xs">
+<span class="font-label-code text-label-code uppercase tracking-wider text-outline">How We Work</span>
+<h2 class="font-headline-lg text-headline-lg text-white">
+          Tell us which systems need to work together.
+        </h2>
+</div>
+<div class="flex flex-col gap-space-md">
+<!-- Step 1 -->
+<div class="flex items-start gap-space-md p-space-md rounded bg-surface-container-low">
+<div class="w-8 h-8 rounded bg-surface-container-high flex items-center justify-center shrink-0 font-label-code text-label-code text-white font-bold">
+            01
+          </div>
+<div class="flex flex-col gap-1">
+<span class="font-headline-sm text-headline-sm text-white">Tell us the workflow</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              Explain what currently happens and where the manual work exists.
+            </p>
+</div>
+</div>
+<!-- Step 2 -->
+<div class="flex items-start gap-space-md p-space-md rounded bg-surface-container-low">
+<div class="w-8 h-8 rounded bg-surface-container-high flex items-center justify-center shrink-0 font-label-code text-label-code text-white font-bold">
+            02
+          </div>
+<div class="flex flex-col gap-1">
+<span class="font-headline-sm text-headline-sm text-white">We evaluate the systems</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              We review the available integration paths and design the appropriate solution.
+            </p>
+</div>
+</div>
+<!-- Step 3 -->
+<div class="flex items-start gap-space-md p-space-md rounded bg-surface-container-low">
+<div class="w-8 h-8 rounded bg-surface-container-high flex items-center justify-center shrink-0 font-label-code text-label-code text-primary font-bold">
+            03
+          </div>
+<div class="flex flex-col gap-1">
+<span class="font-headline-sm text-headline-sm text-white">We build and connect it</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              We implement, test, and deploy the integration around your existing operation.
+            </p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 8 — SMALL TRUST BLOCK -->
+<section class="w-full px-margin-mobile py-space-md">
+<div class="p-space-md rounded bg-surface-container-low flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-xs text-outline">
+<span class="material-symbols-outlined text-[18px]">engineering</span>
+<span class="font-label-code text-label-code uppercase tracking-wider">Direct Experience</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface italic">
+        “Built by Cleiton Carvalho, Founder of Automa Soluct, with hands-on experience integrating Jobber with real operational systems used by U.S. service businesses.”
+      </p>
+</div>
+</section>
+<!-- SECTION 9 — FINAL CTA -->
+<section class="w-full px-margin-mobile py-space-xl" id="assessment">
+<div class="flex flex-col gap-space-md p-space-lg rounded bg-surface-container-high">
+<div class="flex flex-col gap-space-xs">
+<h2 class="font-headline-lg text-headline-lg text-white">
+          What systems do you need Jobber to work with?
+        </h2>
+<p class="font-body-md text-body-md text-on-surface-variant">
+          Tell us what you use today, what you’re doing manually, and what you want to happen automatically.
+        </p>
+</div>
+<!-- Quick Interactive Inquirer -->
+<div class="flex flex-col gap-space-sm pt-space-xs" id="quick-inquiry">
+<div class="flex flex-col gap-1">
+<label class="font-label-code text-label-code text-outline">Primary System to Connect</label>
+<div class="flex flex-wrap gap-1.5" id="software-selector">
+<button class="software-pill px-2.5 py-1.5 rounded bg-surface-container font-label-code text-label-code text-on-surface active:bg-primary-container active:text-white transition-colors" data-app="Xero" type="button">Xero</button>
+<button class="software-pill px-2.5 py-1.5 rounded bg-surface-container font-label-code text-label-code text-on-surface active:bg-primary-container active:text-white transition-colors" data-app="Google Workspace" type="button">Google Workspace</button>
+<button class="software-pill px-2.5 py-1.5 rounded bg-surface-container font-label-code text-label-code text-on-surface active:bg-primary-container active:text-white transition-colors" data-app="CompanyCam" type="button">CompanyCam</button>
+<button class="software-pill px-2.5 py-1.5 rounded bg-surface-container font-label-code text-label-code text-on-surface active:bg-primary-container active:text-white transition-colors" data-app="HighLevel" type="button">HighLevel</button>
+<button class="software-pill px-2.5 py-1.5 rounded bg-surface-container font-label-code text-label-code text-on-surface active:bg-primary-container active:text-white transition-colors" data-app="Custom Database" type="button">Custom API / DB</button>
+</div>
+</div>
+<a class="inline-flex items-center justify-center gap-space-xs min-h-[44px] w-full px-space-md py-space-xs rounded bg-primary-container text-white font-label-lg text-label-lg active:opacity-90 transition-opacity mt-space-xs" href="sms:+13076224973?&amp;body=Hi%20Automa%20Soluct,%20I%20need%20to%20integrate%20Jobber%20with%20my%20systems." id="submit-assessment-cta">
+<span class="">Get a Free Assessment</span>
+<span class="material-symbols-outlined text-[18px]">send</span>
+</a>
+<a class="inline-flex items-center justify-center gap-space-xs min-h-[44px] w-full px-space-md py-space-xs rounded bg-surface-container text-white font-label-lg text-label-lg active:bg-surface-container-highest transition-colors" href="sms:+13076224973">
+<span class="material-symbols-outlined text-[18px]">chat</span>
+<span class="">Text an Engineer: +1 (307) 622-4973</span>
+</a>
+</div>
+<div class="pt-space-xs font-label-code text-label-code text-outline text-center">
+<span class="">Direct Email: </span>
+<a class="text-white hover:text-primary transition-colors" href="mailto:hello@automasoluct.com">hello@automasoluct.com</a>
+</div>
+</div>
+</section>
+<!-- Micro-interaction Script for Quick Selector -->
+<script>
+    (function() {
+      const pills = document.querySelectorAll('#software-selector .software-pill');
+      const ctaBtn = document.getElementById('submit-assessment-cta');
+      let selectedApps = [];
+
+      pills.forEach(pill => {
+        pill.addEventListener('click', function() {
+          const app = this.getAttribute('data-app');
+          if (selectedApps.includes(app)) {
+            selectedApps = selectedApps.filter(item => item !== app);
+            this.classList.remove('bg-primary-container', 'text-white');
+            this.classList.add('bg-surface-container', 'text-on-surface');
+          } else {
+            selectedApps.push(app);
+            this.classList.add('bg-primary-container', 'text-white');
+            this.classList.remove('bg-surface-container', 'text-on-surface');
+          }
+
+          if (ctaBtn) {
+            const bodyContent = selectedApps.length > 0 
+              ? `Hi Automa Soluct, I need to integrate Jobber with: ${selectedApps.join(', ')}.` 
+              : `Hi Automa Soluct, I need to integrate Jobber with my systems.`;
+            ctaBtn.setAttribute('href', `sms:+13076224973?&body=${encodeURIComponent(bodyContent)}`);
+          }
+        });
+      });
+    })();
+  </script>
+</div><footer class="w-full bg-surface-container-lowest px-margin-mobile py-space-xl mt-space-xl"><div class="flex flex-col gap-space-lg"><div class="flex flex-col gap-space-xs"><span class="font-headline-sm text-headline-sm text-on-surface font-semibold">Automa Soluct <span class="text-outline font-normal">|</span> Carvalho Technologies LLC</span><p class="font-body-sm text-body-sm text-on-surface-variant">Engineering enterprise workflows &amp; custom software around Jobber for trade businesses.</p></div><div class="flex flex-wrap gap-x-space-md gap-y-space-xs font-label-md text-label-md"><a class="text-on-surface-variant hover:text-on-surface transition-colors py-1" data-path="jobber" href="#">Jobber Automation</a><a class="text-on-surface-variant hover:text-on-surface transition-colors py-1" data-path="integrations" href="#">Integrations</a><a class="text-on-surface-variant hover:text-on-surface transition-colors py-1" data-path="about" href="#">About</a><a class="text-on-surface-variant hover:text-on-surface transition-colors py-1" data-path="contact" href="#">Contact</a><a class="text-on-surface-variant hover:text-on-surface transition-colors py-1" data-path="privacy-terms" href="#">Privacy &amp; Terms</a></div><div class="flex flex-col gap-space-xs pt-space-xs font-label-code text-label-code text-on-surface-variant"><span class="text-outline uppercase tracking-wider">Direct Engineering</span><a class="hover:text-primary transition-colors" href="mailto:hello@automasoluct.com">hello@automasoluct.com</a><a class="hover:text-primary transition-colors" href="tel:+13076224973">+1 (307) 622-4973</a></div><div class="pt-space-sm font-body-sm text-body-sm text-outline">© 2026 Carvalho Technologies LLC. All rights reserved. Precision Engineering for Trade Operations.</div></div></footer></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface/90 backdrop-blur-xl shadow-[0_-2px_12px_rgba(0,0,0,0.5)]" data-active-classes="text-primary-container font-semibold"><div class="grid grid-cols-4 items-center h-16 px-space-xs"><a class="flex flex-col items-center justify-center gap-0.5 min-h-[44px] text-outline hover:text-on-surface transition-colors" data-path="home" href="#"><span class="material-symbols-outlined text-[20px]">home</span><span class="font-label-md text-label-md">Home</span></a><a class="flex flex-col items-center justify-center gap-0.5 min-h-[44px] text-outline hover:text-on-surface transition-colors" data-path="jobber" href="#"><span class="material-symbols-outlined text-[20px]">sync_alt</span><span class="font-label-md text-label-md">Jobber</span></a><a aria-current="page" class="flex flex-col items-center justify-center gap-0.5 min-h-[44px] transition-colors text-primary-container font-semibold" data-path="systems" href="#"><span class="material-symbols-outlined text-[20px]">hub</span><span class="font-label-md text-label-md">Systems</span></a><a class="flex flex-col items-center justify-center gap-0.5 min-h-[44px] text-outline hover:text-on-surface transition-colors" data-path="contact" href="sms:+13076224973"><span class="material-symbols-outlined text-[20px]">chat</span><span class="font-label-md text-label-md">Text Us</span></a></div></nav>
+
+</body></html>
