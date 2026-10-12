@@ -1,6 +1,12 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useRef, useState, type FormEvent } from "react";
+
+import {
+  TurnstileWidget,
+  type TurnstileWidgetHandle,
+} from "@/components/forms/TurnstileWidget";
+import { submitAssessment } from "@/lib/assessment-webhook";
 
 import { JobberIcon } from "./JobberIcon";
 
@@ -16,15 +22,46 @@ const fieldClassName =
 
 export function AssessmentForm() {
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState("");
+  const turnstileRef = useRef<TurnstileWidgetHandle>(null);
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (submitted) {
+    if (submitted || isSubmitting || !turnstileToken) {
       return;
     }
 
-    setSubmitted(true);
+    const formData = new FormData(event.currentTarget);
+
+    setSubmitError("");
+    setIsSubmitting(true);
+
+    try {
+      await submitAssessment({
+        fullName: String(formData.get("fullName") ?? "").trim(),
+        businessName: String(formData.get("businessName") ?? "").trim(),
+        businessEmail: String(formData.get("businessEmail") ?? "").trim(),
+        phoneNumber: String(formData.get("phoneNumber") ?? ""),
+        businessDescription: "Not provided on this form.",
+        estimatedProjectBudget: String(formData.get("budget") ?? ""),
+        systemsInvolved: ["Jobber"],
+        jobberWorkflowRequest: String(
+          formData.get("workflowNeeds") ?? "",
+        ).trim(),
+        sourcePage: "/jobber-automation",
+        turnstileToken,
+      });
+      turnstileRef.current?.reset();
+      setSubmitted(true);
+    } catch {
+      setSubmitError("Something went wrong. Please try again.");
+      turnstileRef.current?.reset();
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -138,16 +175,35 @@ export function AssessmentForm() {
             />
           </div>
 
+          <TurnstileWidget
+            onTokenChange={setTurnstileToken}
+            ref={turnstileRef}
+          />
+
           <button
-            aria-disabled={submitted}
+            aria-disabled={submitted || isSubmitting || !turnstileToken}
             className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md bg-primary px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-soft aria-disabled:cursor-default aria-disabled:bg-primary-active md:min-h-12 md:rounded-lg"
+            disabled={submitted || isSubmitting || !turnstileToken}
             type="submit"
           >
             <span aria-atomic="true" aria-live="polite">
-              {submitted ? "Request Received ✓" : "Request Free Assessment"}
+              {submitted
+                ? "Request Received ✓"
+                : isSubmitting
+                  ? "Sending..."
+                  : "Request Free Assessment"}
             </span>
-            {!submitted ? <JobberIcon name="send" /> : null}
+            {!submitted && !isSubmitting ? <JobberIcon name="send" /> : null}
           </button>
+          {submitError ? (
+            <p
+              aria-atomic="true"
+              className="text-center text-sm text-red-300"
+              role="alert"
+            >
+              {submitError}
+            </p>
+          ) : null}
         </form>
       </div>
 

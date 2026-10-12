@@ -2,6 +2,12 @@
 
 import { FormEvent, useEffect, useRef, useState } from "react";
 
+import {
+  TurnstileWidget,
+  type TurnstileWidgetHandle,
+} from "@/components/forms/TurnstileWidget";
+import { submitAssessment } from "@/lib/assessment-webhook";
+
 import { ContactIcon } from "./ContactIcon";
 
 const budgetOptions = [
@@ -64,7 +70,11 @@ export function ContactAssessmentForm() {
   const [selectedBudget, setSelectedBudget] = useState<string>("");
   const [selectedSystems, setSelectedSystems] = useState<string[]>([]);
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState("");
   const successRef = useRef<HTMLDivElement>(null);
+  const turnstileRef = useRef<TurnstileWidgetHandle>(null);
 
   useEffect(() => {
     if (submitted) {
@@ -80,9 +90,43 @@ export function ContactAssessmentForm() {
     );
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setSubmitted(true);
+
+    if (isSubmitting || !turnstileToken) {
+      return;
+    }
+
+    const formData = new FormData(event.currentTarget);
+
+    setSubmitError("");
+    setIsSubmitting(true);
+
+    try {
+      await submitAssessment({
+        fullName: String(formData.get("fullName") ?? "").trim(),
+        businessName: String(formData.get("businessName") ?? "").trim(),
+        businessEmail: String(formData.get("businessEmail") ?? "").trim(),
+        phoneNumber: String(formData.get("phoneNumber") ?? ""),
+        businessDescription: String(
+          formData.get("businessActivity") ?? "",
+        ).trim(),
+        estimatedProjectBudget: selectedBudget,
+        systemsInvolved: selectedSystems,
+        jobberWorkflowRequest: String(
+          formData.get("workflow") ?? "",
+        ).trim(),
+        sourcePage: "/contact",
+        turnstileToken,
+      });
+      turnstileRef.current?.reset();
+      setSubmitted(true);
+    } catch {
+      setSubmitError("Something went wrong. Please try again.");
+      turnstileRef.current?.reset();
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -263,18 +307,37 @@ export function ContactAssessmentForm() {
             />
           </div>
 
+          <TurnstileWidget
+            onTokenChange={setTurnstileToken}
+            ref={turnstileRef}
+          />
+
           <div className="flex flex-col items-center justify-between gap-2 pt-2 md:flex-row md:gap-4 md:border-t md:border-border-subtle md:pt-4">
             <button
-              className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-lg bg-primary px-8 text-sm font-semibold text-white transition-colors hover:bg-primary-hover active:bg-primary-active md:w-auto md:rounded"
+              className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-lg bg-primary px-8 text-sm font-semibold text-white transition-colors hover:bg-primary-hover active:bg-primary-active disabled:bg-primary-active md:w-auto md:rounded"
+              disabled={isSubmitting || !turnstileToken}
               type="submit"
             >
-              Request Free Assessment
-              <ContactIcon className="size-[18px]" name="arrow-right" />
+              <span aria-atomic="true" aria-live="polite">
+                {isSubmitting ? "Sending..." : "Request Free Assessment"}
+              </span>
+              {!isSubmitting ? (
+                <ContactIcon className="size-[18px]" name="arrow-right" />
+              ) : null}
             </button>
             <p className="text-center text-xs leading-[18px] text-text-low md:text-right">
               We’ll review your request before reaching out.
             </p>
           </div>
+          {submitError ? (
+            <p
+              aria-atomic="true"
+              className="text-center text-sm text-red-300 md:text-left"
+              role="alert"
+            >
+              {submitError}
+            </p>
+          ) : null}
         </form>
       )}
     </div>
