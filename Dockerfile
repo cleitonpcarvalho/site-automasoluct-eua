@@ -9,6 +9,9 @@ FROM node:24-alpine AS builder
 
 WORKDIR /app
 
+ARG NEXT_PUBLIC_TURNSTILE_SITE_KEY
+ENV NEXT_PUBLIC_TURNSTILE_SITE_KEY=$NEXT_PUBLIC_TURNSTILE_SITE_KEY
+
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
