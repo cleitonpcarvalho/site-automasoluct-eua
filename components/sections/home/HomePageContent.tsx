@@ -49,6 +49,14 @@ const connectedSystems = [
     heroDescription: "Lead attribution",
     description: "CRM pipelines & lead capture sync",
   },
+  {
+    name: "Quo",
+    alt: "Quo",
+    src: "/assets/logos/logo-quo.png",
+    imageClassName: "size-7 rounded-full",
+    heroDescription: "Calls & Messaging",
+    description: "Business Communications",
+  },
 ] as const;
 
 const capabilities: readonly {

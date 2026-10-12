@@ -57,6 +57,15 @@ const platforms = [
     src: "/assets/logos/logo-hightlevel.png",
     imageClassName: "",
   },
+  {
+    name: "Quo",
+    mobileName: "Quo",
+    description: "Business Communications / Calls & Messaging",
+    mobileDescription: "Calls & Messaging",
+    alt: "Quo",
+    src: "/assets/logos/logo-quo.png",
+    imageClassName: "rounded-full",
+  },
 ] as const;
 
 const systemCategories = [
@@ -65,6 +74,7 @@ const systemCategories = [
   "Cloud Storage",
   "Email",
   "Marketing",
+  "Business Communications",
   "Internal Systems",
   "Custom APIs",
 ] as const;
@@ -182,6 +192,7 @@ const assessmentSystems = [
   "Google Workspace",
   "CompanyCam",
   "HighLevel",
+  "Quo",
   "Custom API / DB",
 ] as const;
 
@@ -295,6 +306,7 @@ export function IntegrationsPageContent() {
                 [platforms[1], "Cloud Storage"],
                 [platforms[2], "Field Documentation"],
                 [platforms[3], "CRM"],
+                [platforms[4], "Business Communications"],
               ].map(([platform, category]) => {
                 const item = platform as (typeof platforms)[number];
                 return (
@@ -393,7 +405,7 @@ export function IntegrationsPageContent() {
               </span>
             </div>
 
-            <div className="grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-4">
+            <div className="grid grid-cols-2 gap-2 md:grid-cols-5 md:gap-4">
               {platforms.map((platform) => (
                 <article
                   className="flex flex-col justify-between gap-2 rounded-md border border-white/[0.08] bg-[#08080A] p-4 md:gap-4 md:rounded-xl md:p-5"

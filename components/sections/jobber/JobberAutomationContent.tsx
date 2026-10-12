@@ -153,6 +153,13 @@ const systems = [
     src: "/assets/logos/logo-hightlevel.png",
     logoClassName: "bg-surface-2 p-1.5",
   },
+  {
+    name: "Quo",
+    mobileName: "Quo",
+    alt: "Quo",
+    src: "/assets/logos/logo-quo.png",
+    logoClassName: "rounded-full bg-surface-2 p-1.5",
+  },
 ] as const;
 
 const processSteps = [
@@ -462,7 +469,7 @@ export function JobberAutomationContent() {
             title="Jobber is only one part of your operation."
           />
 
-          <div className="grid grid-cols-5 gap-1 rounded-md bg-surface-1 p-2 md:gap-3 lg:gap-4 lg:bg-transparent lg:p-0">
+          <div className="grid grid-cols-3 gap-1 rounded-md bg-surface-1 p-2 sm:grid-cols-6 md:gap-3 lg:gap-4 lg:bg-transparent lg:p-0">
             {systems.map((system) => (
               <article
                 className="flex min-w-0 flex-col items-center justify-center gap-1 rounded-md bg-[#08080A] p-2 text-center md:gap-2 md:p-3 lg:min-h-36 lg:gap-3 lg:rounded-xl lg:border lg:border-white/[0.08] lg:bg-surface-1 lg:p-5"
