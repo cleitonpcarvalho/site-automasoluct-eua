@@ -25,7 +25,7 @@ export function Header() {
         </Link>
 
         <Link
-          className="inline-flex min-h-[38px] items-center justify-center gap-1.5 rounded-lg bg-primary px-3.5 py-1.5 font-body text-xs font-semibold text-white transition-colors hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-soft active:bg-primary-active md:min-h-11 md:px-5 md:py-2.5 md:text-sm"
+          className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-lg bg-primary px-3.5 py-1.5 font-body text-xs font-semibold text-white transition-colors hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-soft active:bg-primary-active md:px-5 md:py-2.5 md:text-sm"
           href="/contact"
         >
           <svg

@@ -14,7 +14,7 @@ export function Footer() {
           <div className="flex max-w-sm flex-col gap-1.5 lg:col-span-5">
             <Link
               aria-label="Automa Soluct home"
-              className="mb-1 hidden w-fit focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary lg:inline-flex"
+              className="mb-1 hidden min-h-11 w-fit items-center focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary lg:inline-flex"
               href="/"
             >
               <Image
@@ -39,14 +39,14 @@ export function Footer() {
 
           <nav
             aria-label="Footer navigation"
-            className="flex flex-col gap-2 lg:col-span-4"
+            className="flex flex-col gap-0 lg:col-span-4 xl:gap-2"
           >
-            <span className="font-mono text-xs font-medium uppercase tracking-wider text-text-low">
+            <span className="mb-2 font-mono text-xs font-medium uppercase tracking-wider text-text-low xl:mb-0">
               Navigation
             </span>
             {footerNavigation.map((item) => (
               <Link
-                className="w-fit text-xs text-text-medium transition-colors hover:text-white focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary-soft"
+                className="inline-flex min-h-11 min-w-11 w-fit items-center py-2 text-xs text-text-medium transition-colors hover:text-white focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary-soft xl:min-h-0 xl:min-w-0 xl:py-0"
                 href={item.href}
                 key={item.href}
               >
@@ -55,19 +55,19 @@ export function Footer() {
             ))}
           </nav>
 
-          <div className="flex flex-col gap-2 lg:col-span-3">
-            <span className="font-mono text-xs font-medium uppercase tracking-wider text-text-low">
+          <div className="flex flex-col gap-0 lg:col-span-3 xl:gap-2">
+            <span className="mb-2 font-mono text-xs font-medium uppercase tracking-wider text-text-low xl:mb-0">
               <span className="lg:hidden">Direct Engineering</span>
               <span className="hidden lg:inline">Contact</span>
             </span>
             <a
-              className="w-fit text-xs text-text-medium transition-colors hover:text-white"
+              className="inline-flex min-h-11 w-fit items-center py-2 text-xs text-text-medium transition-colors hover:text-white xl:min-h-0 xl:py-0"
               href={`mailto:${siteConfig.email}`}
             >
               {siteConfig.email}
             </a>
             <a
-              className="w-fit text-xs text-text-medium transition-colors hover:text-white"
+              className="inline-flex min-h-11 w-fit items-center py-2 text-xs text-text-medium transition-colors hover:text-white xl:min-h-0 xl:py-0"
               href={siteConfig.phoneHref}
             >
               {siteConfig.phoneDisplay}

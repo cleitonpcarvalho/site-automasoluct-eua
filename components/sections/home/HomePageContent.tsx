@@ -4,7 +4,12 @@ import Link from "next/link";
 import { Container } from "@/components/layout/Container";
 
 import { HomeIcon, type HomeIconName } from "./HomeIcon";
+import { HeroAsciiBackground } from "./HeroAsciiBackground";
+import { HeroStrokeHeadline } from "./HeroStrokeHeadline";
 import { HomeMotionController } from "./HomeMotionController";
+import { FounderProfileCard } from "./FounderProfileCard";
+import { IntegrationShowcase, StaticIntegrationShowcase } from "./IntegrationShowcase";
+import { SolutionsShowcase, StaticSolutionsShowcase } from "./SolutionsShowcase";
 
 const trades = [
   "HVAC",
@@ -90,49 +95,6 @@ const capabilities: readonly {
   },
 ];
 
-const blueprints: readonly {
-  title: string;
-  description: string;
-  icon: HomeIconName;
-}[] = [
-  {
-    title: "Referral & Lead-Source Attribution",
-    description:
-      "Automatically capture source tags, UTM parameters, and lead forms directly into Jobber client custom fields.",
-    icon: "target",
-  },
-  {
-    title: "Payment-Triggered Workflows",
-    description:
-      "Auto-release lien waivers, trigger review request text messages, and notify territory managers instantly when payments clear.",
-    icon: "payments",
-  },
-  {
-    title: "Accounting & Xero/QBO Sync",
-    description:
-      "Deep multi-tier invoice sync with automated tax code mapping, customer deposit reconciliation, and class tracking.",
-    icon: "receipt",
-  },
-  {
-    title: "Google Workspace & Drive Sync",
-    description:
-      "Instantly structure customer folders, job site documentation, estimates, and executed contracts into organized cloud drives.",
-    icon: "folder",
-  },
-  {
-    title: "Field Photo & Documentation Pipelines",
-    description:
-      "Streamline before/after photo transfers from tools like CompanyCam directly to client notes and insurance claims.",
-    icon: "photo",
-  },
-  {
-    title: "Custom Dispatch Logic & Routing",
-    description:
-      "Route emergency calls and high-margin service contracts based on crew geo-coordinates and specific technician skill tags.",
-    icon: "route",
-  },
-];
-
 const processSteps = [
   {
     title: "Tell us what you need Jobber to do",
@@ -193,8 +155,9 @@ function SectionHeading({
 function MobileHomeContent() {
   return (
     <div className="flex flex-1 flex-col bg-canvas md:hidden">
-      <section>
-        <Container className="flex max-w-7xl flex-col gap-5 pb-8 pt-6 md:gap-6 md:pb-14 md:pt-12 lg:grid lg:min-h-[590px] lg:grid-cols-12 lg:content-center lg:gap-x-12 lg:gap-y-6 lg:pb-20 lg:pt-16">
+      <section className="relative isolate">
+        <HeroAsciiBackground animated={false} />
+        <Container className="relative z-10 flex max-w-7xl flex-col gap-5 pb-8 pt-6 md:gap-6 md:pb-14 md:pt-12 lg:grid lg:min-h-[590px] lg:grid-cols-12 lg:content-center lg:gap-x-12 lg:gap-y-6 lg:pb-20 lg:pt-16">
           <div className="inline-flex max-w-full items-center gap-2 self-start rounded-full border border-white/[0.08] bg-surface-2 px-3 py-1.5 lg:col-span-7 lg:col-start-1 lg:row-start-1 lg:self-end">
             <span className="size-1.5 shrink-0 rounded-full bg-primary" />
             <span className="font-heading text-[11px] font-bold uppercase tracking-wider text-[#D1D5DB]">
@@ -203,10 +166,10 @@ function MobileHomeContent() {
           </div>
 
           <div className="flex max-w-3xl flex-col gap-2.5 md:max-w-4xl md:gap-3 lg:col-span-7 lg:col-start-1 lg:row-start-2 lg:self-start">
-            <h1 className="font-heading text-[32px] font-extrabold leading-[38px] tracking-tight text-white md:text-[40px] md:leading-12 lg:text-[48px] lg:leading-[54px] lg:tracking-[-0.03em] xl:text-[52px] xl:leading-[58px]">
-              Need <span className="text-primary">Jobber</span> to do more?
-              <span className="block">We build custom solutions around it.</span>
-            </h1>
+            <HeroStrokeHeadline
+              variant="mobile"
+              className="font-heading text-[32px] font-extrabold leading-[38px] tracking-tight text-white md:text-[40px] md:leading-12 lg:text-[48px] lg:leading-[54px] lg:tracking-[-0.03em] xl:text-[52px] xl:leading-[58px]"
+            />
             <p className="max-w-2xl text-sm leading-relaxed text-[#9CA3AF] md:max-w-3xl lg:max-w-xl lg:text-lg lg:leading-7">
               Custom automations, integrations, and software for U.S. service
               businesses that need more from their Jobber workflow.
@@ -328,60 +291,7 @@ function MobileHomeContent() {
           />
 
           <div className="contents md:flex md:flex-col md:gap-8 md:rounded-2xl md:border md:border-white/[0.08] md:bg-surface-1 md:p-6 lg:p-8">
-            <div className="grid grid-cols-2 gap-2.5 md:grid-cols-4 md:gap-x-4 md:gap-y-6">
-              <div className="col-span-2 flex items-center justify-between gap-3 rounded-lg border border-white/[0.08] bg-surface-1 p-3.5 md:col-span-4 md:min-h-28 md:bg-surface-2 md:p-5 lg:min-h-24 lg:p-6">
-                <div className="flex min-w-0 items-center gap-3 lg:gap-4">
-                  <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-white p-1 md:size-12 lg:size-14">
-                    <Image
-                      alt="Jobber Symbol"
-                      className="size-full object-contain"
-                      height={56}
-                      src="/assets/logos/logo-jobber.png"
-                      width={56}
-                    />
-                  </div>
-                  <div className="flex min-w-0 flex-col gap-0.5">
-                    <span className="font-heading text-sm font-bold text-white md:text-base lg:text-lg">
-                      Jobber Ecosystem
-                    </span>
-                    <span className="text-xs text-[#9CA3AF] lg:text-sm">
-                      <span className="md:hidden">Core Field Service Operations</span>
-                      <span className="hidden md:inline">
-                        Core Field Service Operations, Client Management,
-                        Estimates &amp; Invoicing
-                      </span>
-                    </span>
-                  </div>
-                </div>
-                <span className="shrink-0 rounded border border-blue-500/20 bg-blue-500/10 px-2 py-0.5 text-xs font-medium text-blue-400 md:px-2.5 md:py-1">
-                  <span className="md:hidden">Custom Sync</span>
-                  <span className="hidden md:inline">Connected Systems</span>
-                </span>
-              </div>
-
-              {connectedSystems.map((system) => (
-                <div
-                  className="flex min-h-24 flex-col items-center justify-center gap-2 rounded-lg border border-white/[0.08] bg-surface-1 p-3 text-center md:min-h-32 md:p-4 lg:min-h-28 lg:flex-row lg:justify-start lg:gap-3 lg:p-5 lg:text-left"
-                  key={system.name}
-                >
-                  <Image
-                    alt={system.alt}
-                    className={`${system.imageClassName} shrink-0 object-contain md:size-8 lg:size-10`}
-                    height={40}
-                    src={system.src}
-                    width={40}
-                  />
-                  <div className="flex min-w-0 flex-col gap-0.5">
-                    <span className="text-xs font-medium text-[#E5E7EB] md:text-sm lg:font-semibold lg:text-white">
-                      {system.name}
-                    </span>
-                    <span className="hidden text-[11px] leading-4 text-[#9CA3AF] lg:block">
-                      {system.description}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <StaticIntegrationShowcase />
 
             <div className="flex items-start gap-2.5 rounded-lg border border-white/[0.06] bg-surface-2 p-3 md:p-4">
               <HomeIcon
@@ -442,24 +352,7 @@ function MobileHomeContent() {
             title="Built around real operational problems."
           />
 
-          <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2 md:gap-6 lg:grid-cols-3">
-            {blueprints.map((blueprint) => (
-              <article
-                className="flex flex-col gap-1.5 rounded-lg border border-white/[0.08] bg-surface-1 p-3.5 md:min-h-40 md:gap-3 md:rounded-xl md:p-5 lg:min-h-44"
-                key={blueprint.title}
-              >
-                <div className="flex items-center gap-2 text-primary">
-                  <HomeIcon className="size-[18px] shrink-0" name={blueprint.icon} />
-                  <h3 className="font-heading text-xs font-bold text-white md:text-sm">
-                    {blueprint.title}
-                  </h3>
-                </div>
-                <p className="text-xs leading-relaxed text-[#9CA3AF] md:text-[13px] md:leading-5">
-                  {blueprint.description}
-                </p>
-              </article>
-            ))}
-          </div>
+          <StaticSolutionsShowcase mobile />
         </Container>
       </section>
 
@@ -511,29 +404,11 @@ function MobileHomeContent() {
           />
 
           <article className="flex max-w-3xl flex-col gap-4 rounded-lg border border-white/[0.08] bg-surface-1 p-4 lg:hidden">
-            <div className="flex items-center gap-3">
-              <div className="size-16 shrink-0 overflow-hidden rounded-full border border-white/[0.1] bg-surface-2">
-                <Image
-                  alt="Cleiton Carvalho - Founder, Automa Soluct"
-                  className="size-full object-cover"
-                  height={64}
-                  sizes="64px"
-                  src="/assets/automasoluct/foto-perfil.png"
-                  width={64}
-                />
-              </div>
-              <div className="flex min-w-0 flex-col">
-                <h3 className="truncate font-heading text-base font-bold text-white">
-                  Cleiton Carvalho
-                </h3>
-                <span className="text-xs font-semibold text-primary-soft">
-                  Founder, Automa Soluct
-                </span>
-                <span className="text-[11px] text-[#9CA3AF]">
-                  Carvalho Technologies LLC
-                </span>
-              </div>
+            <div className="flex min-w-0 justify-center">
+              <FounderProfileCard />
             </div>
+
+            <span className="text-xs text-[#9CA3AF]">Carvalho Technologies LLC</span>
 
             <p className="text-xs leading-relaxed text-[#D1D5DB]">
               Experienced software engineer specializing in API architecture,
@@ -562,16 +437,7 @@ function MobileHomeContent() {
 
           <article className="hidden grid-cols-12 items-center gap-10 rounded-2xl border border-white/[0.08] bg-surface-1 p-10 lg:grid">
             <div className="col-span-5 flex justify-center">
-              <div className="size-72 overflow-hidden rounded-2xl border border-white/[0.1] bg-surface-2">
-                <Image
-                  alt="Cleiton Carvalho - Founder, Automa Soluct"
-                  className="size-full object-cover"
-                  height={288}
-                  sizes="288px"
-                  src="/assets/automasoluct/foto-perfil.png"
-                  width={288}
-                />
-              </div>
+              <FounderProfileCard />
             </div>
 
             <div className="col-span-7 flex flex-col gap-6">
@@ -678,68 +544,6 @@ function MobileHomeContent() {
   );
 }
 
-const desktopSystems = [
-  {
-    name: "QuickBooks Online",
-    category: "Accounting",
-    heroDescription: "Ledger Reconciliation",
-    description:
-      "Invoice and deposit synchronization with class and item code mapping.",
-    alt: "QuickBooks Online",
-    src: "/assets/logos/logo-quickbooks-online.png",
-    imageClassName: "rounded-full",
-  },
-  {
-    name: "Xero",
-    category: "Ledger",
-    heroDescription: "Accounting Sync",
-    description:
-      "Tax reconciliation and ledger updates as Jobber jobs finalize.",
-    alt: "Xero",
-    src: "/assets/logos/logo-xero.png",
-    imageClassName: "rounded-full",
-  },
-  {
-    name: "Google Workspace",
-    heroName: "Google Workspace & Drive",
-    category: "Cloud Storage",
-    heroDescription: "Contracts & Folders",
-    description:
-      "Automated folder generation and file routing for estimates, proposals, and signed files.",
-    alt: "Google Workspace",
-    src: "/assets/logos/logo-google-workspace.png",
-  },
-  {
-    name: "CompanyCam",
-    category: "Field Visuals",
-    heroDescription: "Field Photo Sync",
-    description:
-      "Automatic sync of before-and-after photos and inspection notes into Jobber client files.",
-    alt: "CompanyCam",
-    src: "/assets/logos/logo-companycam.png",
-    imageClassName: "rounded",
-  },
-  {
-    name: "HighLevel",
-    category: "CRM & Marketing",
-    heroDescription: "Lead Attribution",
-    description:
-      "Connections for inbound marketing leads, campaign attribution, and client status updates.",
-    alt: "HighLevel",
-    src: "/assets/logos/logo-hightlevel.png",
-  },
-  {
-    name: "Quo",
-    category: "Business Communications",
-    heroDescription: "Calls & Messaging",
-    description:
-      "Calls and messaging connections for service-business communication workflows.",
-    alt: "Quo",
-    src: "/assets/logos/logo-quo.png",
-    imageClassName: "rounded-full",
-  },
-] as const;
-
 const desktopCapabilities: readonly {
   title: string;
   description: string;
@@ -768,49 +572,6 @@ const desktopCapabilities: readonly {
     description:
       "Develop custom internal tools, client portals, and tailored logic when off-the-shelf apps fall short.",
     icon: "terminal",
-  },
-];
-
-const desktopBlueprints: readonly {
-  title: string;
-  description: string;
-  icon: HomeIconName;
-}[] = [
-  {
-    title: "Referral & Lead-Source Attribution",
-    description:
-      "Capture source tags, UTM parameters, and lead forms directly into Jobber client custom fields.",
-    icon: "target",
-  },
-  {
-    title: "Payment-Triggered Workflows",
-    description:
-      "Release lien waivers, trigger review-request messages, and notify territory managers when payments clear.",
-    icon: "payments",
-  },
-  {
-    title: "Accounting & Xero/QBO Sync",
-    description:
-      "Multi-tier invoice sync with tax-code mapping, customer deposit reconciliation, and class tracking.",
-    icon: "receipt",
-  },
-  {
-    title: "Google Workspace & Drive Sync",
-    description:
-      "Structure customer folders, job-site documentation, estimates, and executed contracts in organized cloud drives.",
-    icon: "folder",
-  },
-  {
-    title: "Field Photo & Documentation Pipelines",
-    description:
-      "Streamline before-and-after photo transfers from tools like CompanyCam to client notes and insurance claims.",
-    icon: "photo",
-  },
-  {
-    title: "Custom Dispatch Logic & Routing",
-    description:
-      "Route emergency calls and priority service contracts using crew locations and technician skill tags.",
-    icon: "route",
   },
 ];
 
@@ -844,34 +605,13 @@ function DesktopSectionHeading({
   );
 }
 
-type DesktopSystem = (typeof desktopSystems)[number];
-
-function DesktopSystemMark({
-  className = "size-8",
-  system,
-}: {
-  className?: string;
-  system: DesktopSystem;
-}) {
-  return (
-    <Image
-      alt={system.alt}
-      className={`${className} home-logo shrink-0 object-contain ${
-        "imageClassName" in system ? system.imageClassName : ""
-      }`}
-      height={32}
-      src={system.src}
-      width={32}
-    />
-  );
-}
-
 function DesktopHomeContent() {
   return (
     <div className="hidden flex-1 flex-col bg-canvas md:flex">
-      <section>
-        <Container className="grid max-w-7xl grid-cols-1 items-center gap-12 py-16 lg:grid-cols-12 lg:py-20 xl:pb-24">
-          <div className="flex flex-col gap-8 lg:col-span-7">
+      <section className="relative isolate overflow-hidden" data-desktop-home-hero>
+        <HeroAsciiBackground />
+        <Container className="relative z-10 max-w-7xl py-16 lg:py-20 xl:py-24">
+          <div className="flex max-w-[1000px] flex-col gap-7 lg:gap-8">
             <span
               className="font-mono text-[11px] font-medium uppercase tracking-wider text-text-low"
               data-reveal
@@ -881,20 +621,12 @@ function DesktopHomeContent() {
             </span>
 
             <div className="flex flex-col gap-5">
-              <div
-                aria-level={1}
-                className="font-heading text-[38px] font-bold leading-[46px] tracking-[-0.025em] text-white lg:text-[40px] lg:leading-[48px] xl:text-[42px] xl:leading-[50px]"
-                data-reveal
-                data-reveal-delay="1"
-                role="heading"
-              >
-                Need <span className="text-primary">Jobber</span> to do more?
-                <span className="block text-[#E5E7EB]">
-                  We build custom solutions around it.
-                </span>
-              </div>
+              <HeroStrokeHeadline
+                variant="desktop"
+                className="font-heading text-[38px] font-bold leading-[46px] tracking-[-0.035em] text-white lg:text-[52px] lg:leading-[60px] xl:text-[60px] xl:leading-[68px]"
+              />
               <p
-                className="max-w-xl text-base leading-relaxed text-[#9CA3AF]"
+                className="max-w-[640px] text-base leading-7 text-[#B4B6BE] lg:text-lg lg:leading-8"
                 data-reveal
                 data-reveal-delay="2"
               >
@@ -955,66 +687,6 @@ function DesktopHomeContent() {
             </p>
           </div>
 
-          <aside
-            className="home-interactive-card rounded-2xl border border-white/[0.08] bg-[#08080A] p-6 lg:col-span-5 xl:p-8"
-            data-reveal
-            data-reveal-delay="2"
-          >
-            <div className="flex items-center justify-between gap-4 border-b border-white/[0.08] pb-5">
-              <div className="flex min-w-0 items-center gap-3">
-                <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-white p-1">
-                  <Image
-                    alt="Jobber"
-                    className="home-logo size-full object-contain"
-                    height={40}
-                    src="/assets/logos/logo-jobber.png"
-                    width={40}
-                  />
-                </div>
-                <div className="min-w-0">
-                  <h3 className="font-heading text-sm font-bold text-white">
-                    Jobber
-                  </h3>
-                  <span className="font-mono text-[11px] text-text-low">
-                    Central Platform
-                  </span>
-                </div>
-              </div>
-              <span className="shrink-0 font-mono text-[11px] text-[#9CA3AF]">
-                Direct Integration
-              </span>
-            </div>
-
-            <div className="flex flex-col gap-1.5 pt-4">
-              {[
-                desktopSystems[2],
-                desktopSystems[3],
-                desktopSystems[0],
-                desktopSystems[1],
-                desktopSystems[4],
-                desktopSystems[5],
-              ].map((system, index, systems) => (
-                <div
-                  className={`home-system-row flex min-h-9 items-center justify-between gap-4 rounded py-1.5 ${
-                    index < systems.length - 1
-                      ? "border-b border-white/[0.04]"
-                      : ""
-                  }`}
-                  key={`hero-${system.name}`}
-                >
-                  <div className="flex min-w-0 items-center gap-2.5">
-                    <DesktopSystemMark className="size-6" system={system} />
-                    <span className="truncate text-xs font-medium text-[#D1D5DB]">
-                      {"heroName" in system ? system.heroName : system.name}
-                    </span>
-                  </div>
-                  <span className="shrink-0 font-mono text-[10px] text-text-low xl:text-[11px]">
-                    {system.heroDescription}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </aside>
         </Container>
       </section>
 
@@ -1026,63 +698,7 @@ function DesktopHomeContent() {
             title="Your business uses more than one system. We make them work together."
           />
 
-          <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-12">
-            <article
-              className="home-interactive-card flex flex-col gap-4 rounded-xl border border-white/[0.08] bg-[#08080A] p-6 lg:col-span-4"
-              data-reveal
-              data-reveal-delay="0"
-            >
-              <div className="flex items-center gap-3.5">
-                <div className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-white p-1.5">
-                  <Image
-                    alt="Jobber"
-                    className="home-logo size-full object-contain"
-                    height={44}
-                    src="/assets/logos/logo-jobber.png"
-                    width={44}
-                  />
-                </div>
-                <div>
-                  <h3 className="font-heading text-base font-bold text-white">
-                    Jobber
-                  </h3>
-                  <span className="font-mono text-xs text-text-low">
-                    Core Operational Platform
-                  </span>
-                </div>
-              </div>
-              <p className="text-xs leading-relaxed text-[#9CA3AF]">
-                Serves as your primary record for field dispatch, client
-                records, job quotes, and operational scheduling.
-              </p>
-            </article>
-
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:col-span-8">
-              {desktopSystems.map((system, index) => (
-                <article
-                  className="home-interactive-card flex flex-col gap-2.5 rounded-xl border border-white/[0.06] bg-[#08080A] p-5"
-                  data-reveal
-                  data-reveal-delay={String(index % 6)}
-                  key={`connected-${system.name}`}
-                >
-                  <div className="flex items-center gap-3">
-                    <DesktopSystemMark system={system} />
-                    <div>
-                      <h3 className="text-sm font-semibold text-white">
-                        {system.name}
-                      </h3>
-                      <span className="font-mono text-[11px] text-text-low">
-                        {system.category}
-                      </span>
-                    </div>
-                  </div>
-                  <p className="text-xs leading-relaxed text-[#9CA3AF]">
-                    {system.description}
-                  </p>
-                </article>
-              ))}
-            </div>
-          </div>
+          <IntegrationShowcase />
         </Container>
       </section>
 
@@ -1126,31 +742,7 @@ function DesktopHomeContent() {
             title="Built around real operational problems."
           />
 
-          <div className="grid grid-cols-2 gap-x-8 gap-y-10 border-t border-white/[0.08] pt-4 lg:grid-cols-3 lg:gap-x-10">
-            {desktopBlueprints.map((blueprint, index) => (
-              <article
-                className={`home-editorial-item flex flex-col gap-2.5 ${
-                  index > 1 ? "border-t border-white/[0.04] pt-4" : ""
-                } ${index === 2 ? "lg:border-t-0 lg:pt-0" : ""}`}
-                data-reveal
-                data-reveal-delay={String(index % 3)}
-                key={blueprint.title}
-              >
-                <div className="flex items-center gap-2 text-primary">
-                  <HomeIcon
-                    className="home-action-icon size-5 shrink-0"
-                    name={blueprint.icon}
-                  />
-                  <h3 className="font-heading text-sm font-bold text-white">
-                    {blueprint.title}
-                  </h3>
-                </div>
-                <p className="text-xs leading-relaxed text-[#9CA3AF]">
-                  {blueprint.description}
-                </p>
-              </article>
-            ))}
-          </div>
+          <SolutionsShowcase />
         </Container>
       </section>
 
@@ -1195,17 +787,8 @@ function DesktopHomeContent() {
             data-reveal
             data-reveal-delay="0"
           >
-            <div className="flex justify-center lg:col-span-5">
-              <div className="size-64 overflow-hidden rounded-2xl border border-white/[0.1] bg-surface-2 xl:size-72">
-                <Image
-                  alt="Cleiton Carvalho - Founder, Automa Soluct"
-                  className="size-full object-cover"
-                  height={288}
-                  sizes="(min-width: 1280px) 288px, 256px"
-                  src="/assets/automasoluct/foto-perfil.png"
-                  width={288}
-                />
-              </div>
+            <div className="flex min-w-0 justify-center lg:col-span-5">
+              <FounderProfileCard />
             </div>
 
             <div className="flex flex-col gap-5 lg:col-span-7">
