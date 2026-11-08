@@ -1,5 +1,5 @@
-import type { BlogBlock, BlogImage, BlogPostFields, BlogVideo, PostQuery, PostUpdate } from "./types.ts";
-import { invalid } from "./errors.ts";
+import type { BlogBlock, BlogImage, BlogPostFields, BlogValidationIssue, BlogVideo, PostQuery, PostUpdate } from "./types.ts";
+import { BlogError, invalid } from "./errors.ts";
 
 export const BLOG_IMAGE_FILENAME = /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}\.(?:avif|webp|png|jpe?g)$/;
 const UUID = /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/;
@@ -131,6 +131,30 @@ function parseFields(input: Record<string, unknown>): Partial<BlogPostFields> {
   return fields;
 }
 
+// Reuse write-time parsers for saved data without normalizing or persisting it.
+export function collectPostFieldIssues(post: BlogPostFields): BlogValidationIssue[] {
+  const issues: BlogValidationIssue[] = [];
+  for (const key of mutableFields) {
+    try { parseFields({ [key]: post[key as keyof BlogPostFields] }); }
+    catch (error) {
+      if (!(error instanceof BlogError) || error.status !== 400) throw error;
+      if (key === "blocks" && Array.isArray(post.blocks)) {
+        const before = issues.length;
+        for (const [index, block] of post.blocks.entries()) {
+          try { parseBlocks([block]); }
+          catch (blockError) {
+            if (!(blockError instanceof BlogError) || blockError.status !== 400) throw blockError;
+            issues.push({ code: "invalid_field", field: `blocks.${index}`, message: blockError.message });
+          }
+        }
+        if (issues.length > before) continue;
+      }
+      issues.push({ code: "invalid_field", field: key, message: error.message });
+    }
+  }
+  return issues;
+}
+
 export function parseCreateDraft(value: unknown): BlogPostFields {
   const input = record(value, "post");
   onlyKeys(input, mutableFields, "post");
@@ -161,6 +185,20 @@ export function parsePublishRequest(value: unknown): number {
   const input = record(value, "publish request");
   onlyKeys(input, ["revision"], "publish request");
   return parseRevision(input.revision);
+}
+
+export function parseValidateRequest(value: unknown): number | undefined {
+  const input = record(value, "validation request");
+  onlyKeys(input, ["revision"], "validation request");
+  return input.revision === undefined ? undefined : parseRevision(input.revision);
+}
+
+export function parsePreviewQuery(search: URLSearchParams): number | undefined {
+  if ([...search.keys()].some(key => key !== "revision") || search.getAll("revision").length > 1) invalid("Only one optional revision query parameter is accepted.");
+  const value = search.get("revision");
+  if (value === null) return undefined;
+  if (!/^[1-9][0-9]*$/.test(value)) invalid("revision must be a positive integer.");
+  return parseRevision(Number(value));
 }
 
 export function parsePostQuery(search: URLSearchParams): PostQuery {

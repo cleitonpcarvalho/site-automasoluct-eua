@@ -11,12 +11,16 @@ export function blogJson(data: unknown, status = 200, headers?: HeadersInit) {
   });
 }
 
-export async function readBlogJson(request: Request): Promise<unknown> {
-  if (request.headers.get("content-type")?.split(";", 1)[0].trim().toLowerCase() !== "application/json") {
+export async function readBlogJson(request: Request, { allowEmpty = false }: { allowEmpty?: boolean } = {}): Promise<unknown> {
+  const json = request.headers.get("content-type")?.split(";", 1)[0].trim().toLowerCase() === "application/json";
+  if (!json && !allowEmpty) {
     throw new BlogError(415, "unsupported_media_type", "Use Content-Type: application/json.");
   }
   const reader = request.body?.getReader();
-  if (!reader) throw new BlogError(400, "invalid_json", "A JSON body is required.");
+  if (!reader) {
+    if (allowEmpty) return {};
+    throw new BlogError(400, "invalid_json", "A JSON body is required.");
+  }
   let size = 0;
   const chunks: Uint8Array[] = [];
   try {
@@ -28,9 +32,14 @@ export async function readBlogJson(request: Request): Promise<unknown> {
         await reader.cancel();
         throw new BlogError(413, "request_too_large", "Blog requests may not exceed 512 KiB.");
       }
+      if (!json && chunk.value.byteLength > 0) {
+        await reader.cancel();
+        throw new BlogError(415, "unsupported_media_type", "Use Content-Type: application/json.");
+      }
       chunks.push(chunk.value);
     }
   } finally { reader.releaseLock(); }
+  if (allowEmpty && size === 0) return {};
   try {
     return JSON.parse(Buffer.concat(chunks).toString("utf8"));
   } catch { throw new BlogError(400, "invalid_json", "The request body is not valid JSON."); }

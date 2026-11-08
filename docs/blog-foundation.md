@@ -6,7 +6,7 @@ The original foundation stage added persistent posts, an internal HTTP API and p
 
 - `lib/blog/types.ts`: post, image, video, ordered block and pagination contracts.
 - `lib/blog/template.ts`: the single editorial template definition, including versioned slot ids and order. The future `get_blog_template` MCP tool can call the protected template endpoint; it does not need database access.
-- `lib/blog/validation.ts` / `publication.ts`: input and editorial validation. Drafts may be incomplete; publication requires a complete valid template and available images.
+- `lib/blog/validation.ts` / `publication.ts`: shared input and authoritative publication validation. `validateBlogPost` checks the exact same editorial requirements and stored images for standalone validation and publication. Drafts may be incomplete; publication requires a complete valid template and available images. See [blog-validation.md](blog-validation.md).
 - `lib/blog/database.ts` / `migrations.ts` / `repository.ts`: SQLite, transactional schema migrations and parameterized persistence.
 - `lib/blog/service.ts`: shared application operations, independent of HTTP. Public pages call its published-only methods; internal controllers call its mutation methods.
 - `lib/blog/auth.ts` / `http.ts` / `handlers.ts`: service authentication, permissions, bounded JSON bodies and consistent responses. The human panel uses a separate session adapter over the same blog service; the service-token boundary is unchanged.
@@ -115,9 +115,9 @@ All `/api/internal/blog/*` routes are protected, including draft reads and the t
 
 | Variable | Permissions |
 | --- | --- |
-| `BLOG_API_READ_TOKEN` | Read posts/template |
-| `BLOG_API_WRITE_TOKEN` | Read and create/update drafts; cannot publish |
-| `BLOG_API_PUBLISH_TOKEN` | Read and explicitly publish; cannot edit |
+| `BLOG_API_READ_TOKEN` | Read posts/template/preview and validate without publishing |
+| `BLOG_API_WRITE_TOKEN` | Read, validate and create/update drafts; cannot publish |
+| `BLOG_API_PUBLISH_TOKEN` | Read and explicitly publish; cannot edit or call standalone validation |
 
 Only configure the roles needed. A future MCP client should start with write permission, without the publication credential. The internal service API accepts no session cookies and enables no permissive CORS. Human login now exists separately at `/admin/login`; its scoped cookie/CSRF architecture and environment configuration are described in [blog-admin.md](blog-admin.md). Multi-user management and credential rotation UI remain deferred.
 
@@ -127,6 +127,8 @@ Only configure the roles needed. A future MCP client should start with write per
 | GET | `/api/internal/blog/posts/[id]` | Read | Full post by UUID |
 | POST | `/api/internal/blog/posts` | Write | Create draft, revision 1, 201 + Location |
 | PATCH | `/api/internal/blog/posts/[id]` | Write | Partial update with required current `revision` |
+| POST | `/api/internal/blog/posts/[id]/validate` | Read or Write (`posts:validate`) | `{ data: { valid, postId, revision, errors, warnings } }`; optional `{ revision }`; never writes/publishes |
+| GET | `/api/internal/blog/posts/[id]/preview?revision=1` | Read | Saved-revision admin preview URL; revision guard optional, human login required |
 | POST | `/api/internal/blog/posts/[id]/publish` | Publish | Explicit publication with `{ revision }` |
 | GET | `/api/internal/blog/template` | Read | Central template definition |
 
@@ -145,6 +147,8 @@ Update example:
 `id`, dates and revision increments are server-controlled. A slug is derived from the title when omitted at creation, and conflicts return 409. Updates replace supplied arrays in full and preserve omitted fields. They cannot set `status: "published"`. To edit an already-published post, explicitly send `status: "draft"` plus its current revision; this **withdraws it from public pages** and clears publishedAt. The next publication requires the separate publish operation and credential. Until a future staged-revision workflow exists, there is no silent editing of live content.
 
 Errors use `{ error: { code, message, details? } }`. Statuses: 400 invalid input, 401 missing/invalid credential, 403 insufficient role, 404 absent post, 409 slug/revision/workflow conflict, 413 body >512 KiB, 415 non-JSON body, 422 incomplete editorial content/missing media, 503 unconfigured authentication/template. Internal responses are `private, no-store`; errors never include SQL, filesystem paths or secrets. Revision checks run again atomically after publication media validation to avoid racing an edit.
+
+Standalone validation uses HTTP 200 for both `valid: true` and `valid: false` and structured `{ code, field, message }` issues; transport/authentication/conflict failures retain the standard HTTP error envelope. It checks the saved revision again after asynchronous media reads. The permission `posts:validate` is assigned to existing READ/WRITE credentials only, explicitly excluding PUBLISH. No new environment variables or credentials are needed. [Full validation and private-preview contract](blog-validation.md).
 
 ## Public pages and validation
 

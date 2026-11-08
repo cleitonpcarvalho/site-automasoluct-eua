@@ -4,12 +4,12 @@ import { createHash, timingSafeEqual } from "node:crypto";
 
 import { BlogError } from "./errors.ts";
 
-export type BlogScope = "posts:read" | "posts:write" | "posts:publish";
+export type BlogScope = "posts:read" | "posts:validate" | "posts:write" | "posts:publish";
 export type BlogPrincipal = { kind: "service"; scopes: readonly BlogScope[] };
 
 const credentials: { variable: string; scopes: readonly BlogScope[] }[] = [
-  { variable: "BLOG_API_READ_TOKEN", scopes: ["posts:read"] },
-  { variable: "BLOG_API_WRITE_TOKEN", scopes: ["posts:read", "posts:write"] },
+  { variable: "BLOG_API_READ_TOKEN", scopes: ["posts:read", "posts:validate"] },
+  { variable: "BLOG_API_WRITE_TOKEN", scopes: ["posts:read", "posts:validate", "posts:write"] },
   { variable: "BLOG_API_PUBLISH_TOKEN", scopes: ["posts:read", "posts:publish"] },
 ];
 

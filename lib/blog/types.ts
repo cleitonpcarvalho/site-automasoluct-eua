@@ -48,6 +48,20 @@ export type BlogPost = BlogPostFields & {
 
 export type BlogPostSummary = Omit<BlogPost, "blocks" | "video">;
 
+export type BlogValidationIssue = {
+  code: string;
+  field: string;
+  message: string;
+};
+
+export type BlogPostValidation = {
+  valid: boolean;
+  postId: string;
+  revision: number;
+  errors: BlogValidationIssue[];
+  warnings: BlogValidationIssue[];
+};
+
 export type PostPage = {
   items: BlogPostSummary[];
   total: number;
