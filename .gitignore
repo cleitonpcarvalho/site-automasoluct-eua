@@ -22,3 +22,8 @@ pnpm-debug.log*
 
 # system files
 .DS_Store
+
+# persistent blog state (never commit databases, assets or credentials)
+/data/blog/
+/uploads/blog/
+!.env.example

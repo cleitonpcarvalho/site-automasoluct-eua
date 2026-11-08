@@ -13,6 +13,7 @@ import {
 type TurnstileRenderOptions = {
   sitekey: string;
   theme: "dark";
+  size?: "compact";
   callback: (token: string) => void;
   "error-callback": () => boolean;
   "expired-callback": () => void;
@@ -40,6 +41,7 @@ export type TurnstileWidgetHandle = {
 
 type TurnstileWidgetProps = {
   onTokenChange: (token: string) => void;
+  size?: "compact";
 };
 
 const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
@@ -47,7 +49,7 @@ const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 export const TurnstileWidget = forwardRef<
   TurnstileWidgetHandle,
   TurnstileWidgetProps
->(function TurnstileWidget({ onTokenChange }, ref) {
+>(function TurnstileWidget({ onTokenChange, size }, ref) {
   const containerRef = useRef<HTMLDivElement>(null);
   const widgetIdRef = useRef<string | null>(null);
   const [scriptReady, setScriptReady] = useState(false);
@@ -85,6 +87,7 @@ export const TurnstileWidget = forwardRef<
     const widgetId = window.turnstile.render(containerRef.current, {
       sitekey: turnstileSiteKey,
       theme: "dark",
+      ...(size ? { size } : {}),
       callback: onTokenChange,
       "error-callback": () => {
         onTokenChange("");
@@ -101,7 +104,7 @@ export const TurnstileWidget = forwardRef<
       }
       widgetIdRef.current = null;
     };
-  }, [onTokenChange, scriptReady]);
+  }, [onTokenChange, scriptReady, size]);
 
   return (
     <>

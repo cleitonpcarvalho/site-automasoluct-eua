@@ -8,5 +8,21 @@ services:
     restart: unless-stopped
     environment:
       NODE_ENV: production
+      BLOG_DATA_DIR: /app/data/blog
+      BLOG_UPLOAD_DIR: /app/uploads/blog
+      BLOG_UPLOAD_MAX_BYTES: ${BLOG_UPLOAD_MAX_BYTES:-10485760}
+      BLOG_API_READ_TOKEN: ${BLOG_API_READ_TOKEN:-}
+      BLOG_API_WRITE_TOKEN: ${BLOG_API_WRITE_TOKEN:-}
+      BLOG_API_PUBLISH_TOKEN: ${BLOG_API_PUBLISH_TOKEN:-}
+      BLOG_ADMIN_LOGIN: ${BLOG_ADMIN_LOGIN:-}
+      BLOG_ADMIN_PASSWORD_HASH: ${BLOG_ADMIN_PASSWORD_HASH:-}
+      BLOG_ADMIN_ORIGIN: ${BLOG_ADMIN_ORIGIN:-}
+    volumes:
+      - blog-data:/app/data/blog
+      - blog-uploads:/app/uploads/blog
     ports:
       - "3000:3000"
+
+volumes:
+  blog-data:
+  blog-uploads:

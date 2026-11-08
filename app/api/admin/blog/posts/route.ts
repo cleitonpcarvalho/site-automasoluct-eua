@@ -1,0 +1,11 @@
+import { createAdminHandlers } from "@/lib/blog/admin/handlers";
+
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
+export async function GET(request: Request) {
+  return createAdminHandlers().list(request);
+}
+export async function POST(request: Request) {
+  return createAdminHandlers().create(request);
+}

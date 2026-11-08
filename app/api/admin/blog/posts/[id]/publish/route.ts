@@ -1,0 +1,8 @@
+import { createAdminHandlers } from "@/lib/blog/admin/handlers";
+
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
+export async function POST(request: Request, context: { params: Promise<{ id: string }> }) {
+  return createAdminHandlers().publish(request, (await context.params).id);
+}

@@ -1,0 +1,19 @@
+/* The shared contact form sits inside a narrower article column here. */
+.form :global(#systems-help) {
+  position: static;
+}
+
+.form button,
+.form input:not([type="radio"]) {
+  min-height: 44px;
+}
+
+.form button {
+  min-width: 44px;
+}
+
+/* Keep editable text readable without triggering automatic mobile zoom. */
+.form input:not([type="radio"]),
+.form textarea {
+  font-size: 1rem;
+}

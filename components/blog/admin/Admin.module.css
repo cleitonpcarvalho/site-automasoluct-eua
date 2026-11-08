@@ -1,0 +1,122 @@
+.root {
+  width: min(calc(100% - 2rem), 76rem);
+  min-width: 0;
+  margin-inline: auto;
+  padding-block: 2rem 3rem;
+  overflow-wrap: anywhere;
+}
+
+.root :is(button, input, select, textarea, a) {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.root :is(input:not([type="checkbox"]), select, textarea) {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  border: 1px solid var(--border-strong);
+  border-radius: 0.5rem;
+  background: var(--surface-2);
+  padding: 0.65rem 0.8rem;
+  color: white;
+  font: inherit;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.root textarea { min-height: 8rem; resize: vertical; }
+.root :is(input, textarea)::placeholder { color: var(--text-low); }
+.root :is(button, input, textarea, select):disabled { opacity: 0.6; cursor: not-allowed; }
+.root fieldset { min-width: 0; }
+
+.nav, .actions, .row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+.nav { justify-content: space-between; border-bottom: 1px solid var(--border-subtle); padding-bottom: 1rem; margin-bottom: 1.5rem; }
+.nav a { display: inline-flex; align-items: center; font-weight: 600; }
+.stack { display: flex; min-width: 0; flex-direction: column; gap: 1.25rem; }
+.grid { display: grid; min-width: 0; grid-template-columns: minmax(0, 1fr); gap: 1rem; }
+.panel { min-width: 0; border: 1px solid var(--border-subtle); border-radius: 1rem; background: var(--surface-1); padding: 1rem; }
+.title { margin: 0; font-family: var(--font-plus-jakarta-sans), sans-serif; font-size: clamp(1.5rem, 5vw, 2.25rem); font-weight: 750; line-height: 1.25; }
+.subtitle { margin: 0; font-size: 1.15rem; line-height: 1.5; font-weight: 650; }
+.muted { color: var(--text-medium); font-size: 0.875rem; line-height: 1.6; }
+.mono { font-family: var(--font-jetbrains-mono), monospace; font-size: 0.8rem; color: var(--text-medium); }
+.field { display: flex; min-width: 0; flex-direction: column; gap: 0.45rem; font-size: 0.875rem; font-weight: 600; }
+.field small { font-weight: 400; color: var(--text-medium); font-size: 0.8rem; line-height: 1.5; }
+.button, .secondary, .danger {
+  display: inline-flex;
+  max-width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1rem;
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.5;
+  text-align: center;
+  cursor: pointer;
+}
+.button { background: var(--primary); }
+.button:hover:not(:disabled) { background: var(--primary-hover); }
+.secondary { border-color: var(--border-strong); background: var(--surface-2); }
+.secondary:hover:not(:disabled) { background: var(--surface-hover); }
+.danger { border-color: #854040; background: #351616; color: #ffbebe; }
+.status { display: inline-flex; border: 1px solid var(--border-strong); border-radius: 2rem; padding: 0.25rem 0.6rem; font-size: 0.8rem; font-weight: 600; }
+.published { background: #0c2418; border-color: #29543b; color: #a6ebbc; }
+.notice, .error, .success { border: 1px solid var(--primary); border-radius: 0.75rem; padding: 1rem; font-size: 0.9rem; line-height: 1.6; background: #06132c; }
+.error { border-color: #854040; background: #261313; color: #ffcaca; }
+.success { border-color: #29543b; background: #0c2418; color: #bbf7d0; }
+.filters { display: grid; grid-template-columns: minmax(0, 1fr); align-items: end; gap: 0.75rem; }
+.postList { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem; }
+.meta { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0.6rem; font-size: 0.8rem; color: var(--text-medium); }
+.meta dt { color: white; font-weight: 600; }
+.block { scroll-margin-top: 7rem; }
+.block legend { margin-bottom: 0.75rem; padding-inline: 0.25rem; font-weight: 650; font-size: 1rem; }
+.longText { min-height: 14rem !important; }
+.image { display: block; width: 100%; max-height: 18rem; object-fit: contain; border-radius: 0.5rem; background: #000; }
+.login { width: min(100%, 30rem); margin-inline: auto; }
+.sticky { position: sticky; top: calc(var(--header-height) + 0.5rem); z-index: 20; border: 1px solid var(--border-strong); background: #0b0b0df5; border-radius: 0.75rem; padding: 0.75rem; }
+.root dialog { margin: auto; width: min(calc(100% - 2rem), 34rem); max-height: calc(100svh - 2rem); border: 1px solid var(--border-strong); border-radius: 1rem; padding: 1.25rem; background: var(--surface-1); color: white; overflow-y: auto; }
+.root dialog::backdrop { background: #000c; }
+.root dialog.mediaDialog { width: min(calc(100% - 2rem), 68rem); }
+.mediaLibrary { container-type: inline-size; }
+.mediaSearch { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0.75rem; align-items: end; }
+.mediaGrid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem; }
+.mediaThumbnail { display: block; width: 100%; height: 12rem; object-fit: contain; background: #000; border-radius: 0.5rem; }
+.mediaName { margin: 0; font-size: 1rem; font-weight: 650; line-height: 1.5; overflow-wrap: anywhere; }
+.mediaMetadata { overflow-wrap: anywhere; }
+.mediaMetadata a, .mediaLibrary li a { display: inline-flex; max-width: 100%; align-items: center; }
+.mediaSummary { display: flex; min-height: 44px; align-items: center; cursor: pointer; color: var(--text-medium); font-size: 0.875rem; }
+.root details[open] > summary { margin-bottom: 1rem; }
+.root :is(button, a, input, select, textarea, summary):focus-visible { outline: 2px solid #76a1ff; outline-offset: 3px; }
+.check { display: flex; align-items: flex-start; gap: 0.75rem; min-height: 44px; font-size: 0.9rem; line-height: 1.5; cursor: pointer; }
+.root input[type="checkbox"] { flex: 0 0 44px; width: 44px; height: 44px; accent-color: var(--primary); }
+
+@media (min-width: 48rem) {
+  .root { width: min(calc(100% - 4rem), 76rem); padding-top: 3rem; }
+  .panel { padding: 1.5rem; }
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .filters { grid-template-columns: minmax(0, 1fr) minmax(10rem, 0.5fr) auto; }
+  .postList { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .meta { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .mediaSearch { grid-template-columns: minmax(0, 1fr) auto; }
+}
+
+@container (min-width: 40rem) {
+  .mediaGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@container (min-width: 65rem) {
+  .mediaGrid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: 47.999rem) {
+  .sticky { position: static; }
+  .actions > :is(button, a) { flex: 1 1 auto; }
+}

@@ -23,3 +23,9 @@ logos/**
 .idea
 .vscode
 coverage
+
+# Runtime volumes must not enter images or build contexts.
+data/blog
+uploads/blog
+tests
+docs

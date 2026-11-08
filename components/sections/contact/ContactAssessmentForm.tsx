@@ -66,7 +66,7 @@ function TextField({
   );
 }
 
-export function ContactAssessmentForm() {
+export function ContactAssessmentForm({ compactVerification = false }: { compactVerification?: boolean }) {
   const [selectedBudget, setSelectedBudget] = useState<string>("");
   const [selectedSystems, setSelectedSystems] = useState<string[]>([]);
   const [submitted, setSubmitted] = useState(false);
@@ -310,6 +310,7 @@ export function ContactAssessmentForm() {
           <TurnstileWidget
             onTokenChange={setTurnstileToken}
             ref={turnstileRef}
+            size={compactVerification ? "compact" : undefined}
           />
 
           <div className="flex flex-col items-center justify-between gap-2 pt-2 md:flex-row md:gap-4 md:border-t md:border-border-subtle md:pt-4">
