@@ -82,7 +82,7 @@ const variations: { name: string; change: (fields: BlogPostFields) => void; fiel
   { name: "invalid slug", change: fields => { fields.slug = "Invalid_Slug"; }, field: "slug" },
   { name: "missing required video", change: fields => { fields.video = null; }, field: "video" },
   { name: "H2 instead of H3", change: fields => { const block = fields.blocks.find(block => block.type === "heading")!; if (block.type === "heading") block.level = 2; }, field: "blocks." },
-  { name: "empty CTA text", change: fields => { const block = fields.blocks.find(block => block.type === "cta")!; if (block.type === "cta") block.text = ""; }, field: "blocks." },
+  { name: "empty CTA label", change: fields => { const block = fields.blocks.find(block => block.type === "cta")!; if (block.type === "cta") block.label = ""; }, field: "blocks." },
   { name: "unsafe CTA destination", change: fields => { const block = fields.blocks.find(block => block.type === "cta")!; if (block.type === "cta") block.href = "javascript:alert(1)"; }, field: "blocks." },
   { name: "altered final form", change: fields => { Reflect.set(fields.blocks.at(-1)!, "formId", "unknown-form"); }, field: "blocks." },
   { name: "duplicate image identity", change: fields => { const block = fields.blocks.find(block => block.type === "image")!; if (block.type === "image") block.image = { ...fields.featuredImage!, type: "internal" }; }, field: "blocks" },

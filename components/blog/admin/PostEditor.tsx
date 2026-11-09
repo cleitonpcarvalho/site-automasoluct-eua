@@ -104,7 +104,7 @@ export function PostEditor({ initialPost, initialFields, csrf, images, maxUpload
             <label className={styles.field} htmlFor={`${id}-${block.id}-caption`}>Legenda (opcional)<input id={`${id}-${block.id}-caption`} maxLength={500} onChange={event => updateBlock(index, { ...block, caption: event.target.value })} value={block.caption ?? ""} /></label>
           </>}
           {block.type === "video" && <>
-            <label className={styles.field} htmlFor={`${id}-video-url`}>URL do vídeo<input id={`${id}-video-url`} maxLength={1000} onChange={event => setValue({ ...value, videoUrl: event.target.value })} placeholder="https://www.youtube.com/watch?v=…" type="url" value={value.videoUrl} /><small>YouTube ou Vimeo via HTTPS. Obrigatório para publicar.</small></label>
+            <label className={styles.field} htmlFor={`${id}-video-url`}>URL do vídeo<input id={`${id}-video-url`} maxLength={1000} onChange={event => setValue({ ...value, videoUrl: event.target.value })} placeholder="https://www.youtube.com/watch?v=…" type="url" value={value.videoUrl} /><small>YouTube ou Vimeo via HTTPS. Em novos posts, somente com pedido explícito registrado.</small></label>
             <label className={styles.field} htmlFor={`${id}-video-title`}>Título acessível do vídeo<input id={`${id}-video-title`} maxLength={240} onChange={event => setValue({ ...value, videoTitle: event.target.value })} value={value.videoTitle} /></label>
           </>}
           {block.type === "form" && <div className={styles.notice}><p>Formulário de avaliação técnica existente.</p><p className={styles.mono}>formId: assessment · configuração fixa</p><p className={styles.muted}>A estrutura e o destino do formulário não podem ser alterados neste editor.</p></div>}

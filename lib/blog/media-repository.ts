@@ -7,7 +7,7 @@ import type { BlogMedia, MediaPage, MediaQuery, MediaUse } from "./media-types.t
 
 function decode(row: Record<string, SQLOutputValue>): BlogMedia {
   return {
-    id: String(row.id), fileName: String(row.file_name), originalName: String(row.original_name), url: String(row.url),
+    ...(row.provenance == null ? {} : { provenance: JSON.parse(String(row.provenance)) }), id: String(row.id), fileName: String(row.file_name), originalName: String(row.original_name), url: String(row.url),
     alt: String(row.alt), type: row.type as BlogMedia["type"], mimeType: row.mime_type as BlogMedia["mimeType"],
     size: Number(row.size), width: Number(row.width), height: Number(row.height), createdAt: String(row.created_at),
   };
@@ -30,8 +30,8 @@ export function createMediaRepository(database: DatabaseSync) {
     get, uses,
     create(media: BlogMedia) {
       database.prepare(`INSERT INTO blog_media
-        (id, file_name, original_name, url, alt, type, mime_type, size, width, height, created_at)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).run(media.id, media.fileName, media.originalName, media.url, media.alt, media.type, media.mimeType, media.size, media.width, media.height, media.createdAt);
+        (id, file_name, original_name, url, alt, type, mime_type, size, width, height, created_at, provenance)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).run(media.id, media.fileName, media.originalName, media.url, media.alt, media.type, media.mimeType, media.size, media.width, media.height, media.createdAt, media.provenance ? JSON.stringify(media.provenance) : null);
       return get(media.id);
     },
     list(query: MediaQuery): MediaPage {

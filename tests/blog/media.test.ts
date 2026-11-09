@@ -66,7 +66,8 @@ test("media migration upgrades version two without changing posts or active admi
   const path = join(directory, "blog.sqlite"), old = new DatabaseSync(path);
   old.exec("CREATE TABLE blog_migrations (version INTEGER PRIMARY KEY, applied_at TEXT NOT NULL) STRICT");
   for (const migration of BLOG_MIGRATIONS.slice(0, 2)) { old.exec(migration.sql); old.prepare("INSERT INTO blog_migrations VALUES (?, ?)").run(migration.version, new Date().toISOString()); }
-  const post = createBlogService(createPostRepository(old), async () => {}).createDraft({ title: "Existing draft" });
+  old.prepare("INSERT INTO blog_posts (id,title,slug,created_at,updated_at) VALUES (?,?,?,?,?)").run("11111111-1111-4111-8111-111111111111", "Existing draft", "existing-draft", "2026-11-08T00:00:00Z", "2026-11-08T00:00:00Z");
+  const post = { id: "11111111-1111-4111-8111-111111111111", title: "Existing draft", subtitle: "", slug: "existing-draft", seoTitle: "", metaDescription: "", focusKeyword: "", excerpt: "", featuredImage: null, blocks: [], video: null, tags: [], status: "draft", revision: 1, createdAt: "2026-11-08T00:00:00Z", updatedAt: "2026-11-08T00:00:00Z", publishedAt: null };
   old.prepare("INSERT INTO blog_admin_sessions VALUES (?, ?, ?, ?, ?)").run("token-digest", "version", "csrf", 1, 99);
   old.close();
   const next = openBlogDatabase(path);

@@ -6,7 +6,7 @@ import { blogUploadLimits } from "./config.ts";
 import { BlogError, invalid } from "./errors.ts";
 import { readBlogJson } from "./http.ts";
 import { getMediaService, parseMediaQuery, type MediaService, type StoreBlogImageInput } from "./media-service.ts";
-import { record } from "./validation.ts";
+import { parseProvenance, record } from "./validation.ts";
 
 async function readUpload(request: Request): Promise<StoreBlogImageInput> {
   const contentType = request.headers.get("content-type") ?? "";
@@ -31,11 +31,16 @@ async function readUpload(request: Request): Promise<StoreBlogImageInput> {
   let form: FormData;
   try { form = await new Response(Buffer.concat(chunks), { headers: { "Content-Type": contentType } }).formData(); }
   catch { return invalid("O envio multipart está inválido."); }
-  if ([...form.keys()].some(key => !["file", "alt", "type"].includes(key) || form.getAll(key).length !== 1)) return invalid("Campos de upload inválidos ou duplicados.");
+  if ([...form.keys()].some(key => !["file", "alt", "type", "provenance"].includes(key) || form.getAll(key).length !== 1)) return invalid("Campos de upload inválidos ou duplicados.");
   const file = form.get("file");
   if (!(file instanceof File)) return invalid("Selecione um arquivo de imagem.");
   if (file.size > maxBytes) throw new BlogError(413, "image_too_large", "A imagem excede o limite de upload.");
-  return { bytes: new Uint8Array(await file.arrayBuffer()), mimeType: file.type, originalName: file.name, alt: form.get("alt") as string, type: form.get("type") as StoreBlogImageInput["type"] };
+  let provenance;
+  if (form.has("provenance")) {
+    try { provenance = parseProvenance(JSON.parse(String(form.get("provenance")))); }
+    catch { return invalid("Procedência de imagem inválida."); }
+  }
+  return { ...(provenance ? { provenance } : {}), bytes: new Uint8Array(await file.arrayBuffer()), mimeType: file.type, originalName: file.name, alt: form.get("alt") as string, type: form.get("type") as StoreBlogImageInput["type"] };
 }
 
 type AuthorizeMedia = (request: Request, write: boolean) => void;

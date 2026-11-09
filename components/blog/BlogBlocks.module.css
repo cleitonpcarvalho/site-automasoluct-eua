@@ -17,3 +17,7 @@
 .form textarea {
   font-size: 1rem;
 }
+
+/* Article links keep inherited type and use the existing brand token on hover. */
+.link { color: inherit; text-decoration: underline; text-underline-offset: 0.2em; transition: color 150ms ease; }
+.link:hover, .link:focus-visible { color: var(--primary); }

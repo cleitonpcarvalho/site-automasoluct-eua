@@ -14,9 +14,9 @@ import { MediaUpload } from "./MediaUpload";
 export function ImageField({ label, value, onChange, images, csrf, type, maxBytes, onBusyChange }: { label: string; value: EditorImage | null; onChange: (value: EditorImage | null) => void; images: string[]; csrf: string; type: BlogMediaType; maxBytes: number; onBusyChange: (busy: boolean) => void }) {
   const id = useId();
   const [library, setLibrary] = useState(false);
-  function select(media: BlogMedia) { onChange({ url: media.url, alt: value?.alt.trim() ? value.alt : media.alt }); setLibrary(false); }
+  function select(media: BlogMedia) { onChange({ ...(media.provenance ? { provenance: media.provenance } : {}), url: media.url, alt: value?.alt.trim() ? value.alt : media.alt }); setLibrary(false); }
   return <div className={styles.stack}>
-    <label className={styles.field} htmlFor={`${id}-alt`}>Texto alternativo — {label}<input id={`${id}-alt`} maxLength={300} onChange={event => onChange({ url: value?.url ?? "", alt: event.target.value })} required={!!value?.url.trim()} value={value?.alt ?? ""} /><small>Descreva o conteúdo e a função da imagem.</small></label>
+    <label className={styles.field} htmlFor={`${id}-alt`}>Texto alternativo — {label}<input id={`${id}-alt`} maxLength={300} onChange={event => onChange({ ...value, url: value?.url ?? "", alt: event.target.value })} required={!!value?.url.trim()} value={value?.alt ?? ""} /><small>Descreva o conteúdo e a função da imagem.</small></label>
     <MediaUpload alt={value?.alt ?? ""} csrf={csrf} maxBytes={maxBytes} onBusyChange={onBusyChange} onUploaded={select} type={type} />
     <div className={styles.actions}><button className={styles.secondary} onClick={() => setLibrary(true)} type="button">Escolher da biblioteca</button>{value?.url && <button className={styles.secondary} onClick={() => onChange(null)} type="button">Remover seleção</button>}</div>
     <Dialog onClose={() => setLibrary(false)} open={library} title={`Biblioteca — ${label}`} wide>

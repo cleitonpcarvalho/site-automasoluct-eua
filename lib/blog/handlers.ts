@@ -3,6 +3,7 @@ import "server-only";
 import { requireBlogScope } from "./auth.ts";
 import { getAdminConfig } from "./admin/auth.ts";
 import { blogJson, internalBlogRequest, readBlogJson } from "./http.ts";
+import { assertPublicationReady } from "./publication.ts";
 import { getBlogService, type BlogService } from "./service.ts";
 import { parsePostQuery, parsePreviewQuery } from "./validation.ts";
 
@@ -19,8 +20,12 @@ export function createBlogHandlers(resolveService: () => BlogService = getBlogSe
       const input = await readBlogJson(request, { allowEmpty: true });
       return blogJson({ data: await resolveService().validate(id, input) });
     }, authorize),
-    preview: (request: Request, id: string) => internalBlogRequest(request, "posts:read", () => {
-      const preview = resolveService().preview(id, parsePreviewQuery(new URL(request.url).searchParams));
+    preview: (request: Request, id: string) => internalBlogRequest(request, "posts:read", async () => {
+      const service = resolveService();
+      const requested = parsePreviewQuery(new URL(request.url).searchParams);
+      const post = service.get(id);
+      if (post.editorial) assertPublicationReady(await service.validate(id, { revision: requested ?? post.revision }));
+      const preview = service.preview(id, requested ?? post.revision);
       return blogJson({ data: { ...preview, previewUrl: new URL(preview.previewUrl, resolvePreviewOrigin()).href } }, 200, { "X-Robots-Tag": "noindex, nofollow" });
     }, authorize),
     publish: (request: Request, id: string) => internalBlogRequest(request, "posts:publish", async () => blogJson({ data: await resolveService().publish(id, await readBlogJson(request)) }), authorize),

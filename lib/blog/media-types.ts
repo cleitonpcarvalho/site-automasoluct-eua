@@ -1,5 +1,7 @@
+import type { ImageProvenance } from "./types.ts";
 export type BlogMediaType = "featured" | "internal" | "other";
 export type BlogMedia = {
+  provenance?: ImageProvenance;
   id: string;
   fileName: string;
   originalName: string;

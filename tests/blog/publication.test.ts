@@ -26,7 +26,7 @@ test("the approved template preserves the exact 26-slot order and H3 requirement
   ]);
   assert.equal(BLOG_TEMPLATE.slots.filter(slot => slot.type === "text").length, 10);
   assert.equal(BLOG_TEMPLATE.slots.filter(slot => slot.type === "heading" && slot.level === 3).length, 6);
-  assert.equal(BLOG_TEMPLATE.slots.some(slot => slot.optional), false);
+  assert.equal(BLOG_TEMPLATE.slots.filter(slot => slot.optional).map(slot => slot.type).join(), "video");
 });
 
 test("publication requires a complete exact template, a video and nonempty metadata", async t => {

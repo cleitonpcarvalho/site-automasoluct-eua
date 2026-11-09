@@ -15,7 +15,7 @@ export function completePostFixture(withVideo = true): BlogPostFields {
     switch (slot.type) {
       case "text": return { id: slot.id, type: "text", content: "Test-only editorial paragraph.\n\nA second paragraph for rendering verification." };
       case "heading": return { id: slot.id, type: "heading", level: slot.level ?? 3, content: "Test-only section heading" };
-      case "cta": return { id: slot.id, type: "cta", text: "Discuss a workflow with our engineering team.", label: "Get a Free Assessment", href: "/contact" };
+      case "cta": return { id: slot.id, type: "cta", text: "Discuss a workflow with our engineering team.", label: `Discuss workflow ${slot.id}`, href: "/contact" };
       case "image": return { id: slot.id, type: "image", image: imageFixture(), caption: "Test-only illustration." };
       case "video": return { id: slot.id, type: "video" };
       case "form": return { id: slot.id, type: "form", formId: "assessment" };
@@ -24,7 +24,8 @@ export function completePostFixture(withVideo = true): BlogPostFields {
   return {
     title: "Test-only Jobber workflow", subtitle: "A local test fixture, never production content.", slug: `test-only-${randomUUID()}`,
     seoTitle: "Test-only workflow | Automa Soluct", metaDescription: "An isolated test fixture for blog validation.",
-    focusKeyword: "test workflow", excerpt: "A short test-only excerpt.", featuredImage: imageFixture("featured"),
+    focusKeyword: "test workflow", excerpt: "A short test-only excerpt.", featuredImage: { ...imageFixture("featured"), provenance: { sourceAssets: ["default_cover_portrait", "default_cover_logo"] } },
+    editorial: { policyVersion: 1, videoRequestedByUser: withVideo },
     blocks, video: withVideo ? { provider: "youtube", id: "AAAAAAAAAAA", title: "Test-only video reference" } : null,
     tags: ["Jobber", "Automation"],
   };

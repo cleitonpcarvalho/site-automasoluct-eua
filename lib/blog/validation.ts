@@ -1,4 +1,4 @@
-import type { BlogBlock, BlogImage, BlogPostFields, BlogValidationIssue, BlogVideo, PostQuery, PostUpdate } from "./types.ts";
+import type { BlogBlock, BlogEditorial, ImageProvenance, BlogImage, BlogPostFields, BlogValidationIssue, BlogVideo, PostQuery, PostUpdate } from "./types.ts";
 import { BlogError, invalid } from "./errors.ts";
 
 export const BLOG_IMAGE_FILENAME = /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}\.(?:avif|webp|png|jpe?g)$/;
@@ -39,7 +39,7 @@ function slugFromTitle(title: string): string {
 
 export function parseImage(value: unknown, expectedType: BlogImage["type"]): BlogImage {
   const image = record(value, "image");
-  onlyKeys(image, ["id", "url", "alt", "type"], "image");
+  onlyKeys(image, ["id", "url", "alt", "type", "provenance"], "image");
   const id = text(image.id, "image.id", 36, true);
   const url = text(image.url, "image.url", 200, true);
   const filename = url.slice("/uploads/blog/".length);
@@ -47,7 +47,7 @@ export function parseImage(value: unknown, expectedType: BlogImage["type"]): Blo
     invalid("image must reference /uploads/blog/<image-id>.<jpg|jpeg|png|webp|avif> with a matching UUID.");
   }
   if (image.type !== expectedType) invalid(`image.type must be ${expectedType}.`);
-  return { id, url, alt: text(image.alt, "image.alt", 300, true), type: expectedType };
+  return { id, url, alt: text(image.alt, "image.alt", 300, true), type: expectedType, ...(image.provenance === undefined ? {} : { provenance: parseProvenance(image.provenance) }) };
 }
 
 function parseVideo(value: unknown): BlogVideo {
@@ -106,10 +106,11 @@ export function parseBlocks(value: unknown): BlogBlock[] {
 }
 
 const textFields = { title: 240, subtitle: 500, seoTitle: 240, metaDescription: 500, focusKeyword: 200, excerpt: 1000 } as const;
-const mutableFields = [...Object.keys(textFields), "slug", "featuredImage", "blocks", "video", "tags"];
+const mutableFields = ["editorial", ...Object.keys(textFields), "slug", "featuredImage", "blocks", "video", "tags"];
 
 function parseFields(input: Record<string, unknown>): Partial<BlogPostFields> {
   const fields: Partial<BlogPostFields> = {};
+  if (Object.hasOwn(input, "editorial")) fields.editorial = parseEditorial(input.editorial);
   for (const [key, max] of Object.entries(textFields)) {
     const field = key as keyof typeof textFields;
     if (Object.hasOwn(input, field)) fields[field] = text(input[field], field, max, field === "title");
@@ -135,6 +136,7 @@ function parseFields(input: Record<string, unknown>): Partial<BlogPostFields> {
 export function collectPostFieldIssues(post: BlogPostFields): BlogValidationIssue[] {
   const issues: BlogValidationIssue[] = [];
   for (const key of mutableFields) {
+    if (key === "editorial" && post.editorial === undefined) continue;
     try { parseFields({ [key]: post[key as keyof BlogPostFields] }); }
     catch (error) {
       if (!(error instanceof BlogError) || error.status !== 400) throw error;
@@ -163,7 +165,7 @@ export function parseCreateDraft(value: unknown): BlogPostFields {
   return {
     subtitle: "", seoTitle: "", metaDescription: "", focusKeyword: "", excerpt: "",
     featuredImage: null, blocks: [], video: null, tags: [],
-    ...fields, title: fields.title, slug: fields.slug ?? slugFromTitle(fields.title),
+    editorial: { policyVersion: 1 }, ...fields, title: fields.title, slug: fields.slug ?? slugFromTitle(fields.title),
   };
 }
 
@@ -212,4 +214,20 @@ export function parsePostQuery(search: URLSearchParams): PostQuery {
   const status = search.get("status");
   if (status !== null && status !== "draft" && status !== "published") invalid("status must be draft or published.");
   return { page: integer("page", 1, 10000), pageSize: integer("pageSize", 20, 100), ...(status ? { status } : {}) };
+}
+
+export function parseProvenance(value: unknown): ImageProvenance {
+  const input = record(value, "provenance");
+  onlyKeys(input, ["sourceAssets", "source"], "provenance");
+  if (!Array.isArray(input.sourceAssets) || input.sourceAssets.length > 2 || input.sourceAssets.some(id => !["default_cover_portrait", "default_cover_logo"].includes(id))) return invalid("Invalid sourceAssets.");
+  if (input.source !== undefined && !["generated", "user_screenshot", "workflow", "system", "diagram", "other"].includes(String(input.source))) return invalid("Invalid image source.");
+  return { sourceAssets: [...new Set(input.sourceAssets)] as ImageProvenance["sourceAssets"], ...(input.source === undefined ? {} : { source: input.source as ImageProvenance["source"] }) };
+}
+export function parseEditorial(value: unknown): BlogEditorial {
+  const input = record(value, "editorial");
+  onlyKeys(input, ["policyVersion", "videoRequestedByUser", "brandInBodyRequestedByUser", "suppliedScreenshotIds"], "editorial");
+  if (input.policyVersion !== 1) return invalid("Unsupported editorial policyVersion.");
+  for (const key of ["videoRequestedByUser", "brandInBodyRequestedByUser"]) if (input[key] !== undefined && typeof input[key] !== "boolean") return invalid("Editorial overrides must be explicit booleans.");
+  if (input.suppliedScreenshotIds !== undefined && (!Array.isArray(input.suppliedScreenshotIds) || input.suppliedScreenshotIds.length > 80 || input.suppliedScreenshotIds.some(id => typeof id !== "string" || !UUID.test(id)))) return invalid("suppliedScreenshotIds must contain media UUIDs.");
+  return { policyVersion: 1, ...(input.videoRequestedByUser === undefined ? {} : { videoRequestedByUser: input.videoRequestedByUser as boolean }), ...(input.brandInBodyRequestedByUser === undefined ? {} : { brandInBodyRequestedByUser: input.brandInBodyRequestedByUser as boolean }), ...(input.suppliedScreenshotIds === undefined ? {} : { suppliedScreenshotIds: input.suppliedScreenshotIds as string[] }) };
 }

@@ -7,14 +7,14 @@ import { BlogError } from "./errors.ts";
 import type { BlogPost, BlogPostFields, BlogPostSummary, PostPage, PostQuery, PostUpdate } from "./types.ts";
 
 type Row = Record<string, SQLOutputValue>;
-const summaryColumns = "id, title, subtitle, slug, seo_title, meta_description, focus_keyword, excerpt, featured_image, tags, status, revision, created_at, updated_at, published_at";
+const summaryColumns = "id, title, subtitle, slug, seo_title, meta_description, focus_keyword, excerpt, featured_image, tags, status, revision, created_at, updated_at, published_at, editorial";
 
 function summary(row: Row): BlogPostSummary {
   return {
     id: String(row.id), title: String(row.title), subtitle: String(row.subtitle), slug: String(row.slug),
     seoTitle: String(row.seo_title), metaDescription: String(row.meta_description), focusKeyword: String(row.focus_keyword),
     excerpt: String(row.excerpt), featuredImage: row.featured_image === null ? null : JSON.parse(String(row.featured_image)),
-    tags: JSON.parse(String(row.tags)), status: row.status as BlogPost["status"], revision: Number(row.revision),
+    tags: JSON.parse(String(row.tags)), ...(row.editorial == null ? {} : { editorial: JSON.parse(String(row.editorial)) }), status: row.status as BlogPost["status"], revision: Number(row.revision),
     createdAt: String(row.created_at), updatedAt: String(row.updated_at), publishedAt: row.published_at === null ? null : String(row.published_at),
   };
 }
@@ -29,7 +29,7 @@ function encode(fields: BlogPostFields) {
     meta_description: fields.metaDescription, focus_keyword: fields.focusKeyword, excerpt: fields.excerpt,
     featured_image: fields.featuredImage ? JSON.stringify(fields.featuredImage) : null,
     blocks: JSON.stringify(fields.blocks), video: fields.video ? JSON.stringify(fields.video) : null,
-    tags: JSON.stringify(fields.tags),
+    tags: JSON.stringify(fields.tags), editorial: fields.editorial ? JSON.stringify(fields.editorial) : null,
   };
 }
 

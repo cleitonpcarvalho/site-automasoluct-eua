@@ -1,9 +1,9 @@
 import { BlogError, invalid } from "../errors.ts";
 import { BLOG_TEMPLATE } from "../template.ts";
-import type { BlogBlock, BlogImage, BlogPost, BlogPostFields, BlogVideo } from "../types.ts";
-import { BLOG_IMAGE_FILENAME, parseCreateDraft, record } from "../validation.ts";
+import type { ImageProvenance, BlogBlock, BlogImage, BlogPost, BlogPostFields, BlogVideo } from "../types.ts";
+import { BLOG_IMAGE_FILENAME, parseCreateDraft, parseEditorial, parseProvenance, record } from "../validation.ts";
 
-export type EditorImage = { url: string; alt: string };
+export type EditorImage = { url: string; alt: string; provenance?: ImageProvenance };
 export type EditorBlock = Exclude<BlogBlock, { type: "image" }> | { id: string; type: "image"; image: EditorImage | null; caption?: string };
 export type EditorFields = Omit<BlogPostFields, "featuredImage" | "blocks" | "video" | "tags"> & {
   featuredImage: EditorImage | null;
@@ -60,11 +60,11 @@ export function isEditorImageUrl(url: string) {
 function editorImage(value: unknown, type: BlogImage["type"]): BlogImage | null {
   if (value === null) return null;
   const image = record(value, "image");
-  if (Object.keys(image).some(key => !["url", "alt"].includes(key)) || typeof image.url !== "string" || typeof image.alt !== "string") return invalid("Image needs only URL and alt text.");
+  if (Object.keys(image).some(key => !["url", "alt", "provenance"].includes(key)) || typeof image.url !== "string" || typeof image.alt !== "string") return invalid("Image needs only URL and alt text.");
   const url = image.url.trim();
   if (!url) return null;
   if (!isEditorImageUrl(url)) return invalid("Select an existing image from /uploads/blog/<uuid>.<jpg|jpeg|png|webp|avif>.");
-  return { id: url.slice("/uploads/blog/".length, "/uploads/blog/".length + 36), url, alt: image.alt, type };
+  return { id: url.slice("/uploads/blog/".length, "/uploads/blog/".length + 36), url, alt: image.alt, type, ...(image.provenance === undefined ? {} : { provenance: parseProvenance(image.provenance) }) };
 }
 
 export function toEditorFields(post: BlogPost): EditorFields {
@@ -72,13 +72,13 @@ export function toEditorFields(post: BlogPost): EditorFields {
     throw new BlogError(422, "unsupported_editorial_blocks", "This draft contains blocks outside the approved template. It has not been changed.");
   }
   return {
-    title: post.title, subtitle: post.subtitle, slug: post.slug, seoTitle: post.seoTitle, metaDescription: post.metaDescription,
-    focusKeyword: post.focusKeyword, excerpt: post.excerpt, featuredImage: post.featuredImage ? { url: post.featuredImage.url, alt: post.featuredImage.alt } : null,
+    ...(post.editorial ? { editorial: post.editorial } : {}), title: post.title, subtitle: post.subtitle, slug: post.slug, seoTitle: post.seoTitle, metaDescription: post.metaDescription,
+    focusKeyword: post.focusKeyword, excerpt: post.excerpt, featuredImage: post.featuredImage ? { url: post.featuredImage.url, alt: post.featuredImage.alt, ...(post.featuredImage.provenance ? { provenance: post.featuredImage.provenance } : {}) } : null,
     tagsText: post.tags.join(", "), videoUrl: videoUrl(post.video), videoTitle: post.video?.title ?? "",
     blocks: emptyAdminBlocks().map(empty => {
       const block = post.blocks.find(item => item.id === empty.id);
       if (!block) return empty;
-      if (block.type === "image") return { ...block, image: block.image ? { url: block.image.url, alt: block.image.alt } : null };
+      if (block.type === "image") return { ...block, image: block.image ? { url: block.image.url, alt: block.image.alt, ...(block.image.provenance ? { provenance: block.image.provenance } : {}) } : null };
       return block.type === "heading" ? { ...block, level: 3 } : block;
     }),
   };
@@ -86,7 +86,7 @@ export function toEditorFields(post: BlogPost): EditorFields {
 
 export function parseEditorFields(value: unknown): BlogPostFields {
   const fields = record(value, "fields");
-  const allowed = ["title", "subtitle", "slug", "seoTitle", "metaDescription", "focusKeyword", "excerpt", "featuredImage", "blocks", "tagsText", "videoUrl", "videoTitle"];
+  const allowed = ["editorial", "title", "subtitle", "slug", "seoTitle", "metaDescription", "focusKeyword", "excerpt", "featuredImage", "blocks", "tagsText", "videoUrl", "videoTitle"];
   if (Object.keys(fields).some(key => !allowed.includes(key)) || typeof fields.tagsText !== "string") return invalid("Invalid editor fields.");
   const blocks = fields.blocks;
   if (!Array.isArray(blocks) || blocks.length !== BLOG_TEMPLATE.slots.length) return invalid("Keep all 26 mandatory blocks in their fixed order.");
@@ -96,9 +96,13 @@ export function parseEditorFields(value: unknown): BlogPostFields {
     if (block.id !== slot.id || block.type !== slot.type || (slot.type === "heading" && block.level !== 3) || (slot.type === "form" && block.formId !== "assessment")) return invalid("Block ids, types, H3 levels and order are fixed by the approved template.");
     return block.type === "image" ? { ...block, image: editorImage(block.image, "internal") } : block;
   });
-  return parseCreateDraft({
+  const video = parseEditorVideo(fields.videoUrl, fields.videoTitle);
+  const parsed = parseCreateDraft({
+    ...(fields.editorial === undefined ? {} : { editorial: parseEditorial(fields.editorial) }),
     title: fields.title, subtitle: fields.subtitle, slug: fields.slug, seoTitle: fields.seoTitle, metaDescription: fields.metaDescription,
     focusKeyword: fields.focusKeyword, excerpt: fields.excerpt, featuredImage: editorImage(fields.featuredImage, "featured"),
-    blocks: normalized, tags: fields.tagsText.split(",").map(tag => tag.trim()).filter(Boolean), video: parseEditorVideo(fields.videoUrl, fields.videoTitle),
+    blocks: fields.editorial && !video ? normalized.filter(block => block.type !== "video") : normalized, tags: fields.tagsText.split(",").map(tag => tag.trim()).filter(Boolean), video,
   });
+  if (fields.editorial === undefined) delete parsed.editorial;
+  return parsed;
 }

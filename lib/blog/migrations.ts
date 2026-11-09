@@ -86,4 +86,11 @@ export const BLOG_MIGRATIONS = [
       ) BEGIN SELECT RAISE(ABORT, 'blog_media_deleted'); END;
     `,
   },
+  {
+    version: 4,
+    sql: `
+      ALTER TABLE blog_posts ADD COLUMN editorial TEXT CHECK(editorial IS NULL OR (json_valid(editorial) AND json_type(editorial) = 'object'));
+      ALTER TABLE blog_media ADD COLUMN provenance TEXT CHECK(provenance IS NULL OR (json_valid(provenance) AND json_type(provenance) = 'object'));
+    `,
+  },
 ] as const;

@@ -81,7 +81,8 @@ test("the admin migration upgrades a version-1 database without changing existin
   old.exec("CREATE TABLE blog_migrations (version INTEGER PRIMARY KEY, applied_at TEXT NOT NULL) STRICT");
   old.exec(BLOG_MIGRATIONS[0].sql);
   old.prepare("INSERT INTO blog_migrations VALUES (1, ?)").run(new Date().toISOString());
-  const original = createPostRepository(old).createDraft(completePostFixture());
+  old.prepare("INSERT INTO blog_posts (id,title,slug,created_at,updated_at) VALUES (?,?,?,?,?)").run("11111111-1111-4111-8111-111111111111", "Existing draft", "existing-draft", "2026-11-08T00:00:00Z", "2026-11-08T00:00:00Z");
+  const original = { id: "11111111-1111-4111-8111-111111111111", title: "Existing draft", subtitle: "", slug: "existing-draft", seoTitle: "", metaDescription: "", focusKeyword: "", excerpt: "", featuredImage: null, blocks: [], video: null, tags: [], status: "draft", revision: 1, createdAt: "2026-11-08T00:00:00Z", updatedAt: "2026-11-08T00:00:00Z", publishedAt: null };
   old.close();
   const upgraded = openBlogDatabase(filename);
   try {
@@ -161,7 +162,7 @@ test("saving a draft preserves paragraphs, nullable pending images and advances 
   const response = await handlers.update(request(`/api/admin/blog/posts/${post.id}`, "PATCH", { expectedRevision: 1, fields }, current), post.id);
   assert.equal(response.status, 200); const updated = (await response.json()).data;
   assert.equal(updated.revision, 2); assert.equal(updated.status, "draft"); assert.equal(updated.blocks[0].content, block.type === "text" ? block.content : "");
-  assert.equal(updated.blocks[4].image, null); assert.equal(updated.blocks.length, 26);
+  assert.equal(updated.blocks[4].image, null); assert.equal(updated.blocks.length, 25);
 });
 
 test("concurrent draft edits return revision_conflict without overwriting the saved post", async t => {

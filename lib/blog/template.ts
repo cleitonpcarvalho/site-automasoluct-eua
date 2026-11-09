@@ -11,7 +11,7 @@ export type BlogTemplateSlot = {
 // The exact 26-slot editorial order supplied and approved by the user.
 // Do not reorder or simplify it. Title, subtitle, excerpt and featured image are
 // post-level fields outside this sequence. The introduction counts as one text.
-export const BLOG_TEMPLATE: {
+export const LEGACY_BLOG_TEMPLATE: {
   id: string;
   version: number;
   approval: "pending" | "approved";
@@ -52,4 +52,12 @@ export const BLOG_TEMPLATE: {
     { id: "closing-text", type: "text", purpose: "25. Bloco de texto final" },
     { id: "final-form", type: "form", purpose: "26. Formulário final" },
   ],
+};
+
+// Existing records retain v1 unless the author explicitly adopts the new policy.
+export const BLOG_TEMPLATE = {
+  ...LEGACY_BLOG_TEMPLATE, version: 2, editorialPolicyVersion: 1,
+  fieldsOutsideSequence: [...LEGACY_BLOG_TEMPLATE.fieldsOutsideSequence, "editorial"],
+  requirements: { ...LEGACY_BLOG_TEMPLATE.requirements, videos: 0 },
+  slots: LEGACY_BLOG_TEMPLATE.slots.map(slot => slot.type === "video" ? { ...slot, optional: true, purpose: "Vídeo somente com pedido explícito do usuário" } : slot),
 };

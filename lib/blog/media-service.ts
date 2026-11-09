@@ -1,6 +1,6 @@
 import "server-only";
 
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import { unlinkSync } from "node:fs";
 import { mkdir, open, realpath, unlink } from "node:fs/promises";
 import { join } from "node:path";
@@ -11,9 +11,12 @@ import { getBlogDatabase } from "./database.ts";
 import { BlogError, invalid } from "./errors.ts";
 import { createMediaRepository, type MediaRepository } from "./media-repository.ts";
 import type { BlogMedia, BlogMediaType, MediaQuery } from "./media-types.ts";
+import { DEFAULT_ASSETS } from "./editorial-policy.ts";
+import { parseProvenance } from "./validation.ts";
+import type { ImageProvenance } from "./types.ts";
 import { BLOG_IMAGE_FILENAME } from "./validation.ts";
 
-export type StoreBlogImageInput = { bytes: Uint8Array; mimeType: string; alt: string; type: BlogMediaType; originalName?: string };
+export type StoreBlogImageInput = { bytes: Uint8Array; mimeType: string; alt: string; type: BlogMediaType; originalName?: string; provenance?: ImageProvenance };
 const formats = { "image/png": "png", "image/jpeg": "jpeg", "image/webp": "webp" } as const;
 const decodeState = globalThis as typeof globalThis & { blogMediaDecoding?: boolean };
 export function parseMediaId(id: string) {
@@ -56,6 +59,10 @@ export function createMediaService(repository: MediaRepository, directory = blog
       if (input.bytes.byteLength > limits.maxBytes) throw new BlogError(413, "image_too_large", "A imagem excede o limite de upload configurado.");
       if (input.originalName !== undefined && (typeof input.originalName !== "string" || input.originalName.length > 1024)) return invalid("Nome de imagem inválido.");
       const bytes = Buffer.from(input.bytes);
+      const declared = input.provenance === undefined ? undefined : parseProvenance(input.provenance);
+      const digest = createHash("sha256").update(bytes).digest("hex");
+      const detected = Object.values(DEFAULT_ASSETS).filter(asset => asset.sha256 === digest).map(asset => asset.id);
+      const provenance = declared || detected.length ? { ...declared, sourceAssets: [...new Set([...(declared?.sourceAssets ?? []), ...detected])] } : undefined;
       if (!signature(bytes, input.mimeType)) throw new BlogError(415, "image_type_mismatch", "O conteúdo da imagem não corresponde ao MIME informado.");
       if (decodeState.blogMediaDecoding) throw new BlogError(429, "image_processing_busy", "Aguarde o processamento da outra imagem e tente novamente.");
       decodeState.blogMediaDecoding = true;
@@ -84,7 +91,7 @@ export function createMediaService(repository: MediaRepository, directory = blog
       await file.close();
       try {
         return repository.create({ id, fileName, originalName: (input.originalName ?? "").split(/[\\/]/).at(-1)!.replace(/[\u0000-\u001f\u007f]/g, "").slice(0, 180) || fileName,
-          url: `${BLOG_UPLOAD_URL}${fileName}`, alt, type: input.type, mimeType: input.mimeType as BlogMedia["mimeType"], size: bytes.byteLength, width, height, createdAt: new Date().toISOString() });
+          ...(provenance ? { provenance } : {}), url: `${BLOG_UPLOAD_URL}${fileName}`, alt, type: input.type, mimeType: input.mimeType as BlogMedia["mimeType"], size: bytes.byteLength, width, height, createdAt: new Date().toISOString() });
       } catch (error) { await unlink(target).catch(() => {}); throw error; }
     },
     async remove(id: string, confirmation: unknown) {

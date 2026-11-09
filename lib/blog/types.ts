@@ -1,6 +1,9 @@
 export type PostStatus = "draft" | "published";
 
+export type ImageProvenance = { sourceAssets: ("default_cover_portrait" | "default_cover_logo")[]; source?: "generated" | "user_screenshot" | "workflow" | "system" | "diagram" | "other" };
+export type BlogEditorial = { policyVersion: 1; videoRequestedByUser?: boolean; brandInBodyRequestedByUser?: boolean; suppliedScreenshotIds?: string[] };
 export type BlogImage = {
+  provenance?: ImageProvenance;
   id: string;
   url: string;
   alt: string;
@@ -23,6 +26,7 @@ export type BlogBlock =
   | { id: string; type: "form"; formId: "assessment" };
 
 export type BlogPostFields = {
+  editorial?: BlogEditorial;
   title: string;
   subtitle: string;
   slug: string;
