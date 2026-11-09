@@ -35,6 +35,20 @@ async function call(path: string, method = "GET", body?: unknown, authenticated 
   const multipart = body instanceof FormData;
   return fetch(`${origin}${path}`, { method, redirect: "manual", headers: { Origin: origin, ...(body === undefined || multipart ? {} : { "Content-Type": "application/json" }), ...(authenticated && cookie ? { Cookie: cookie, "X-CSRF-Token": csrf } : {}), ...headers }, ...(body === undefined ? {} : { body: multipart ? body : JSON.stringify(body) }) });
 }
+async function readSitemap() {
+  const response = await call("/sitemap.xml", "GET", undefined, false);
+  assert.equal(response.status, 200);
+  assert.match(response.headers.get("content-type") ?? "", /xml/);
+  const cacheControl = response.headers.get("cache-control") ?? "";
+  assert.ok(/\bno-store\b/.test(cacheControl) || (/\bmax-age=0\b/.test(cacheControl) && /\bmust-revalidate\b/.test(cacheControl)));
+  assert.doesNotMatch(cacheControl, /\b(?:s-maxage|max-age)=[1-9]\d*/);
+  return [...(await response.text()).matchAll(/<url>([\s\S]*?)<\/url>/g)].map(match => ({
+    url: match[1].match(/<loc>([^<]+)<\/loc>/)?.[1],
+    lastModified: match[1].match(/<lastmod>([^<]+)<\/lastmod>/)?.[1],
+    changeFrequency: match[1].match(/<changefreq>([^<]+)<\/changefreq>/)?.[1],
+    priority: match[1].match(/<priority>([^<]+)<\/priority>/)?.[1],
+  }));
+}
 async function uploadMedia(name: string, type = "other", provenance?: ImageProvenance): Promise<BlogMedia> {
   const form = new FormData();
   form.set("file", new File([new Uint8Array(await readFile("public/og-image.png"))], name, { type: "image/png" }));
@@ -98,6 +112,7 @@ try {
     await new Promise(resolve => setTimeout(resolve, 100));
   }
   assert.ok(ready, logs);
+  assert.deepEqual((await readSitemap()).map(entry => entry.url), ["/", "/jobber-automation", "/integrations", "/contact", "/privacy", "/terms"].map(path => new URL(path, "https://automasoluct.com").toString()));
   const publicLogin = await call("/admin/login", "GET", undefined, false);
   assert.match(publicLogin.headers.get("cache-control")!, /no-store/);
   assert.equal(publicLogin.headers.get("x-frame-options"), "DENY");
@@ -134,6 +149,7 @@ try {
   assert.equal((await call("/api/admin/blog/posts", "POST", { title: "CSRF blocked" }, true, { "X-CSRF-Token": "bad" })).status, 403);
   assert.equal((await call("/api/admin/blog/posts", "POST", { title: "Origin blocked" }, true, { Origin: "https://attacker.test" })).status, 403);
   const post = await completeDraft("qa-only-admin-lifecycle", "QA-only private editorial draft");
+  assert.ok((await readSitemap()).every(entry => !entry.url?.includes(post.slug)));
   const editor = await call(`/admin/blog/${post.id}`);
   assert.equal(editor.status, 200); const editorHtml = await editor.text();
   assert.equal((editorHtml.match(/data-editor-block=/g) ?? []).length, 26);
@@ -152,11 +168,15 @@ try {
   assert.equal((await call(`/api/admin/blog/posts/${post.id}/publish`, "POST", { expectedRevision: post.revision })).status, 400);
   const publish = await call(`/api/admin/blog/posts/${post.id}/publish`, "POST", { expectedRevision: post.revision, confirmation: post.slug }); assert.equal(publish.status, 200);
   const published = (await publish.json()).data as BlogPost;
+  assert.deepEqual((await readSitemap()).find(entry => entry.url === `https://automasoluct.com/blog/${post.slug}`), {
+    url: `https://automasoluct.com/blog/${post.slug}`, lastModified: published.updatedAt, changeFrequency: "monthly", priority: "0.6",
+  });
   const publicArticle = await call(`/blog/${post.slug}`, "GET", undefined, false);
   assert.equal(publicArticle.status, 200); assertBlogConversion(await publicArticle.text());
   assert.equal((await call(`/api/admin/blog/posts/${post.id}`, "PATCH", { expectedRevision: published.revision, fields: toEditorFields(published) })).status, 409);
   const withdraw = await call(`/api/admin/blog/posts/${post.id}/draft`, "POST", { expectedRevision: published.revision, confirmation: post.slug }); assert.equal(withdraw.status, 200);
   const withdrawn = (await withdraw.json()).data as BlogPost;
+  assert.ok((await readSitemap()).every(entry => !entry.url?.includes(post.slug)));
   assert.equal((await call(`/blog/${post.slug}`, "GET", undefined, false)).status, 404);
   assert.equal((await call(`/api/admin/blog/posts/${post.id}`, "DELETE", { expectedRevision: withdrawn.revision, confirmation: "wrong" })).status, 400);
   assert.equal((await call(`/api/admin/blog/posts/${post.id}`, "DELETE", { expectedRevision: 1, confirmation: post.slug })).status, 409);
@@ -208,6 +228,14 @@ try {
     assert.ok(!recentSection.includes(`/blog/${visualPublished.slug}`));
     assert.ok(html.indexOf('id="free-assessment"') < html.indexOf('id="recent-posts-heading"'));
   }
+  const sitemapEntries = await readSitemap();
+  assert.equal(sitemapEntries.length, 17); // Six static pages and eleven published articles.
+  for (const slug of [visualPublished.slug, legacy.slug, ...recentSlugs]) assert.ok(sitemapEntries.some(entry => entry.url === `https://automasoluct.com/blog/${slug}`));
+  assert.ok(sitemapEntries.every(entry => !entry.url?.includes(visualDraft.slug) && !entry.url?.includes("/admin/")));
+  assert.equal((await call(`/api/admin/blog/posts/${legacy.id}`, "DELETE", { expectedRevision: legacyBefore.revision, confirmation: legacy.slug })).status, 200);
+  const afterPublishedDeletion = await readSitemap();
+  assert.equal(afterPublishedDeletion.length, 16);
+  assert.ok(afterPublishedDeletion.every(entry => entry.url !== `https://automasoluct.com/blog/${legacy.slug}`));
   const connection = join(directory, "browser-qa.json");
   await writeFile(connection, JSON.stringify({ origin, login, password, editorId: visualDraft.id, publishedId: visualPublished.id, editor: `/admin/blog/${visualDraft.id}`, preview: `/admin/blog/${visualDraft.id}/preview?revision=${visualDraft.revision}` }), { mode: 0o600 });
   console.log(JSON.stringify({ passed: ["protected server pages and API", "real scrypt login", "cookie secrecy and logout", "CSRF/Origin", "create/list/editor/save/conflict", "private exact-revision preview", "explicit publication/withdrawal", "confirmed CAS deletion", "media multipart upload/list/get/alt", "media association and safe deletion", "exact public image bytes and MIME", "internal bearer media API", "internal API preserved", "home/public blog"], browserConnectionFile: connection, isolated: true }));
