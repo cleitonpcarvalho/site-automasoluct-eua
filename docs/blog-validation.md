@@ -1,5 +1,19 @@
 # Authoritative blog validation and private preview
 
+## Canonical official cover assets: public Google Drive
+
+The authoritative `GET /api/internal/blog/template` now exposes `defaultAssets` from `lib/blog/cover-asset-metadata.ts`:
+
+- Portrait: https://drive.google.com/file/d/16E9m_oWHJxr54ST_NddqMYevefB9Zvn_/view
+- Logo: https://drive.google.com/file/d/1hrYGGW0M1h3PEQdFby3HuouIQPWNzwB7/view
+- Public folder (informational): https://drive.google.com/drive/folders/1OT9AXfl2r_Hcvi2EeMkgxS3nMOb2nO4V
+
+Google Drive is the only source for cover-reference delivery. The MCP downloads the actual PNG bytes, follows only trusted Drive redirects, verifies signatures, pinned SHA-256 and full PNG decode, then returns exactly two model-visible ImageContent blocks: portrait first, logo second. Site copies and bundled files are never fallback delivery sources. Any failed download, image check or missing image block stops featured generation.
+
+The Drive portrait is 1,659,133 bytes, 1254 × 1254, SHA-256 `402a8a19611ca23af8916dac731cf1203da0389695b319a89545d78c85ac2d97`. The logo is 8,252 bytes, 230 × 100, SHA-256 `8fe8c3315cd917bd1077e36bc6d67fce57aae8299c48d4010de819b8d8cc439d`. PNG bytes are preserved without conversion. The historical portrait hash remains recognition-only so reference-file rejection/provenance validation stays compatible; it cannot be used for retrieval fallback.
+
+The MCP wire schema accepts the new optional `defaultAssets` object explicitly and strictly; older site responses without it remain supported. Article structure, 16:9 generation rules, upload/Drive-import transport, CTA/conversion and publication behavior are unchanged.
+
 ## Native ChatGPT image workflow (template v4)
 
 Image generation happens in the ChatGPT conversation, not inside the MCP. The MCP only uploads and associates real image files.
@@ -10,11 +24,11 @@ The MCP has no generation endpoint or API-key configuration. `get_blog_template`
 
 Every generated featured cover and each of the four generated body images MUST use exactly **16:9**, landscape only. Explicitly request 16:9 in every native generation operation. Never generate 1:1, 4:3, portrait or 9:16 images. Each body image is one standalone image in a separate native operation, waiting for each result; no collage, multi-panel layout or article mockup, and no added logos, Automa Soluct branding, founder portrait or decorative text. User-supplied screenshots retain their existing upload support.
 
-The HTTP `GET /api/internal/blog/template` contract stays unchanged: the existing image-slot `purpose` strings carry these rules, with the featured-cover instruction included in `image-1.purpose`. `IMAGE_WORKFLOW_POLICY.instructions`, `IMAGE_WORKFLOW_STEPS` and `EDITORIAL_GUIDANCE.images` repeat the same requirement. The MCP adds its own `imageWorkflow` object locally, so its generation instructions also need the same wording; no MCP schema change is required. Upload verification and publishing behavior are unchanged.
+The image-generation rules in `GET /api/internal/blog/template` continue using the existing image-slot `purpose` strings, with the featured-cover instruction included in `image-1.purpose`. `IMAGE_WORKFLOW_POLICY.instructions`, `IMAGE_WORKFLOW_STEPS` and `EDITORIAL_GUIDANCE.images` repeat the same requirement. The MCP adds its own `imageWorkflow` object locally, so its generation instructions also need the same wording. The separate canonical asset metadata uses the optional strict `defaultAssets` wire field documented above. Upload verification and publishing behavior are unchanged.
 
 ## Permanent image-generation guidance
 
-The site and MCP keep identical instruction text in `lib/blog/image-generation-guidance.ts` / `src/image-generation-guidance.ts`. The site exposes all five rules through the existing `image-1.purpose` string and the body-image rule through all four image slots. Both workflow instructions and `EDITORIAL_GUIDANCE.images` include the same text. The HTTP template keeps its existing fields; no schema, validation, upload, Google Drive, CTA, conversion or publishing change is required.
+The site and MCP keep identical instruction text in `lib/blog/image-generation-guidance.ts` / `src/image-generation-guidance.ts`. The site exposes all five rules through the existing `image-1.purpose` string and the body-image rule through all four image slots. Both workflow instructions and `EDITORIAL_GUIDANCE.images` include the same text. These generation instructions use existing purpose strings and do not change validation, upload, Google Drive import, CTA, conversion or publishing behavior. The optional defaultAssets wire field is documented above.
 
 - **Featured portrait:** the official portrait is an identity reference only. Preserve the exact recognizable person and official logo, but vary pose, expression, head/body angle, framing, placement and composition for the article. Technical topics should look focused/confident/thoughtful; growth positive/energetic/confident; problems serious/attentive/concerned; education approachable/professional; operations decisive/engaged/professional. Avoid repeated crossed arms, straight-on headshots, neutral expressions, position and crop. Keep gestures realistic; no exaggeration, caricature, theatrical expressions or unnatural poses. This variation rule applies only to the featured cover.
 - **Body visuals:** each of the four images is exactly 16:9, standalone and generated in its own native operation, waiting for each result. They are natural editorial/supporting visuals, never thumbnails or covers. No headline, title, subtitle, CTA, text overlay, large typography, logo, Automa Soluct branding or founder portrait. No collage, multi-panel layout, screenshot montage or article mockup. Text is allowed only when inherent in a real UI/system screenshot supplied by the user; never invent decorative text.

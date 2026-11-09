@@ -11,7 +11,7 @@ import { getBlogDatabase } from "./database.ts";
 import { BlogError, invalid } from "./errors.ts";
 import { createMediaRepository, type MediaRepository } from "./media-repository.ts";
 import type { BlogMedia, BlogMediaType, MediaQuery } from "./media-types.ts";
-import { DEFAULT_ASSETS } from "./editorial-policy.ts";
+import { officialCoverAssetIds } from "./cover-asset-metadata.ts";
 import { parseProvenance } from "./validation.ts";
 import type { ImageProvenance } from "./types.ts";
 import { BLOG_IMAGE_FILENAME } from "./validation.ts";
@@ -61,7 +61,7 @@ export function createMediaService(repository: MediaRepository, directory = blog
       const bytes = Buffer.from(input.bytes);
       const declared = input.provenance === undefined ? undefined : parseProvenance(input.provenance);
       const digest = createHash("sha256").update(bytes).digest("hex");
-      const detected = Object.values(DEFAULT_ASSETS).filter(asset => asset.sha256 === digest).map(asset => asset.id);
+      const detected = officialCoverAssetIds(digest);
       const provenance = declared || detected.length ? { ...declared, sourceAssets: [...new Set([...(declared?.sourceAssets ?? []), ...detected])] } : undefined;
       if (!signature(bytes, input.mimeType)) throw new BlogError(415, "image_type_mismatch", "O conteúdo da imagem não corresponde ao MIME informado.");
       if (decodeState.blogMediaDecoding) throw new BlogError(429, "image_processing_busy", "Aguarde o processamento da outra imagem e tente novamente.");

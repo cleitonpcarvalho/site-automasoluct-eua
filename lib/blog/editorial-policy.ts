@@ -5,11 +5,10 @@ import { IMAGE_GENERATION_INSTRUCTIONS } from './image-generation-guidance.ts';
 import { CTA_BUTTON_RULES, countCtaCharacters } from './cta-policy.ts';
 import { BLOG_CONVERSION_RULES } from './conversion.ts';
 
+import { DEFAULT_ASSETS } from './cover-asset-metadata.ts';
+
 // Kept in sync with the website copy by scripts/sync-site-editorial.mjs.
-export const DEFAULT_ASSETS = {
-    default_cover_portrait: { id: 'default_cover_portrait', path: '/images/team/cleiton-profile.png', sha256: 'ca591ab564082f74572ec0885f5582e59632eeca20e5c900ba5ed3e54fb24871', mimeType: 'image/png', usage: 'cover_only' },
-    default_cover_logo: { id: 'default_cover_logo', path: '/assets/automasoluct/logo-automasoluct.png', sha256: '8fe8c3315cd917bd1077e36bc6d67fce57aae8299c48d4010de819b8d8cc439d', mimeType: 'image/png', usage: 'cover_only' },
-} as const;
+export { DEFAULT_ASSETS } from './cover-asset-metadata.ts';
 export const EDITORIAL_GUIDANCE = {
     policyVersion: 1,
     ctaButtonRules: CTA_BUTTON_RULES,

@@ -21,7 +21,7 @@ test("template HTTP payload requires exactly 16:9 for the featured cover and all
   assert.equal(response.status, 200);
   const { data } = await response.json() as { data: typeof BLOG_TEMPLATE };
   // Keep the existing HTTP contract: generation instructions live in purpose strings.
-  assert.deepEqual(Object.keys(data).sort(), ["id", "version", "approval", "fieldsOutsideSequence", "requirements", "slots", "imageWorkflowVersion", "editorialPolicyVersion", "ctaButtonRules", "conversionRules"].sort());
+  assert.deepEqual(Object.keys(data).sort(), ["id", "version", "approval", "fieldsOutsideSequence", "requirements", "slots", "imageWorkflowVersion", "editorialPolicyVersion", "ctaButtonRules", "conversionRules", "defaultAssets"].sort());
   const images = data.slots.filter(slot => slot.type === "image");
   assert.equal(images.length, 4);
   assert.deepEqual(images.map(slot => slot.id), ["image-1", "image-2", "image-3", "image-4"]);

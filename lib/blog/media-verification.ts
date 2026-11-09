@@ -1,6 +1,6 @@
 import "server-only";
 import { createHash } from "node:crypto";
-import { DEFAULT_ASSETS } from "./editorial-policy.ts";
+import { officialCoverAssetIds } from "./cover-asset-metadata.ts";
 import sharp from "sharp";
 import { BlogError } from "./errors.ts";
 import { isImagePlaceholder } from "./image-workflow.ts";
@@ -23,7 +23,7 @@ export function createStoredImageVerifier(getMedia: (id: string) => BlogMedia, r
     // records into a new upload registry requirement.
     if (!requireConfirmedUpload || !media) return media?.provenance;
     if (media.width <= 1 || media.height <= 1 || isImagePlaceholder(media.originalName) || isImagePlaceholder(media.alt)) throw new BlogError(422, "image_placeholder", "A placeholder or one-pixel stand-in cannot complete the article images. Obtain the actual image file.");
-    if (image.type === "featured" && Object.values(DEFAULT_ASSETS).some(asset => asset.sha256 === createHash("sha256").update(bytes).digest("hex"))) throw new BlogError(422, "cover_source_asset", "The official portrait/logo is only a reference asset. Upload a newly composed cover generated in the ChatGPT conversation.");
+    if (image.type === "featured" && officialCoverAssetIds(createHash("sha256").update(bytes).digest("hex")).length > 0) throw new BlogError(422, "cover_source_asset", "The official portrait/logo is only a reference asset. Upload a newly composed cover generated in the ChatGPT conversation.");
     if (bytes.length !== media.size) throw new BlogError(422, "media_content_mismatch", "Stored image bytes do not match the confirmed upload metadata.");
     try {
       const decoded = sharp(bytes, { limitInputPixels: 24000000, failOn: "warning" });
