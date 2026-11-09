@@ -22,7 +22,6 @@ type TurnstileRenderOptions = {
 };
 
 type TurnstileApi = {
-  ready: (callback: () => void) => void;
   remove: (widgetId: string) => void;
   render: (
     container: HTMLElement,
@@ -125,43 +124,38 @@ export const TurnstileWidget = forwardRef<
       }
     };
 
+    // Next Script's onReady has already waited for the async SDK to load.
+    // SDK ready() throws 3857 for async/defer scripts; render directly instead.
+    onTokenChange("");
+    setVerification({ status: "verifying" });
     try {
-      api.ready(() => {
-        if (!active || !containerRef.current) return;
-        onTokenChange("");
-        setVerification({ status: "verifying" });
-        try {
-          const widgetId = api.render(containerRef.current, {
-            sitekey: siteKey.trim(),
-            theme: "dark",
-            ...(size ? { size } : {}),
-            callback: (token) => {
-              if (!active) return;
-              if (!token) {
-                fail("Security verification did not complete. Please try again.");
-                return;
-              }
-              onTokenChange(token);
-              setVerification({ status: "verified" });
-            },
-            "error-callback": () => {
-              if (active) {
-                fail("Security verification failed. Please retry the security check or reload this page.");
-              }
-            },
-            "expired-callback": () => resetInvalidWidget(
-              "Security verification expired. Please complete the new security check.",
-            ),
-            "timeout-callback": () => resetInvalidWidget(
-              "Security verification timed out. Please complete the new security check.",
-            ),
-          });
-          if (!widgetId) throw new Error("Widget did not initialize.");
-          widgetIdRef.current = widgetId;
-        } catch {
-          fail("Security verification could not start. Reload this page and try again.");
-        }
+      const widgetId = api.render(containerRef.current, {
+        sitekey: siteKey.trim(),
+        theme: "dark",
+        ...(size ? { size } : {}),
+        callback: (token) => {
+          if (!active) return;
+          if (!token) {
+            fail("Security verification did not complete. Please try again.");
+            return;
+          }
+          onTokenChange(token);
+          setVerification({ status: "verified" });
+        },
+        "error-callback": () => {
+          if (active) {
+            fail("Security verification failed. Please retry the security check or reload this page.");
+          }
+        },
+        "expired-callback": () => resetInvalidWidget(
+          "Security verification expired. Please complete the new security check.",
+        ),
+        "timeout-callback": () => resetInvalidWidget(
+          "Security verification timed out. Please complete the new security check.",
+        ),
       });
+      if (!widgetId) throw new Error("Widget did not initialize.");
+      widgetIdRef.current = widgetId;
     } catch {
       fail("Security verification could not start. Reload this page and try again.");
     }

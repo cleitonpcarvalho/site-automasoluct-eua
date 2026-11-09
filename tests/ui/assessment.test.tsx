@@ -29,7 +29,10 @@ vi.mock("next/script", () => ({
 type RenderOptions = Parameters<NonNullable<Window["turnstile"]>["render"]>[1];
 let options: RenderOptions;
 const provider = {
-  ready: vi.fn((callback: () => void) => callback()),
+  // Match the real async-loaded SDK instead of hiding its 3857 guard.
+  ready: vi.fn(() => {
+    throw new Error("[Cloudflare Turnstile] Remove async/defer from the Turnstile api.js script tag before using turnstile.ready().");
+  }),
   render: vi.fn((_container: HTMLElement, config: RenderOptions) => { options = config; return "test-widget"; }),
   reset: vi.fn(),
   remove: vi.fn(),
@@ -188,6 +191,21 @@ test("missing sitekey is visible and never initializes verification", () => {
   expect(screen.queryByTestId("turnstile-script")).toBeNull();
 });
 
+test("async Turnstile loads render after Next Script readiness without calling SDK ready", async () => {
+  // The real SDK throws 3857 from ready() for an async/defer script, even after
+  // its load event. Next Script already supplies the readiness signal.
+  scriptEvents.autoReady = false;
+  const onTokenChange = vi.fn();
+  render(<TurnstileWidget onTokenChange={onTokenChange} />);
+  expect(provider.render).not.toHaveBeenCalled();
+  await act(async () => scriptEvents.ready?.());
+  expect(provider.ready).not.toHaveBeenCalled();
+  expect(provider.render).toHaveBeenCalledTimes(1);
+  expect(screen.queryByRole("alert")).toBeNull();
+  await act(async () => options.callback("verified-token"));
+  expect(onTokenChange).toHaveBeenLastCalledWith("verified-token");
+});
+
 test("script failure and provider errors clear the token and expose retry feedback", async () => {
   const onTokenChange = vi.fn();
   render(<TurnstileWidget onTokenChange={onTokenChange} />);
@@ -212,13 +230,17 @@ test("a blocked or stalled script reports a visible loading timeout", async () =
   expect(provider.render).not.toHaveBeenCalled();
 });
 
-test("a provider that loads but never becomes ready also reports a loading timeout", async () => {
+test("a late Script readiness event recovers from the loading timeout", async () => {
   vi.useFakeTimers();
-  provider.ready.mockImplementationOnce(() => {});
+  scriptEvents.autoReady = false;
   render(<TurnstileWidget onTokenChange={vi.fn()} />);
   await act(async () => vi.advanceTimersByTime(15_000));
   expect(screen.getByRole("alert").textContent).toMatch(/did not load/);
   expect(provider.render).not.toHaveBeenCalled();
+  await act(async () => scriptEvents.ready?.());
+  expect(provider.render).toHaveBeenCalledTimes(1);
+  expect(provider.ready).not.toHaveBeenCalled();
+  expect(screen.queryByRole("alert")).toBeNull();
 });
 
 test("moving between pages starts with an empty token and ignores the previous widget", async () => {
