@@ -1,3 +1,4 @@
+import type { imageAssociationStatus } from "./image-workflow.ts";
 export type PostStatus = "draft" | "published";
 
 export type ImageProvenance = { sourceAssets: ("default_cover_portrait" | "default_cover_logo")[]; source?: "generated" | "user_screenshot" | "workflow" | "system" | "diagram" | "other" };
@@ -64,6 +65,7 @@ export type BlogPostValidation = {
   revision: number;
   errors: BlogValidationIssue[];
   warnings: BlogValidationIssue[];
+  imageStatus?: ReturnType<typeof imageAssociationStatus>;
 };
 
 export type PostPage = {

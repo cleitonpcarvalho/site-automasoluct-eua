@@ -24,8 +24,8 @@ function fieldsWithLabel(label: string) {
   cta.label = label;
   return fields;
 }
-test("backend template v3 exposes permanent CTA length, exact suffix, uniqueness and context", () => {
-  assert.equal(BLOG_TEMPLATE.version, 3);
+test("backend template v4 exposes permanent CTA length, exact suffix, uniqueness and context", () => {
+  assert.equal(BLOG_TEMPLATE.version, 4);
   assert.deepEqual(BLOG_TEMPLATE.ctaButtonRules, CTA_BUTTON_RULES);
   assert.equal(BLOG_TEMPLATE.ctaButtonRules.minCharacters, 45);
   assert.equal(BLOG_TEMPLATE.ctaButtonRules.maxCharacters, 50);

@@ -44,7 +44,9 @@ test("validate accepts a complete draft and checks actual stored image files wit
   const post = service.createDraft(fields);
   const response = await handlers.validate(request(post.id), post.id);
   assert.equal(response.status, 200);
-  assert.deepEqual((await response.json()).data, { valid: true, postId: post.id, revision: 1, errors: [], warnings: [] });
+  const { imageStatus, ...validation } = (await response.json()).data;
+  assert.deepEqual(validation, { valid: true, postId: post.id, revision: 1, errors: [], warnings: [] });
+  assert.equal(imageStatus.complete, true); assert.equal(imageStatus.verified, 5);
   assert.equal(checks, 5);
   assert.equal(service.get(post.id).status, "draft");
   assert.equal(service.getPublished(post.slug), null);

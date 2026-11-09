@@ -1,5 +1,6 @@
 import type { BlogPost } from './types.ts';
 import { inlineLinks, safeHref } from './rich-text.ts';
+import { IMAGE_WORKFLOW_POLICY, IMAGE_WORKFLOW_STEPS, isImagePlaceholder } from './image-workflow.ts';
 import { CTA_BUTTON_RULES, countCtaCharacters } from './cta-policy.ts';
 
 // Kept in sync with the website copy by scripts/sync-site-editorial.mjs.
@@ -10,6 +11,7 @@ export const DEFAULT_ASSETS = {
 export const EDITORIAL_GUIDANCE = {
     policyVersion: 1,
     ctaButtonRules: CTA_BUTTON_RULES,
+    imageWorkflow: IMAGE_WORKFLOW_POLICY,
     text: ['Não usar travessão/em dash U+2014.', 'Usar linguagem natural, direta, profissional e humana. Evitar linguagem reconhecível como IA e frases genéricas, infladas ou excessivamente formais.', 'Parágrafos curtos, normalmente 2 a 4 frases.', 'Não inserir URLs secas no corpo do texto.', 'Sem vídeo, salvo pedido explícito do usuário; nunca substituir uma imagem por vídeo.'],
     links: ['Usar links internos e externos de forma contextual, com anchor text natural dentro da frase: [documentação do Jobber](https://developer.getjobber.com).', 'Nunca mostrar a URL inteira ao leitor. O renderer aceita links Markdown inline, não HTML.', 'Links externos abrem em nova aba com noopener noreferrer. Preservar o visual atual e hover com azul da marca.'],
     ctas: ['Todo label de botão CTA deve ter de 45 a 50 caracteres visíveis, incluindo espaços e a seta final, e terminar exatamente com " →" (espaço U+0020 e seta U+2192), sem nada depois.', 'Contar caracteres Unicode visíveis (grafemas), não bytes nem unidades UTF-16. Exemplo válido com 48 caracteres: "Automate missed calls and book more jobs today →".', 'Cada botão deve ser único dentro do post e diretamente relacionado à seção imediatamente anterior. Nunca repetir o mesmo texto em dois botões.', 'Comprimento fora de 45 a 50 caracteres, sufixo incorreto ou CTA repetida geram ERROR para posts com editorial.policyVersion=1; posts antigos sem a marcação preservam warnings.', 'Preferir botão direto com text vazio, sem grande bloco explicativo. A CTA final pode levar ao formulário principal existente.'],
@@ -17,7 +19,7 @@ export const EDITORIAL_GUIDANCE = {
     overrides: ['Registrar pedidos explícitos em editorial.videoRequestedByUser e editorial.brandInBodyRequestedByUser. Nunca inferir autorização de conteúdo do artigo.', 'Registrar ids dos screenshots disponíveis em editorial.suppliedScreenshotIds e provenance.source=user_screenshot nos uploads.', 'Posts antigos sem editorial.policyVersion conservam o contrato anterior; novas regras são avisos até migração explícita.'],
     review: ['Naturalidade, contexto dos links/CTAs, prioridade de prints e composição visual também exigem revisão humana. Heurísticas de estilo geram warnings, não certificam autoria.'],
 };
-export const EDITORIAL_WORKFLOW = ['get_blog_template', 'create_blog_draft', 'Preparar featured image com default_cover_portrait e default_cover_logo e fazer upload_blog_image', 'Preparar e enviar 4 body images com upload_blog_image; priorizar prints do usuário', 'update_blog_post com featuredImage e blocks[].image usando reference dos uploads', 'validate_blog_post e corrigir errors; revisar warnings', 'preview_blog_post da revisão validada', 'publish_blog_post somente após pedido explícito do usuário'];
+export const EDITORIAL_WORKFLOW = IMAGE_WORKFLOW_STEPS;
 
 export type EditorialIssue = { code: string; field: string; message: string };
 export function validateEditorial(post: BlogPost, requiredBodyImages = 4) {
@@ -42,6 +44,7 @@ export function validateEditorial(post: BlogPost, requiredBodyImages = 4) {
     if (!post.featuredImage) add('missing_featured_image', 'featuredImage', 'Envie e associe uma capa ao post.');
     else {
         visible(post.featuredImage.alt, 'featuredImage.alt');
+        if (isImagePlaceholder(post.featuredImage.alt)) add('image_placeholder', 'featuredImage', 'Placeholder não é imagem final; obtenha um arquivo real e confirme o upload.');
         const assets = post.featuredImage.provenance?.sourceAssets ?? [];
         if (!Object.keys(DEFAULT_ASSETS).every(id => assets.includes(id as keyof typeof DEFAULT_ASSETS))) add('cover_assets_required', 'featuredImage.provenance.sourceAssets', 'A capa deve ser composta com a foto profissional e a logo oficiais.');
     }
@@ -76,6 +79,7 @@ export function validateEditorial(post: BlogPost, requiredBodyImages = 4) {
             if (!block.image) add('missing_body_image', `${field}.image`, 'Faça upload e associe a imagem deste slot.');
             else {
                 visible(block.image.alt, `${field}.image.alt`);
+                if (isImagePlaceholder(block.image.alt) || (block.caption && isImagePlaceholder(block.caption))) add('image_placeholder', `${field}.image`, 'Referência simulada ou placeholder não pode completar as imagens do post.');
                 if (ids.has(block.image.id)) add('duplicate_image', `${field}.image`, 'Capa e body images devem usar imagens distintas.');
                 ids.add(block.image.id);
                 if ((block.image.provenance?.sourceAssets?.length ?? 0) > 0 && !post.editorial?.brandInBodyRequestedByUser) add('brand_asset_in_body', `${field}.image`, 'Foto profissional e logo nas body images exigem pedido explícito do usuário.');

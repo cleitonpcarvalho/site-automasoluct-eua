@@ -57,7 +57,7 @@ export const LEGACY_BLOG_TEMPLATE: {
 
 // Existing records retain v1 unless the author explicitly adopts the new policy.
 export const BLOG_TEMPLATE = {
-  ...LEGACY_BLOG_TEMPLATE, version: 3, editorialPolicyVersion: 1,
+  ...LEGACY_BLOG_TEMPLATE, version: 4, imageWorkflowVersion: 1, editorialPolicyVersion: 1,
   ctaButtonRules: CTA_BUTTON_RULES,
   fieldsOutsideSequence: [...LEGACY_BLOG_TEMPLATE.fieldsOutsideSequence, "editorial"],
   requirements: { ...LEGACY_BLOG_TEMPLATE.requirements, videos: 0 },

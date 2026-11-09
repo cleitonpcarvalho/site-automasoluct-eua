@@ -1,6 +1,7 @@
 import "server-only";
 
 import { getBlogDatabase } from "./database.ts";
+import { createStoredImageVerifier } from "./media-verification.ts";
 import { getMediaService } from "./media-service.ts";
 import { BlogError } from "./errors.ts";
 import { readBlogImage } from "./media.ts";
@@ -9,11 +10,7 @@ import { createPostRepository, type PostRepository } from "./repository.ts";
 import { parseCreateDraft, parsePostId, parsePublishRequest, parseRevision, parseSlug, parseUpdatePost, parseValidateRequest } from "./validation.ts";
 import type { ImageProvenance, BlogImage, BlogPost, PostQuery } from "./types.ts";
 
-export function createBlogService(repository: PostRepository, checkImage: (image: BlogImage) => Promise<void | ImageProvenance> = async image => {
-  await readBlogImage(image.url.slice("/uploads/blog/".length));
-  try { return getMediaService().get(image.id).provenance; }
-  catch (error) { if (!(error instanceof BlogError) || error.status !== 404) throw error; }
-}) {
+export function createBlogService(repository: PostRepository, checkImage: (image: BlogImage, requireConfirmedUpload?: boolean) => Promise<void | ImageProvenance> = createStoredImageVerifier(id => getMediaService().get(id), filename => readBlogImage(filename))) {
   function checkRevision(post: BlogPost, revision: number | undefined) {
     if (revision !== undefined && post.revision !== revision) throw new BlogError(409, "revision_conflict", "Post changed. Fetch the latest revision before retrying.");
   }

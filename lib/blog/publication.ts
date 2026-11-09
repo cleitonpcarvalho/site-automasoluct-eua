@@ -1,4 +1,5 @@
 import { BLOG_TEMPLATE, LEGACY_BLOG_TEMPLATE } from "./template.ts";
+import { imageAssociationStatus, postImageReferences } from "./image-workflow.ts";
 import { validateEditorial } from "./editorial-policy.ts";
 import { BlogError } from "./errors.ts";
 import { collectPostFieldIssues } from "./validation.ts";
@@ -42,27 +43,30 @@ function report(post: BlogPost, errors: BlogValidationIssue[]): BlogPostValidati
 
 // Authoritative, read-only validation shared by the validate and publish flows.
 // Only storage access is injected; callers cannot supply different editorial rules.
-export async function validateBlogPost(post: BlogPost, checkImage: (image: BlogImage) => Promise<void | ImageProvenance>): Promise<BlogPostValidation> {
+export async function validateBlogPost(post: BlogPost, checkImage: (image: BlogImage, requireConfirmedUpload?: boolean) => Promise<void | ImageProvenance>): Promise<BlogPostValidation> {
   post = structuredClone(post);
   const result = report(post, editorialIssues(post));
-  const images = [
-    ...(post.featuredImage ? [{ image: post.featuredImage, field: "featuredImage" }] : []),
-    ...post.blocks.flatMap((block, index) => block.type === "image" && block.image ? [{ image: block.image, field: `blocks.${index}.image` }] : []),
-  ];
+  const verifiedFields: string[] = [];
+  const images = postImageReferences(post);
   for (const { image, field } of images) {
     try {
-      const stored = await checkImage(image);
+      const stored = await checkImage(image, post.editorial?.policyVersion === 1);
+      verifiedFields.push(field);
       // Metadata from storage cannot be hidden by omitting it from a post reference.
       if (stored) image.provenance = { ...image.provenance, ...stored, sourceAssets: [...new Set([...(image.provenance?.sourceAssets ?? []), ...stored.sourceAssets])] };
     }
     catch (error) {
-      if (!(error instanceof BlogError) || error.status !== 404) throw error;
-      result.errors.push({ code: "missing_image", field, message: "All referenced images must exist in blog storage before publication." });
+      if (!(error instanceof BlogError)) throw error;
+      if (error.status === 404) result.errors.push({ code: "missing_image", field, message: "All referenced images must exist in blog storage before publication." });
+      else if (error.status === 422 && ["media_upload_unconfirmed", "media_reference_mismatch", "media_content_mismatch", "image_placeholder", "cover_source_asset"].includes(error.code)) result.errors.push({ code: error.code, field, message: error.message });
+      else throw error;
     }
   }
   const policy = validateEditorial(post);
   result.errors.push(...policy.errors);
   result.warnings.push(...policy.warnings);
+  result.imageStatus = imageAssociationStatus(post, verifiedFields);
+  if (post.editorial?.policyVersion === 1 && !result.imageStatus.complete && result.errors.length === 0) result.errors.push({ code: "image_verification_incomplete", field: "images", message: "Five distinct associated images with confirmed uploads and stored files are required." });
   result.valid = result.errors.length === 0;
   return result;
 }
