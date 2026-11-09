@@ -5,7 +5,7 @@ import { JobberIcon } from "./JobberIcon";
 export function AssessmentForm() {
   return (
     <>
-      <ContactAssessmentForm sourcePage="/jobber-automation" />
+      <ContactAssessmentForm />
 
       <div className="mt-6 flex flex-col items-center justify-center gap-3 text-xs text-[#9CA3AF] sm:flex-row sm:gap-6">
         <a

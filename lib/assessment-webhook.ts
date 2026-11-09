@@ -7,7 +7,7 @@ export type AssessmentPayload = {
   estimatedProjectBudget: string;
   systemsInvolved: string[];
   jobberWorkflowRequest: string;
-  sourcePage: "/contact" | "/jobber-automation";
+  sourcePage: string;
   turnstileToken: string;
 };
 
@@ -23,18 +23,33 @@ const jobberBudgetValues: Record<string, string> = {
 
 export function createAssessmentPayload(formData: FormData, sourcePage: AssessmentPayload["sourcePage"], turnstileToken: string): AssessmentPayload {
   const budget = String(formData.get("budget") ?? "");
+  const isJobberPage = new URL(sourcePage).pathname.replace(/\/$/, "") === "/jobber-automation";
   return {
     fullName: String(formData.get("fullName") ?? "").trim(),
     businessName: String(formData.get("businessName") ?? "").trim(),
     businessEmail: String(formData.get("businessEmail") ?? "").trim(),
     phoneNumber: String(formData.get("phoneNumber") ?? ""),
     businessDescription: "Not provided on this form.",
-    estimatedProjectBudget: sourcePage === "/jobber-automation" ? (jobberBudgetValues[budget] ?? budget) : budget,
-    systemsInvolved: sourcePage === "/jobber-automation" ? ["Jobber"] : [],
+    estimatedProjectBudget: isJobberPage ? (jobberBudgetValues[budget] ?? budget) : budget,
+    systemsInvolved: isJobberPage ? ["Jobber"] : [],
     jobberWorkflowRequest: String(formData.get("workflow") ?? "").trim(),
     sourcePage,
     turnstileToken,
   };
+}
+
+export function getAssessmentValidationError(payload: AssessmentPayload): string | null {
+  const required = [
+    ["fullName", "Enter your full name."],
+    ["businessName", "Enter your business name."],
+    ["businessEmail", "Enter your business email."],
+    ["phoneNumber", "Enter your phone number."],
+    ["estimatedProjectBudget", "Select an estimated project budget."],
+    ["jobberWorkflowRequest", "Describe what you want to automate, integrate, or improve."],
+    ["turnstileToken", "Complete the security verification before sending your request."],
+  ] as const;
+  for (const [field, message] of required) if (!payload[field].trim()) return message;
+  return null;
 }
 
 export async function submitAssessment(

@@ -6,6 +6,7 @@ import {
   useCallback,
   useEffect,
   useImperativeHandle,
+  useId,
   useRef,
   useState,
 } from "react";
@@ -15,17 +16,18 @@ type TurnstileRenderOptions = {
   theme: "dark";
   size?: "compact";
   callback: (token: string) => void;
-  "error-callback": () => boolean;
+  "error-callback": (code: string) => void;
   "expired-callback": () => void;
   "timeout-callback": () => void;
 };
 
 type TurnstileApi = {
+  ready: (callback: () => void) => void;
   remove: (widgetId: string) => void;
   render: (
     container: HTMLElement,
     options: TurnstileRenderOptions,
-  ) => string;
+  ) => string | undefined;
   reset: (widgetId: string) => void;
 };
 
@@ -42,32 +44,66 @@ export type TurnstileWidgetHandle = {
 type TurnstileWidgetProps = {
   onTokenChange: (token: string) => void;
   size?: "compact";
+  siteKey?: string;
 };
 
 const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+type VerificationState =
+  | { status: "loading" | "verifying" | "verified" }
+  | { status: "error"; message: string; canRetry: boolean };
 
 export const TurnstileWidget = forwardRef<
   TurnstileWidgetHandle,
   TurnstileWidgetProps
->(function TurnstileWidget({ onTokenChange, size }, ref) {
+>(function TurnstileWidget({ onTokenChange, size, siteKey = turnstileSiteKey }, ref) {
   const containerRef = useRef<HTMLDivElement>(null);
   const widgetIdRef = useRef<string | null>(null);
   const [scriptReady, setScriptReady] = useState(false);
+  const [verification, setVerification] = useState<VerificationState>({
+    status: "loading",
+  });
+  const statusId = useId();
+
+  const fail = useCallback(
+    (message: string) => {
+      onTokenChange("");
+      setVerification({
+        status: "error",
+        message,
+        canRetry: Boolean(widgetIdRef.current),
+      });
+    },
+    [onTokenChange],
+  );
 
   const reset = useCallback(() => {
     onTokenChange("");
+    setVerification({ status: "verifying" });
 
     if (widgetIdRef.current && window.turnstile) {
-      window.turnstile.reset(widgetIdRef.current);
+      try {
+        window.turnstile.reset(widgetIdRef.current);
+      } catch {
+        fail("Security verification could not restart. Reload this page and try again.");
+      }
     }
-  }, [onTokenChange]);
+  }, [fail, onTokenChange]);
 
   useImperativeHandle(ref, () => ({ reset }), [reset]);
 
   useEffect(() => {
+    if (!siteKey?.trim() || verification.status !== "loading") return;
+    const timeout = window.setTimeout(
+      () => fail("Security verification did not load. Reload this page and try again."),
+      15_000,
+    );
+    return () => window.clearTimeout(timeout);
+  }, [fail, siteKey, verification.status]);
+
+  useEffect(() => {
     if (
       !scriptReady ||
-      !turnstileSiteKey ||
+      !siteKey?.trim() ||
       !containerRef.current ||
       !window.turnstile ||
       widgetIdRef.current
@@ -75,50 +111,119 @@ export const TurnstileWidget = forwardRef<
       return;
     }
 
-    const resetInvalidWidget = () => {
-      onTokenChange("");
-      window.setTimeout(() => {
-        if (widgetIdRef.current && window.turnstile) {
-          window.turnstile.reset(widgetIdRef.current);
+    let active = true;
+    const api = window.turnstile;
+    const resetInvalidWidget = (message: string) => {
+      if (!active) return;
+      fail(message);
+      if (widgetIdRef.current) {
+        try {
+          api.reset(widgetIdRef.current);
+        } catch {
+          fail("Security verification could not restart. Reload this page and try again.");
         }
-      }, 0);
+      }
     };
 
-    const widgetId = window.turnstile.render(containerRef.current, {
-      sitekey: turnstileSiteKey,
-      theme: "dark",
-      ...(size ? { size } : {}),
-      callback: onTokenChange,
-      "error-callback": () => {
+    try {
+      api.ready(() => {
+        if (!active || !containerRef.current) return;
         onTokenChange("");
-        return true;
-      },
-      "expired-callback": resetInvalidWidget,
-      "timeout-callback": resetInvalidWidget,
-    });
-    widgetIdRef.current = widgetId;
+        setVerification({ status: "verifying" });
+        try {
+          const widgetId = api.render(containerRef.current, {
+            sitekey: siteKey.trim(),
+            theme: "dark",
+            ...(size ? { size } : {}),
+            callback: (token) => {
+              if (!active) return;
+              if (!token) {
+                fail("Security verification did not complete. Please try again.");
+                return;
+              }
+              onTokenChange(token);
+              setVerification({ status: "verified" });
+            },
+            "error-callback": () => {
+              if (active) {
+                fail("Security verification failed. Please retry the security check or reload this page.");
+              }
+            },
+            "expired-callback": () => resetInvalidWidget(
+              "Security verification expired. Please complete the new security check.",
+            ),
+            "timeout-callback": () => resetInvalidWidget(
+              "Security verification timed out. Please complete the new security check.",
+            ),
+          });
+          if (!widgetId) throw new Error("Widget did not initialize.");
+          widgetIdRef.current = widgetId;
+        } catch {
+          fail("Security verification could not start. Reload this page and try again.");
+        }
+      });
+    } catch {
+      fail("Security verification could not start. Reload this page and try again.");
+    }
 
     return () => {
-      if (window.turnstile) {
-        window.turnstile.remove(widgetId);
-      }
+      active = false;
+      if (widgetIdRef.current) api.remove(widgetIdRef.current);
       widgetIdRef.current = null;
     };
-  }, [onTokenChange, scriptReady, size]);
+  }, [fail, onTokenChange, scriptReady, siteKey, size]);
+
+  const missingKey = !siteKey?.trim();
+  const hasError = missingKey || verification.status === "error";
+  const message = missingKey
+    ? "Security verification is unavailable. Please try again later."
+    : verification.status === "error" ? verification.message
+    : verification.status === "verified" ? "Security verification complete."
+    : verification.status === "loading" ? "Loading security verification…"
+    : "Complete the security verification before sending your request.";
 
   return (
     <>
-      <Script
-        id="cloudflare-turnstile-script"
-        onReady={() => setScriptReady(true)}
-        src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
-        strategy="afterInteractive"
-      />
-      <div
-        aria-label="Security verification"
-        className="flex min-h-[65px] w-full justify-center"
-        ref={containerRef}
-      />
+      {!missingKey && (
+        <Script
+          id="cloudflare-turnstile-script"
+          onReady={() => {
+            if (!window.turnstile) {
+              fail("Security verification could not load. Reload this page and try again.");
+              return;
+            }
+            setScriptReady(true);
+          }}
+          onError={() => fail("Security verification could not load. Reload this page and try again.")}
+          src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
+          strategy="afterInteractive"
+        />
+      )}
+      <div className="flex flex-col gap-2">
+        <div
+          aria-describedby={statusId}
+          aria-label="Security verification"
+          className="flex min-h-[65px] w-full justify-center"
+          ref={containerRef}
+        />
+        <p
+          aria-live="polite"
+          className={`text-center text-xs leading-[18px] ${hasError ? "text-red-300" : "text-text-medium"}`}
+          id={statusId}
+          role={hasError ? "alert" : "status"}
+        >
+          {message}
+        </p>
+        {verification.status === "error" && verification.canRetry && (
+          <button
+            className="mx-auto min-h-11 text-sm font-semibold text-primary-soft hover:text-white"
+            onClick={reset}
+            type="button"
+          >
+            Retry security verification
+          </button>
+        )}
+      </div>
     </>
   );
 });

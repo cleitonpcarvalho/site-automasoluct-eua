@@ -6,6 +6,7 @@ import { SITE_ORIGIN } from "../lib/seo.ts";
 // Read current publication state on every request, including after withdrawal
 // or deletion. Metadata routes would otherwise be cached by default.
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 export const runtime = "nodejs";
 
 const sitemapRoutes = [
@@ -26,6 +27,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     changeFrequency,
   }));
 
+  // Resolve BLOG_DATA_DIR from the running server's environment, not the image
+  // builder. Never hoist this query or cache its results outside the request.
   const service = getBlogService();
   for (let page = 1; ; page++) {
     const posts = service.listPublished(page, 100);

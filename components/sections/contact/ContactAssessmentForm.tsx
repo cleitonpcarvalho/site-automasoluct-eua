@@ -6,7 +6,7 @@ import {
   TurnstileWidget,
   type TurnstileWidgetHandle,
 } from "@/components/forms/TurnstileWidget";
-import { createAssessmentPayload, submitAssessment, type AssessmentPayload } from "@/lib/assessment-webhook";
+import { createAssessmentPayload, getAssessmentValidationError, submitAssessment } from "@/lib/assessment-webhook";
 
 import { ContactIcon } from "./ContactIcon";
 import styles from "./ContactAssessmentForm.module.css";
@@ -54,7 +54,7 @@ function TextField({
   );
 }
 
-export function ContactAssessmentForm({ compactVerification = false, sourcePage = "/contact" }: { compactVerification?: boolean; sourcePage?: AssessmentPayload["sourcePage"] }) {
+export function ContactAssessmentForm({ compactVerification = false }: { compactVerification?: boolean }) {
   const [selectedBudget, setSelectedBudget] = useState<string>("");
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -72,17 +72,23 @@ export function ContactAssessmentForm({ compactVerification = false, sourcePage 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (isSubmitting || !turnstileToken) {
+    if (isSubmitting) {
       return;
     }
 
     const formData = new FormData(event.currentTarget);
+    const payload = createAssessmentPayload(formData, window.location.href, turnstileToken);
+    const validationError = getAssessmentValidationError(payload);
+    if (validationError) {
+      setSubmitError(validationError);
+      return;
+    }
 
     setSubmitError("");
     setIsSubmitting(true);
 
     try {
-      await submitAssessment(createAssessmentPayload(formData, sourcePage, turnstileToken));
+      await submitAssessment(payload);
       turnstileRef.current?.reset();
       setSubmitted(true);
     } catch {
@@ -118,6 +124,8 @@ export function ContactAssessmentForm({ compactVerification = false, sourcePage 
         <form
           aria-label="Request a free assessment"
           className="flex flex-col gap-4"
+          onChangeCapture={() => { if (submitError) setSubmitError(""); }}
+          onInvalidCapture={() => setSubmitError("Complete all required fields and enter a valid business email before sending.")}
           onSubmit={handleSubmit}
         >
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
