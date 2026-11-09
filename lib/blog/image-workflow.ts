@@ -1,4 +1,7 @@
 import type { BlogPost } from './types.ts';
+import { IMAGE_GENERATION_INSTRUCTIONS } from './image-generation-guidance.ts';
+
+export { FEATURED_IMAGE_GENERATION_INSTRUCTION, BODY_IMAGE_GENERATION_INSTRUCTION } from './image-generation-guidance.ts';
 
 // Guidance describes the ChatGPT host. This module never calls a generator.
 export const IMAGE_WORKFLOW_POLICY = {
@@ -12,8 +15,7 @@ export const IMAGE_WORKFLOW_POLICY = {
         'If image generation is unavailable in the current ChatGPT session, stop the image workflow and report it instead of proceeding with fake or missing image references.',
         'Check the native image generation tool actually available in this ChatGPT session. Its absence from this MCP tools/list is expected and does not establish that native image generation is unavailable.',
         'Never use an OpenAI API key, call an image generation API, or add backend generation as a fallback.',
-        'Generate one new featured file in the conversation using default_cover_portrait and default_cover_logo as composition references. Do not upload a source asset as the finished cover.',
-        'Obtain four real body-image files generated in the conversation or supplied by the user. Prioritize user screenshots; do not add portrait/logo without an explicit request.',
+        ...IMAGE_GENERATION_INSTRUCTIONS,
         'Only call upload_blog_image after the real files are accessible through host-provided file params or their actual bytes. A prompt, file id alone, sandbox path, invented URL or tiny stand-in is not an image upload.',
         'Use exactly the reference objects acknowledged by successful uploads in featuredImage and blocks[].image. Never fabricate ids, references or an uploadConfirmed flag.',
         'Reread the saved draft, confirm 5/5 distinct image associations, then validate their registered media and stored files. Only a valid, complete result permits preview.',
@@ -23,7 +25,7 @@ export const IMAGE_WORKFLOW_POLICY = {
 export const IMAGE_WORKFLOW_STEPS = [
     'get_blog_template; check native image generation availability in this ChatGPT conversation',
     'create_blog_draft with article content; explicitly report partial drafts as incomplete',
-    'ChatGPT native tool generates 1 featured file with default_cover_portrait and default_cover_logo and obtains 4 real body files; prioritize user-supplied screenshots',
+    'ChatGPT native tool generates 1 featured file in exactly 16:9, landscape only, with default_cover_portrait and default_cover_logo and obtains 4 real body files; generate every body image in exactly 16:9, landscape only, as one standalone image in a separate native image-generation operation, waiting for each result; prioritize faithful user-supplied screenshots and inspect/redact sensitive data before any use; use useful clean diagrams second and related realistic editorial images third. For the featured cover only, use the portrait as an IDENTITY reference only and vary pose, expression, angle, framing, placement and composition for the article context',
     'Only after all 5 real files are accessible, upload_blog_image once per file; require successful uploadConfirmed responses',
     'Use exactly the reference objects returned by those uploads',
     'update_blog_post: associate featuredImage and the four blocks[].image objects',
