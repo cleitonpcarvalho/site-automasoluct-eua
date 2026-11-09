@@ -1,9 +1,5 @@
 // Historical provenance/validation identifiers only. No downloadable references.
 // Keep recognition of existing source files without exposing them as guidance.
-export const COVER_PROVENANCE_ASSETS = {
-    default_cover_portrait: { id: 'default_cover_portrait' },
-    default_cover_logo: { id: 'default_cover_logo' },
-} as const;
 const historicalSources = [
     { id: 'default_cover_portrait' as const, sha256: '402a8a19611ca23af8916dac731cf1203da0389695b319a89545d78c85ac2d97' },
     { id: 'default_cover_portrait' as const, sha256: 'ca591ab564082f74572ec0885f5582e59632eeca20e5c900ba5ed3e54fb24871' },

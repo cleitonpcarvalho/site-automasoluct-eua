@@ -130,8 +130,8 @@ test("the persisted login rate limit blocks further guesses and resets after its
 });
 
 test("dashboard listing searches title/slug literally, filters status, paginates and sorts by updated time", async t => {
-  const { handlers, service, database, auth } = store(t); const current = await session(auth);
-  const a = service.createDraft({ title: "100% connected", slug: "connected-ops" });
+  const { handlers, repository, service, database, auth } = store(t); const current = await session(auth);
+  const a = repository.createDraft({ ...completePostFixture(), title: "100% connected", slug: "connected-ops" }); // Historical title remains searchable.
   const b = service.createDraft(completePostFixture()); await service.publish(b.id, { revision: 1 });
   database.prepare("UPDATE blog_posts SET updated_at = ? WHERE id = ?").run("2099-01-01T00:00:00.000Z", a.id);
   for (const q of ["100%", "connected-ops"]) {

@@ -1,4 +1,4 @@
-import { SAVED_COVER_REFERENCES } from "./saved-cover-references.ts";
+import { TITLE_CHARACTER_RULES } from "./title-policy.ts";
 import { CTA_BUTTON_RULES } from "./cta-policy.ts";
 import { BLOG_CONVERSION_RULES } from "./conversion.ts";
 import { BODY_IMAGE_GENERATION_INSTRUCTION, BODY_IMAGE_SELECTION_INSTRUCTION, FEATURED_IMAGE_GENERATION_INSTRUCTION, FEATURED_IMAGE_REVIEW_INSTRUCTION, SCREENSHOT_IMAGE_GENERATION_INSTRUCTION, SCREENSHOT_REDACTION_INSTRUCTION } from "./image-generation-guidance.ts";
@@ -62,7 +62,7 @@ export const LEGACY_BLOG_TEMPLATE: {
 export const BLOG_TEMPLATE = {
   ...LEGACY_BLOG_TEMPLATE, version: 4, imageWorkflowVersion: 1, editorialPolicyVersion: 1,
   ctaButtonRules: CTA_BUTTON_RULES,
-  savedReferences: SAVED_COVER_REFERENCES,
+  titleRules: TITLE_CHARACTER_RULES,
   conversionRules: BLOG_CONVERSION_RULES,
   fieldsOutsideSequence: [...LEGACY_BLOG_TEMPLATE.fieldsOutsideSequence, "editorial"],
   requirements: { ...LEGACY_BLOG_TEMPLATE.requirements, videos: 0 },

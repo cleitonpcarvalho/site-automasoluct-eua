@@ -55,3 +55,16 @@ test("body brand provenance stored with media cannot be hidden in a post referen
   assert.ok((await service.validate(post.id)).errors.some(e => e.code === "brand_asset_in_body"));
   assert.equal(service.get(post.id).blocks.find(b => b.type === "image")?.image?.provenance, undefined);
 });
+
+test("featured covers validate without official portrait or logo provenance", async t => {
+  const database = openBlogDatabase(":memory:"); t.after(() => database.close());
+  const service = createBlogService(createPostRepository(database), async () => {});
+  const fields = completePostFixture(false);
+  delete fields.featuredImage!.provenance;
+  const post = service.createDraft(fields);
+  assert.equal((await service.validate(post.id)).valid, true);
+  const updated = service.update(post.id, { revision: 1, featuredImage: { ...post.featuredImage!, provenance: { sourceAssets: [], source: "generated" } } });
+  const result = await service.validate(updated.id);
+  assert.equal(result.valid, true);
+  assert.equal(result.imageStatus?.complete, true);
+});

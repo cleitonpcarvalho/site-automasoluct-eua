@@ -2,27 +2,20 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { test } from "node:test";
 import { officialCoverAssetIds } from "../../lib/blog/cover-asset-metadata.ts";
-import { SAVED_COVER_REFERENCES } from "../../lib/blog/saved-cover-references.ts";
 import { BLOG_TEMPLATE, LEGACY_BLOG_TEMPLATE } from "../../lib/blog/template.ts";
 import { blogJson } from "../../lib/blog/http.ts";
 import { BlogError } from "../../lib/blog/errors.ts";
 import { createStoredImageVerifier } from "../../lib/blog/media-verification.ts";
 
-test("authoritative template exposes exact ChatGPT saved references without downloadable cover metadata", async () => {
-  const response = blogJson({ data: BLOG_TEMPLATE });
-  const { data } = await response.json();
-  assert.deepEqual(data.savedReferences, SAVED_COVER_REFERENCES);
-  assert.equal(data.savedReferences.founder.name, "Cleiton Carvalho");
-  assert.equal(data.savedReferences.founder.identityReferenceOnly, true);
-  assert.equal(data.savedReferences.logo.name, "Automa Soluct");
-  assert.equal(data.savedReferences.logo.preserveExactly, true);
+test("authoritative template exposes a professional cover workflow without saved references or downloadable assets", async () => {
+  const { data } = await blogJson({ data: BLOG_TEMPLATE }).json();
+  assert.equal(Object.hasOwn(data, "savedReferences"), false);
   assert.equal(Object.hasOwn(data, "defaultAssets"), false);
-  assert.doesNotMatch(JSON.stringify(data), /drive\.google|sha256|get_blog_cover_assets|blog:\/\/assets/);
   assert.equal(Object.hasOwn(LEGACY_BLOG_TEMPLATE, "savedReferences"), false);
+  assert.doesNotMatch(JSON.stringify(data), /Cleiton Carvalho|Saved Reference Images|savedReferences|IDENTITY REFERENCE ONLY|drive\.google|sha256|get_blog_cover_assets|blog:\/\/assets/);
   const featured = data.slots.find((slot: { id: string }) => slot.id === "image-1").purpose;
-  assert.match(featured, /If either saved reference is unavailable.*DO NOT generate the featured image/);
-  assert.match(featured, /naming the missing reference/);
-  assert.match(featured, /Never invent or substitute a person or logo/);
+  assert.match(featured, /Generate exactly one new featured cover in a professional editorial style/);
+  assert.match(featured, /REQUIRED aspect ratio exactly 16:9/);
 });
 
 test("historical portrait and logo hashes remain recognized for validation only", () => {

@@ -3,12 +3,21 @@ import "server-only";
 import { getBlogDatabase } from "./database.ts";
 import { createStoredImageVerifier } from "./media-verification.ts";
 import { getMediaService } from "./media-service.ts";
+import { hasPlainTitleCharacters, TITLE_CHARACTER_RULES } from "./title-policy.ts";
 import { BlogError } from "./errors.ts";
 import { readBlogImage } from "./media.ts";
 import { assertPublicationReady, validateBlogPost } from "./publication.ts";
 import { createPostRepository, type PostRepository } from "./repository.ts";
 import { parseCreateDraft, parsePostId, parsePublishRequest, parseRevision, parseSlug, parseUpdatePost, parseValidateRequest } from "./validation.ts";
 import type { ImageProvenance, BlogImage, BlogPost, PostQuery } from "./types.ts";
+
+function assertTitleCharacters(fields: { title?: string; seoTitle?: string }) {
+  for (const field of TITLE_CHARACTER_RULES.fields) {
+    if (fields[field] !== undefined && !hasPlainTitleCharacters(fields[field])) {
+      throw new BlogError(400, "title_characters", `${field} must use plain natural language without special symbols, emojis or decorative characters. Rewrite it before saving.`, [field]);
+    }
+  }
+}
 
 export function createBlogService(repository: PostRepository, checkImage: (image: BlogImage, requireConfirmedUpload?: boolean) => Promise<void | ImageProvenance> = createStoredImageVerifier(id => getMediaService().get(id), filename => readBlogImage(filename))) {
   function checkRevision(post: BlogPost, revision: number | undefined) {
@@ -31,8 +40,17 @@ export function createBlogService(repository: PostRepository, checkImage: (image
       try { return repository.getPublishedBySlug(parseSlug(slug)); }
       catch (error) { if (error instanceof BlogError && error.status === 400) return null; throw error; }
     },
-    createDraft(input: unknown) { return repository.createDraft(parseCreateDraft(input)); },
-    update(id: string, input: unknown) { return repository.update(parsePostId(id), parseUpdatePost(input)); },
+    createDraft(input: unknown) {
+      const fields = parseCreateDraft(input);
+      assertTitleCharacters(fields);
+      return repository.createDraft(fields);
+    },
+    update(id: string, input: unknown) {
+      parsePostId(id);
+      const update = parseUpdatePost(input);
+      assertTitleCharacters(update.changes);
+      return repository.update(id, update);
+    },
     remove(id: string, revision: number) { return repository.remove(parsePostId(id), parsePublishRequest({ revision })); },
     async validate(id: string, input: unknown = {}) {
       parsePostId(id);

@@ -25,7 +25,7 @@ export function completePostFixture(withVideo = true): BlogPostFields {
   });
   return {
     title: "Test-only Jobber workflow", subtitle: "A local test fixture, never production content.", slug: `test-only-${randomUUID()}`,
-    seoTitle: "Test-only workflow | Automa Soluct", metaDescription: "An isolated test fixture for blog validation.",
+    seoTitle: "Test-only workflow from Automa Soluct", metaDescription: "An isolated test fixture for blog validation.",
     focusKeyword: "test workflow", excerpt: "A short test-only excerpt.", featuredImage: { ...imageFixture("featured"), provenance: { sourceAssets: ["default_cover_portrait", "default_cover_logo"] } },
     editorial: { policyVersion: 1, videoRequestedByUser: withVideo },
     blocks, video: withVideo ? { provider: "youtube", id: "AAAAAAAAAAA", title: "Test-only video reference" } : null,

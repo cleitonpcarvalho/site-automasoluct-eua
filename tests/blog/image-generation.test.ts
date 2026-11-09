@@ -20,8 +20,8 @@ test("template HTTP payload requires exactly 16:9 for the featured cover and all
   const response = blogJson({ data: BLOG_TEMPLATE });
   assert.equal(response.status, 200);
   const { data } = await response.json() as { data: typeof BLOG_TEMPLATE };
-  // Generation instructions stay in purpose strings; savedReferences replaces downloadable defaultAssets metadata.
-  assert.deepEqual(Object.keys(data).sort(), ["id", "version", "approval", "fieldsOutsideSequence", "requirements", "slots", "imageWorkflowVersion", "editorialPolicyVersion", "ctaButtonRules", "conversionRules", "savedReferences"].sort());
+  // Generation instructions stay in purpose strings; cover-reference metadata is absent.
+  assert.deepEqual(Object.keys(data).sort(), ["id", "version", "approval", "fieldsOutsideSequence", "requirements", "slots", "imageWorkflowVersion", "editorialPolicyVersion", "ctaButtonRules", "conversionRules", "titleRules"].sort());
   const images = data.slots.filter(slot => slot.type === "image");
   assert.equal(images.length, 4);
   assert.deepEqual(images.map(slot => slot.id), ["image-1", "image-2", "image-3", "image-4"]);
@@ -53,7 +53,7 @@ test("featured and body workflow instructions explicitly require 16:9 in each na
   assert.ok(featured); assert.ok(body);
   requiredRatio(featured); requiredRatio(body);
   assert.match(featured, /Explicitly request 16:9/);
-  assert.match(featured, /Saved Reference Images named exactly "Cleiton Carvalho".*"Automa Soluct"/);
+  assert.match(featured, /Generate exactly one new featured cover in a professional editorial style/);
   assert.match(body, /Explicitly request 16:9 in every native image-generation operation/);
   assert.match(body, /separate native image-generation operation/);
   assert.match(body, /one standalone image/);
@@ -78,12 +78,10 @@ function rule(prefix: string) {
   return instruction;
 }
 
-test("featured portrait is an identity-only reference with contextual, professional variation", () => {
+test("featured composition retains contextual, professional variation", () => {
   const featured = rule("Featured image:");
-  assert.match(featured, /IDENTITY REFERENCE ONLY/);
-  assert.match(featured, /preserve the exact facial identity, recognizable facial features, beard, hair and person identity/);
-  assert.match(featured, /Preserve the official Automa Soluct logo exactly/);
-  assert.match(featured, /Do NOT copy the reference pose/);
+  assert.match(featured, /When a person appears, adapt/);
+  assert.match(featured, /professional editorial style/);
   for (const variation of ["pose", "facial expression", "head angle", "body angle", "hand position", "camera framing", "subject placement", "composition"]) assert.ok(featured.includes(variation));
   for (const context of ["Analytical/technical", "Growth/opportunity", "Warning/problem", "Educational", "Automation/operations"]) assert.ok(featured.includes(context));
   for (const repeated of ["crossed arms", "straight-on passport/headshot pose", "same neutral facial expression", "same subject placement", "same crop"]) assert.ok(featured.includes(repeated));
@@ -130,17 +128,17 @@ test("authoritative HTTP template and editorial guidance expose all rules and th
   assert.match(priority, /Do not force diagrams when a realistic image is more appropriate/);
 });
 
-test("featured saved references must be available and every cover must pass visual review before presentation", () => {
+test("cover review checks quality and article context without saved-reference lookups or comparisons", () => {
   const featured = rule("Featured image:");
-  assert.match(featured, /Select both saved references in the ChatGPT image generator/);
-  assert.match(featured, /If either saved reference is unavailable.*DO NOT generate the featured image/);
-  assert.match(featured, /naming the missing reference/);
-  assert.match(featured, /Never invent or substitute a person or logo/);
+  assert.match(featured, /professional editorial style/);
   const review = rule("Featured image post-generation check:");
   assert.match(review, /Before presenting.*visually inspect/);
   assert.match(review, /Reject and regenerate/);
-  for (const failure of ["person does not match Cleiton Carvalho", "logo does not match Automa Soluct", "copies the original crossed-arms pose", "pose/expression does not fit the article context", "logo was invented, distorted or substituted"]) assert.ok(review.includes(failure));
-  assert.match(review, /visually inspect every regenerated result/);
+  for (const failure of ["aspect ratio is not exactly 16:9 landscape", "visual quality is poor", "composition does not fit the article context", "pose/expression does not fit the article context"]) assert.ok(review.includes(failure));
+  assert.match(review, /Visually inspect every regenerated result/);
   assert.match(review, /Do not present a failed generation as a valid cover/);
+  assert.doesNotMatch(review, /reference|identity|logo|crossed-arms|Cleiton Carvalho/i);
+  for (const key of ["referenceSource", "requiredReferences", "portraitReferenceUse", "missingReferenceAction", "preserveExactPerson", "preserveExactLogo"]) assert.equal(Object.hasOwn(IMAGE_WORKFLOW_POLICY.featuredImage, key), false);
+  assert.doesNotMatch(JSON.stringify([IMAGE_WORKFLOW_POLICY, IMAGE_WORKFLOW_STEPS, EDITORIAL_GUIDANCE]), /Cleiton Carvalho|Saved Reference Images|savedReferences|IDENTITY REFERENCE ONLY|featuredImageReferences/);
   assert.ok(IMAGE_WORKFLOW_STEPS.indexOf(review) < IMAGE_WORKFLOW_STEPS.findIndex(step => step.includes("upload_blog_image once per file")));
 });

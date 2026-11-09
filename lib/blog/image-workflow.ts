@@ -1,5 +1,4 @@
 import type { BlogPost } from './types.ts';
-import { SAVED_COVER_REFERENCES } from './saved-cover-references.ts';
 import { FEATURED_IMAGE_REVIEW_INSTRUCTION, IMAGE_GENERATION_INSTRUCTIONS } from './image-generation-guidance.ts';
 
 export { FEATURED_IMAGE_GENERATION_INSTRUCTION, BODY_IMAGE_GENERATION_INSTRUCTION } from './image-generation-guidance.ts';
@@ -12,9 +11,6 @@ export const IMAGE_WORKFLOW_POLICY = {
     requiredFeaturedImages: 1,
     requiredBodyImages: 4,
     featuredImage: {
-        referenceSource: SAVED_COVER_REFERENCES.source,
-        requiredReferences: [SAVED_COVER_REFERENCES.founder.name, SAVED_COVER_REFERENCES.logo.name],
-        portraitReferenceUse: 'identity_only', missingReferenceAction: 'do_not_generate_report_unavailable_saved_reference',
         postGenerationVisualInspectionRequired: true, rejectAndRegenerateFailedCover: true,
     },
     instructions: [
@@ -32,7 +28,7 @@ export const IMAGE_WORKFLOW_POLICY = {
 export const IMAGE_WORKFLOW_STEPS = [
     'get_blog_template; check native image generation availability in this ChatGPT conversation',
     'create_blog_draft with article content; explicitly report partial drafts as incomplete',
-    'ChatGPT native tool generates 1 featured file in exactly 16:9, landscape only, using the ChatGPT Saved Reference Images named exactly Cleiton Carvalho and Automa Soluct; if either is unavailable, do not generate the cover and report the missing saved reference; and obtains 4 real body files; generate every body image in exactly 16:9, landscape only, as one standalone image in a separate native image-generation operation, waiting for each result; prioritize faithful user-supplied screenshots and inspect/redact sensitive data before any use; use useful clean diagrams second and related realistic editorial images third. For the featured cover only, use Cleiton Carvalho as an IDENTITY REFERENCE ONLY, preserve exact facial identity, beard/hair and the exact Automa Soluct logo, and vary pose, expression, head/body angles, hand position, framing, placement and composition for the article context',
+    'ChatGPT native tool generates 1 featured file in exactly 16:9, landscape only, with a professional editorial composition appropriate to the article, and obtains 4 real body files; generate every body image in exactly 16:9, landscape only, as one standalone image in a separate native image-generation operation, waiting for each result; prioritize faithful user-supplied screenshots and inspect/redact sensitive data before any use; use useful clean diagrams second and related realistic editorial images third. For the featured cover only, adapt any visible pose, expression, head/body angles, hand position, framing, placement and composition for the article context',
     FEATURED_IMAGE_REVIEW_INSTRUCTION,
     'Only after all 5 real files are accessible, upload_blog_image once per file; require successful uploadConfirmed responses',
     'Use exactly the reference objects returned by those uploads',

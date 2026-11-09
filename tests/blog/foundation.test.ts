@@ -70,9 +70,10 @@ test("drafts never enter public queries and publication dates control listing or
 
 test("slugs are unique and content containing SQL remains literal data", t => {
   const { repository, service } = store(t);
-  const title = "Robert'); DROP TABLE blog_posts;--";
-  const first = service.createDraft({ title, slug: "safe-slug" });
-  assert.equal(repository.get(first.id).title, title);
+  const payload = "Robert'); DROP TABLE blog_posts;--";
+  assert.throws(() => service.createDraft({ title: payload, slug: "safe-slug" }), errorCode("title_characters"));
+  const first = service.createDraft({ title: "Plain title", excerpt: payload, slug: "safe-slug" });
+  assert.equal(repository.get(first.id).excerpt, payload);
   assert.throws(() => service.createDraft({ title: "Other", slug: "safe-slug" }), errorCode("slug_conflict"));
   assert.equal(service.list({ page: 1, pageSize: 10 }).total, 1);
 });
