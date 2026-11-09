@@ -4,6 +4,7 @@ import Link from "next/link";
 import { siteConfig } from "@/lib/site-config";
 
 import { Container } from "./Container";
+import { HeaderNavigation } from "./HeaderNavigation";
 
 export function Header() {
   return (
@@ -24,25 +25,28 @@ export function Header() {
           />
         </Link>
 
-        <Link
-          className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-lg bg-primary px-3.5 py-1.5 font-body text-xs font-semibold text-white transition-colors hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-soft active:bg-primary-active md:px-5 md:py-2.5 md:text-sm"
-          href="/contact"
-        >
-          <svg
-            aria-hidden="true"
-            className="size-4"
-            fill="none"
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="1.8"
-            viewBox="0 0 24 24"
+        <div className="ml-auto flex items-center gap-2 lg:gap-5">
+          <HeaderNavigation />
+          <Link
+            className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-lg bg-primary px-3.5 py-1.5 font-body text-xs font-semibold text-white transition-colors hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-soft active:bg-primary-active md:px-5 md:py-2.5 md:text-sm"
+            href="/contact"
           >
-            <path d="M4 4.5h16v12H8l-4 3v-15Z" />
-            <path d="M8 8.5h8M8 12.5h5" />
-          </svg>
-          Text Us
-        </Link>
+            <svg
+              aria-hidden="true"
+              className="size-4"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="1.8"
+              viewBox="0 0 24 24"
+            >
+              <path d="M4 4.5h16v12H8l-4 3v-15Z" />
+              <path d="M8 8.5h8M8 12.5h5" />
+            </svg>
+            Text Us
+          </Link>
+        </div>
       </Container>
     </header>
   );

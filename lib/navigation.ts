@@ -6,6 +6,14 @@ export type NavigationItem = {
   icon: NavigationIcon;
 };
 
+export const headerNavigation = [
+  { label: "Home", href: "/" },
+  { label: "Jobber Automation", href: "/jobber-automation" },
+  { label: "Integrations", href: "/integrations" },
+  { label: "Blog", href: "/blog" },
+  { label: "Contact", href: "/contact" },
+] as const;
+
 export const mobileNavigation: readonly NavigationItem[] = [
   { label: "Home", href: "/", icon: "home" },
   { label: "Jobber", href: "/jobber-automation", icon: "sync_alt" },
@@ -16,6 +24,7 @@ export const mobileNavigation: readonly NavigationItem[] = [
 export const footerNavigation = [
   { label: "Jobber Automation", href: "/jobber-automation" },
   { label: "Integrations", href: "/integrations" },
+  { label: "Blog", href: "/blog" },
   { label: "Contact", href: "/contact" },
   { label: "Privacy", href: "/privacy" },
   { label: "Terms", href: "/terms" },

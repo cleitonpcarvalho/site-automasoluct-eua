@@ -39,6 +39,7 @@ export function PostActions({ post, csrf, dirty = false, editor = false, onChang
     <div className={styles.actions}>
       {!editor && <a className={styles.secondary} href={`/admin/blog/${post.id}`}>Editar</a>}
       <a className={styles.secondary} href={`/admin/blog/${post.id}/preview?revision=${post.revision}`} rel="noopener noreferrer" target="_blank">Prévia salva r{post.revision}</a>
+      {!editor && post.status === "published" && <a className={styles.secondary} href={`/blog/${post.slug}`} rel="noopener noreferrer" target="_blank">View Published Post</a>}
       {post.status === "draft" ? <button className={styles.button} disabled={dirty || busy} onClick={() => open("publish")} type="button">Publicar</button> : <button className={styles.secondary} disabled={dirty || busy} onClick={() => open("withdraw")} type="button">Devolver para draft</button>}
       <button className={styles.danger} disabled={dirty || busy} onClick={() => open("remove")} type="button">Excluir</button>
     </div>

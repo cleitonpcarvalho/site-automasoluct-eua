@@ -104,6 +104,27 @@ function assertBlogConversion(html: string) {
   assert.match(closing, /Submit the assessment below/);
 }
 
+function assertSocialMetadata(html: string, post: BlogPost, imageUrl: string) {
+  // Read only the raw server-rendered head: no script execution or DOM repair.
+  const head = html.match(/<head>([\s\S]*?)<\/head>/)?.[1] ?? "";
+  const canonical = `https://automasoluct.com/blog/${post.slug}`;
+  assert.match(head, new RegExp(`<link rel="canonical" href="${canonical}"`));
+  const tags = [...head.matchAll(/<meta\b[^>]*>/g)].map(match => match[0]);
+  function content(name: string) {
+    return tags.find(tag => tag.includes(`property="${name}"`) || tag.includes(`name="${name}"`))?.match(/content="([^"]*)"/)?.[1];
+  }
+  assert.equal(content("og:title"), post.seoTitle || post.title);
+  assert.equal(content("og:description"), post.metaDescription || post.subtitle || post.excerpt);
+  assert.equal(content("og:url"), canonical);
+  assert.equal(content("og:type"), "article");
+  assert.equal(content("og:image"), imageUrl);
+  assert.equal(content("og:image:secure_url"), imageUrl);
+  assert.equal(content("twitter:card"), "summary_large_image");
+  assert.equal(content("twitter:title"), post.seoTitle || post.title);
+  assert.equal(content("twitter:description"), post.metaDescription || post.subtitle || post.excerpt);
+  assert.equal(content("twitter:image"), imageUrl);
+}
+
 try {
   let ready = false;
   for (let index = 0; index < 100; index++) {
@@ -149,6 +170,9 @@ try {
   assert.equal((await call("/api/admin/blog/posts", "POST", { title: "CSRF blocked" }, true, { "X-CSRF-Token": "bad" })).status, 403);
   assert.equal((await call("/api/admin/blog/posts", "POST", { title: "Origin blocked" }, true, { Origin: "https://attacker.test" })).status, 403);
   const post = await completeDraft("qa-only-admin-lifecycle", "QA-only private editorial draft");
+  const draftCards = await (await call(`/admin/blog?q=${post.slug}`)).text();
+  assert.match(draftCards, new RegExp(`<img\\b[^>]*src="${post.featuredImage!.url}"`));
+  assert.ok(!draftCards.includes("View Published Post"));
   assert.ok((await readSitemap()).every(entry => !entry.url?.includes(post.slug)));
   const editor = await call(`/admin/blog/${post.id}`);
   assert.equal(editor.status, 200); const editorHtml = await editor.text();
@@ -168,11 +192,31 @@ try {
   assert.equal((await call(`/api/admin/blog/posts/${post.id}/publish`, "POST", { expectedRevision: post.revision })).status, 400);
   const publish = await call(`/api/admin/blog/posts/${post.id}/publish`, "POST", { expectedRevision: post.revision, confirmation: post.slug }); assert.equal(publish.status, 200);
   const published = (await publish.json()).data as BlogPost;
+  const publishedCards = await (await call(`/admin/blog?q=${post.slug}`)).text();
+  assert.match(publishedCards, new RegExp(`<a\\b(?=[^>]*href="/blog/${post.slug}")(?=[^>]*target="_blank")(?=[^>]*rel="noopener noreferrer")[^>]*>View Published Post</a>`));
   assert.deepEqual((await readSitemap()).find(entry => entry.url === `https://automasoluct.com/blog/${post.slug}`), {
     url: `https://automasoluct.com/blog/${post.slug}`, lastModified: published.updatedAt, changeFrequency: "monthly", priority: "0.6",
   });
   const publicArticle = await call(`/blog/${post.slug}`, "GET", undefined, false);
   assert.equal(publicArticle.status, 200); assertBlogConversion(await publicArticle.text());
+  for (const userAgent of ["WhatsApp/2.24.0", "facebookexternalhit/1.1", "Twitterbot/1.0"]) {
+    const social = await call(`/blog/${post.slug}`, "GET", undefined, false, { "User-Agent": userAgent });
+    assert.equal(social.status, 200);
+    assertSocialMetadata(await social.text(), published, new URL(published.featuredImage!.url, "https://automasoluct.com").toString());
+  }
+  // A legacy published row without a cover exercises fallback rendering. The
+  // temporary fixture bypasses validation only here; publishing rules stay intact.
+  const socialDatabase = openBlogDatabase(join(data, "blog.sqlite"));
+  try {
+    const repository = createPostRepository(socialDatabase);
+    const legacyDraft = repository.createDraft({ ...completePostFixture(false), slug: "qa-only-no-cover", featuredImage: null });
+    const legacy = repository.publish(legacyDraft.id, legacyDraft.revision);
+    const social = await call(`/blog/${legacy.slug}`, "GET", undefined, false, { "User-Agent": "WhatsApp/2.24.0" });
+    assert.equal(social.status, 200);
+    assertSocialMetadata(await social.text(), legacy, "https://automasoluct.com/og-image.png");
+    assert.ok((await (await call(`/admin/blog?q=${legacy.slug}`)).text()).includes("No featured image"));
+    repository.remove(legacy.id, legacy.revision);
+  } finally { socialDatabase.close(); }
   assert.equal((await call(`/api/admin/blog/posts/${post.id}`, "PATCH", { expectedRevision: published.revision, fields: toEditorFields(published) })).status, 409);
   const withdraw = await call(`/api/admin/blog/posts/${post.id}/draft`, "POST", { expectedRevision: published.revision, confirmation: post.slug }); assert.equal(withdraw.status, 200);
   const withdrawn = (await withdraw.json()).data as BlogPost;
