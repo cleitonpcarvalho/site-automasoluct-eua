@@ -22,7 +22,7 @@ export function BlogBlocks({ post }: { post: BlogPost }) {
           case "cta":
             return <aside aria-label="Contact Automa Soluct" className={post.editorial ? "flex flex-col items-start gap-3" : "flex flex-col items-start gap-5 rounded-xl border border-primary/30 bg-primary/10 p-5 sm:p-7"} id={block.id} key={block.id}>
               {block.text && <p className="text-base leading-7 text-white">{post.editorial ? <InlineLinks content={block.text} /> : block.text}</p>}
-              <Link className="inline-flex min-h-11 max-w-full items-center justify-center rounded-lg bg-primary px-5 py-3 text-center text-sm font-semibold text-white hover:bg-primary-hover" href={block.href} {...(isExternalHref(block.href) ? { target: "_blank", rel: "noopener noreferrer" } : {})}>{block.label}</Link>
+              <Link className={styles.ctaButton} href={block.href} {...(isExternalHref(block.href) ? { target: "_blank", rel: "noopener noreferrer" } : {})}>{block.label}</Link>
             </aside>;
           case "image":
             if (!block.image) return <div className="rounded-xl border border-dashed border-border-strong p-8 text-sm text-text-medium" id={block.id} key={block.id}>Image pending · {block.id}</div>;
