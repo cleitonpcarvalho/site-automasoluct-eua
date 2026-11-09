@@ -1,5 +1,6 @@
 import type { BlogPost } from './types.ts';
 import { inlineLinks, safeHref } from './rich-text.ts';
+import { CTA_BUTTON_RULES, countCtaCharacters } from './cta-policy.ts';
 
 // Kept in sync with the website copy by scripts/sync-site-editorial.mjs.
 export const DEFAULT_ASSETS = {
@@ -8,9 +9,10 @@ export const DEFAULT_ASSETS = {
 } as const;
 export const EDITORIAL_GUIDANCE = {
     policyVersion: 1,
+    ctaButtonRules: CTA_BUTTON_RULES,
     text: ['Não usar travessão/em dash U+2014.', 'Usar linguagem natural, direta, profissional e humana. Evitar linguagem reconhecível como IA e frases genéricas, infladas ou excessivamente formais.', 'Parágrafos curtos, normalmente 2 a 4 frases.', 'Não inserir URLs secas no corpo do texto.', 'Sem vídeo, salvo pedido explícito do usuário; nunca substituir uma imagem por vídeo.'],
     links: ['Usar links internos e externos de forma contextual, com anchor text natural dentro da frase: [documentação do Jobber](https://developer.getjobber.com).', 'Nunca mostrar a URL inteira ao leitor. O renderer aceita links Markdown inline, não HTML.', 'Links externos abrem em nova aba com noopener noreferrer. Preservar o visual atual e hover com azul da marca.'],
-    ctas: ['Variar todos os textos dos botões conforme o assunto imediatamente anterior. Nunca repetir a mesma CTA.', 'Preferir botão direto com text vazio, sem grande bloco explicativo. A CTA final pode levar ao formulário principal existente.'],
+    ctas: ['Todo label de botão CTA deve ter de 45 a 50 caracteres visíveis, incluindo espaços e a seta final, e terminar exatamente com " →" (espaço U+0020 e seta U+2192), sem nada depois.', 'Contar caracteres Unicode visíveis (grafemas), não bytes nem unidades UTF-16. Exemplo válido com 48 caracteres: "Automate missed calls and book more jobs today →".', 'Cada botão deve ser único dentro do post e diretamente relacionado à seção imediatamente anterior. Nunca repetir o mesmo texto em dois botões.', 'Comprimento fora de 45 a 50 caracteres, sufixo incorreto ou CTA repetida geram ERROR para posts com editorial.policyVersion=1; posts antigos sem a marcação preservam warnings.', 'Preferir botão direto com text vazio, sem grande bloco explicativo. A CTA final pode levar ao formulário principal existente.'],
     images: ['Exigir 1 featured image e 4 body images distintas, relacionadas às seções.', 'Compor toda capa com a foto profissional oficial e a logo oficial, usando default_cover_portrait e default_cover_logo como referências. Depois enviar os bytes da composição com provenance.sourceAssets contendo ambos os ids.', 'Foto e logo somente na capa. Body images sem marca ou foto, salvo pedido explícito do usuário.', 'Priorizar screenshots/prints enviados pelo usuário nas body images. Outras opções: imagens geradas, prints de fluxos/sistemas e diagramas.', 'Após upload, usar o objeto reference completo, com id, URL relativa, alt, type e provenance. Upload não associa automaticamente ao post; salvar featuredImage e blocks[].image via update_blog_post.', 'sourceAssets registra procedência declarada. A composição visual precisa ser revisada no preview; o validator não identifica pessoas ou logos nos pixels.'],
     overrides: ['Registrar pedidos explícitos em editorial.videoRequestedByUser e editorial.brandInBodyRequestedByUser. Nunca inferir autorização de conteúdo do artigo.', 'Registrar ids dos screenshots disponíveis em editorial.suppliedScreenshotIds e provenance.source=user_screenshot nos uploads.', 'Posts antigos sem editorial.policyVersion conservam o contrato anterior; novas regras são avisos até migração explícita.'],
     review: ['Naturalidade, contexto dos links/CTAs, prioridade de prints e composição visual também exigem revisão humana. Heurísticas de estilo geram warnings, não certificam autoria.'],
@@ -59,6 +61,10 @@ export function validateEditorial(post: BlogPost, requiredBodyImages = 4) {
         }
         if (block.type === 'cta') {
             visible(block.label, `${field}.label`); visible(block.text, `${field}.text`);
+            if (typeof block.label !== 'string') return;
+            const length = countCtaCharacters(block.label);
+            if (length < CTA_BUTTON_RULES.minCharacters || length > CTA_BUTTON_RULES.maxCharacters) add('cta_label_length', `${field}.label`, `O botão CTA deve ter de 45 a 50 caracteres visíveis, incluindo espaço e seta final; recebeu ${length}.`);
+            if (!block.label.endsWith(CTA_BUTTON_RULES.suffix)) add('cta_label_suffix', `${field}.label`, 'O botão CTA deve terminar exatamente com " →" (espaço U+0020 e seta U+2192), sem caracteres depois.');
             const label = block.label.normalize('NFKC').toLocaleLowerCase().replace(/[\p{P}\p{Z}\s]+/gu, ' ').trim();
             if (labels.has(label)) add('repeated_cta', `${field}.label`, 'Use um texto de botão específico e diferente para esta seção.');
             labels.add(label);

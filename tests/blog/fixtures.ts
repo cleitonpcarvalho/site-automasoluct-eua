@@ -10,12 +10,14 @@ export function imageFixture(type: BlogImage["type"] = "internal"): BlogImage {
   return { id, url: `/uploads/blog/${id}.png`, alt: "Test-only workflow diagram", type };
 }
 
+const ctaLabels = ["Automate missed calls and book more jobs today →", "Connect your systems and simplify daily work →", "Build custom workflows around your operations →", "Plan your next automation with our engineers →"];
+
 export function completePostFixture(withVideo = true): BlogPostFields {
   const blocks = BLOG_TEMPLATE.slots.filter(slot => !slot.optional || (slot.type === "video" && withVideo)).map((slot): BlogBlock => {
     switch (slot.type) {
       case "text": return { id: slot.id, type: "text", content: "Test-only editorial paragraph.\n\nA second paragraph for rendering verification." };
       case "heading": return { id: slot.id, type: "heading", level: slot.level ?? 3, content: "Test-only section heading" };
-      case "cta": return { id: slot.id, type: "cta", text: "Discuss a workflow with our engineering team.", label: `Discuss workflow ${slot.id}`, href: "/contact" };
+      case "cta": return { id: slot.id, type: "cta", text: "Discuss a workflow with our engineering team.", label: ctaLabels[Number(slot.id.slice(-1)) - 1], href: "/contact" };
       case "image": return { id: slot.id, type: "image", image: imageFixture(), caption: "Test-only illustration." };
       case "video": return { id: slot.id, type: "video" };
       case "form": return { id: slot.id, type: "form", formId: "assessment" };

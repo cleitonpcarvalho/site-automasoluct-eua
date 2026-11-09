@@ -1,8 +1,29 @@
 # Authoritative blog validation and private preview
 
-This stage changes only the site backend and its tests/documentation. No MCP
-project, environment credentials, editorial template, public pages or admin UI
-are changed. No deployment or production test content is created.
+## Permanent CTA rule, template v3
+
+The backend and MCP share `lib/blog/cta-policy.ts` / `src/cta-policy.ts`. Every CTA button label must contain **45–50 visible Unicode characters in the complete label**, including spaces and the exact final `" →"` (U+0020 space, U+2192 arrow). No character may follow the arrow. Example: `Automate missed calls and book more jobs today →` has 48 characters.
+
+Count grapheme clusters using `Intl.Segmenter`, including combining accents and emoji as one visible character. The parser preserves the label exactly; trailing whitespace cannot be silently trimmed to make the suffix valid. Draft/legacy transport still allows up to 100 visible characters, so incomplete drafts can be saved and existing labels remain readable.
+
+Each label must be unique within the post and directly related to its immediately preceding section. Existing duplicate normalization (Unicode, case, whitespace and punctuation) is retained. Context is explicit editorial guidance and requires human review.
+
+`BLOG_TEMPLATE` v3 exposes `ctaButtonRules`; the legacy template remains v1. MCP `get_blog_template` exposes the same rules and `backendCtaRulesSupported`, including permanent generation guidance. For `editorial.policyVersion=1`, the following are **errors**, never merely warnings:
+
+- `cta_label_length`: fewer than 45 or more than 50 characters, counting the complete label and suffix.
+- `cta_label_suffix`: label does not end exactly with `" →"`.
+- `repeated_cta`: duplicate button text in the same post.
+
+Each issue identifies `blocks.<index>.label`, sets `valid=false` and blocks preview/publication. Existing compatibility remains: unmarked legacy posts receive these new issues as warnings, keep their previous template and are not rewritten. No database migration, CSS, visual component, form, image or link rule is changed by this CTA extension.
+
+`tests/blog/cta.test.ts` covers 44/45/48/50/51-character boundaries, exact suffix and trailing whitespace, Unicode, duplicated labels, template metadata, persisted labels, preview/publish rejection and unchanged legacy records.
+
+## CTA validation results, 2026-11-09
+
+- Site: `npm run lint`, `tsc --noEmit` (local binary), `npm run build` and `npm test` passed; **105 tests passed, zero failures and zero skips**.
+- MCP: lint, typecheck, build and full tests passed; **125 passed, one optional remote smoke skipped, zero failures** out of 126 tests, with both real-site integration tests enabled.
+- Added 18 site cases and 21 MCP cases for the new CTA contract. Shared-policy sync and diff whitespace checks passed.
+- No commit, push, deployment or production write was performed. No CSS, visual components, forms, images or link rules were changed. The automatic `next-env.d.ts` build diff was removed.
 
 ## Shared validation
 
@@ -17,15 +38,16 @@ The existing rules remain authoritative:
 - Existing field types, maximum lengths, slug format, tags, image reference/UUID/
   URL/type/alt, CTA label/destination, provider/video id/title and supported form,
   all checked by the same parsers already used on writes.
-- Approved template, exact slot ids/types/order: 26 blocks, 10 texts, 6 H3 headings,
-  4 CTAs, 4 internal images, 1 required video and final assessment form.
-- Nonempty text/heading/CTA content, featured image, internal image references,
+- Approved template, exact slot ids/types/order: 25 default blocks, 10 texts, 6 H3 headings,
+  4 CTAs, 4 internal images and final assessment form. A requested video adds its slot.
+  Unmarked legacy posts retain the original 26-slot template with required video.
+- Nonempty text/headings, required CTA labels, featured image, internal image references,
   distinct image ids (featured included) and the required top-level video.
 - Every referenced image must exist and pass the existing storage reader's checks.
 
 `collectPostFieldIssues` reuses the write-time parsers, including for saved legacy
-or corrupted records. It does not normalize or save anything. No new SEO minimum
-lengths, keyword density, content-length or other editorial rules were introduced.
+or corrupted records. It does not normalize or save anything. No SEO minimum lengths or keyword-density constraints were added. Permanent
+editorial policy is applied by `lib/blog/editorial-policy.ts`, including the CTA rules above.
 
 The synchronous `validatePublication` editorial-only helper is retained for
 existing callers/tests; its rules use the same collector. The production
@@ -87,9 +109,9 @@ such as missing alt. Codes include `invalid_field`, `required_field`,
 `required_text`, `required_cta_text`, `required_video`, `invalid_image_count`,
 `duplicate_image` and `editorial_template_pending`.
 
-Warnings are currently empty; no advisory editorial rules were added. Like the
-previous publication flow, storage reads run after structural/editorial validation
-succeeds. Fix reported fields and revalidate to discover missing stored files.
+Editorial warnings include style suggestions and compatibility notices for legacy
+posts. The shared validator checks available stored image references and merges
+editorial issues without rewriting the post.
 Unexpected storage/infrastructure errors are HTTP 500, not fabricated editorial
 results, and do not expose paths or underlying error messages.
 
@@ -173,9 +195,7 @@ PUBLISH rejection, unchanged draft, private preview/login redirect, absent publi
 draft, invalid publish rejection and revision conflict all passed. The temporary
 server was stopped and its data removed; no production database was used.
 
-The separate MCP project was deliberately not modified or enabled here. Its
-proposed validator schema currently expects string issues and no `postId`; a
-future authorized client change must consume this actual structured contract
-before enabling its validation/publication integration. Do not infer success from
-HTTP 200 alone: check `data.valid`, `postId` and `revision`, then obtain explicit
-publication intent and call publish with that saved revision.
+The companion MCP consumes the structured validation contract, applies the same
+CTA policy to the saved revision and rejects invalid preview/publication even if
+an older backend has not yet implemented the new rules. Do not infer readiness
+from HTTP 200: check `data.valid`, `postId` and `revision`.

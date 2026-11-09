@@ -1,4 +1,5 @@
 import type { BlogBlock, BlogEditorial, ImageProvenance, BlogImage, BlogPostFields, BlogValidationIssue, BlogVideo, PostQuery, PostUpdate } from "./types.ts";
+import { countCtaCharacters } from "./cta-policy.ts";
 import { BlogError, invalid } from "./errors.ts";
 
 export const BLOG_IMAGE_FILENAME = /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}\.(?:avif|webp|png|jpe?g)$/;
@@ -59,6 +60,13 @@ function parseVideo(value: unknown): BlogVideo {
   return { provider: video.provider, id, title: text(video.title, "video.title", 240, true) };
 }
 
+// Preserve the exact label, including its ending, for editorial validation.
+// Drafts and legacy records retain the wider transport limit.
+function ctaLabel(value: unknown): string {
+  if (typeof value !== "string" || !value.trim() || countCtaCharacters(value) > 100) return invalid("cta.label must contain 1–100 visible characters.");
+  return value;
+}
+
 function ctaHref(value: unknown): string {
   const href = text(value, "cta.href", 1000, true);
   // Only site paths or HTTPS. No javascript:, data:, protocol-relative URLs or backslashes.
@@ -88,7 +96,7 @@ export function parseBlocks(value: unknown): BlogBlock[] {
         return { id, type: "heading", level: block.level, content: text(block.content, "heading.content", 240) };
       case "cta":
         onlyKeys(block, ["id", "type", "text", "label", "href"], "cta block");
-        return { id, type: "cta", text: text(block.text, "cta.text", 1000), label: text(block.label, "cta.label", 100, true), href: ctaHref(block.href) };
+        return { id, type: "cta", text: text(block.text, "cta.text", 1000), label: ctaLabel(block.label), href: ctaHref(block.href) };
       case "image":
         onlyKeys(block, ["id", "type", "image", "caption"], "image block");
         return { id, type: "image", image: block.image === null ? null : parseImage(block.image, "internal"), ...(block.caption === undefined ? {} : { caption: text(block.caption, "image.caption", 500) }) };
