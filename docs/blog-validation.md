@@ -1,18 +1,17 @@
 # Authoritative blog validation and private preview
 
-## Canonical official cover assets: public Google Drive
+## Canonical featured references: ChatGPT Saved Reference Images
 
-The authoritative `GET /api/internal/blog/template` now exposes `defaultAssets` from `lib/blog/cover-asset-metadata.ts`:
+`GET /api/internal/blog/template` exposes `savedReferences` from `lib/blog/saved-cover-references.ts`:
 
-- Portrait: https://drive.google.com/file/d/16E9m_oWHJxr54ST_NddqMYevefB9Zvn_/view
-- Logo: https://drive.google.com/file/d/1hrYGGW0M1h3PEQdFby3HuouIQPWNzwB7/view
-- Public folder (informational): https://drive.google.com/drive/folders/1OT9AXfl2r_Hcvi2EeMkgxS3nMOb2nO4V
+- `Cleiton Carvalho`: founder identity reference only. Preserve exact facial identity, recognizable features, beard, hair and person identity.
+- `Automa Soluct`: official logo reference. Preserve the exact logo.
 
-Google Drive is the only source for cover-reference delivery. The MCP downloads the actual PNG bytes, follows only trusted Drive redirects, verifies signatures, pinned SHA-256 and full PNG decode, then returns exactly two model-visible ImageContent blocks: portrait first, logo second. Site copies and bundled files are never fallback delivery sources. Any failed download, image check or missing image block stops featured generation.
+Select both named saved references in the ChatGPT image generator. If either is unavailable to that generator, DO NOT generate the featured image; report the missing reference by name. Never invent or substitute a person or logo. No downloaded file, URL or MCP image block substitutes for a required saved reference.
 
-The Drive portrait is 1,659,133 bytes, 1254 × 1254, SHA-256 `402a8a19611ca23af8916dac731cf1203da0389695b319a89545d78c85ac2d97`. The logo is 8,252 bytes, 230 × 100, SHA-256 `8fe8c3315cd917bd1077e36bc6d67fce57aae8299c48d4010de819b8d8cc439d`. PNG bytes are preserved without conversion. The historical portrait hash remains recognition-only so reference-file rejection/provenance validation stays compatible; it cannot be used for retrieval fallback.
+Google Drive cover downloads, cover URLs/hashes in template guidance, the `get_blog_cover_assets` tool and its PNG resources have been removed. General Google Drive upload/import support remains unchanged. Historical source hashes and `default_cover_portrait` / `default_cover_logo` provenance IDs remain internal validation compatibility data, never generation sources.
 
-The MCP wire schema accepts the new optional `defaultAssets` object explicitly and strictly; older site responses without it remain supported. Article structure, 16:9 generation rules, upload/Drive-import transport, CTA/conversion and publication behavior are unchanged.
+The MCP strictly validates the optional `savedReferences` wire field. It privately accepts the previous optional `defaultAssets` wire object for older deployed sites but strips it from tool output. Article structure, exact 16:9 rules, upload transport, CTA/conversion and publication behavior remain unchanged.
 
 ## Native ChatGPT image workflow (template v4)
 
@@ -20,17 +19,18 @@ Image generation happens in the ChatGPT conversation, not inside the MCP. The MC
 
 If image generation is unavailable in the current ChatGPT session, stop the image workflow and report it instead of proceeding with fake or missing image references.
 
-The MCP has no generation endpoint or API-key configuration. `get_blog_template` provides these instructions and accepts optional client-reported `imageGenerationAvailable` / `imageFilesAccessible` flags. Missing native capability or inaccessible real files yields a stop instruction and an explicitly incomplete draft. This is host information, not a capability inferred from MCP tools/list.
+The MCP has no generation endpoint or API-key configuration. `get_blog_template` accepts `{}` and provides host instructions; it does not accept availability flags or determine saved-reference availability. Missing saved references stop featured generation. Actual native generation failure and generated-file transport failure remain separate host reports, not conclusions inferred from MCP tools/list.
 
 Every generated featured cover and each of the four generated body images MUST use exactly **16:9**, landscape only. Explicitly request 16:9 in every native generation operation. Never generate 1:1, 4:3, portrait or 9:16 images. Each body image is one standalone image in a separate native operation, waiting for each result; no collage, multi-panel layout or article mockup, and no added logos, Automa Soluct branding, founder portrait or decorative text. User-supplied screenshots retain their existing upload support.
 
-The image-generation rules in `GET /api/internal/blog/template` continue using the existing image-slot `purpose` strings, with the featured-cover instruction included in `image-1.purpose`. `IMAGE_WORKFLOW_POLICY.instructions`, `IMAGE_WORKFLOW_STEPS` and `EDITORIAL_GUIDANCE.images` repeat the same requirement. The MCP adds its own `imageWorkflow` object locally, so its generation instructions also need the same wording. The separate canonical asset metadata uses the optional strict `defaultAssets` wire field documented above. Upload verification and publishing behavior are unchanged.
+The image-generation rules in `GET /api/internal/blog/template` continue using the existing image-slot `purpose` strings, with the featured-cover instruction included in `image-1.purpose`. `IMAGE_WORKFLOW_POLICY.instructions`, `IMAGE_WORKFLOW_STEPS` and `EDITORIAL_GUIDANCE.images` repeat the same requirement. The MCP adds its own `imageWorkflow` object locally, so its generation instructions also need the same wording. Canonical saved-reference metadata uses the strict `savedReferences` wire field documented above. Upload verification and publishing behavior are unchanged.
 
 ## Permanent image-generation guidance
 
-The site and MCP keep identical instruction text in `lib/blog/image-generation-guidance.ts` / `src/image-generation-guidance.ts`. The site exposes all five rules through the existing `image-1.purpose` string and the body-image rule through all four image slots. Both workflow instructions and `EDITORIAL_GUIDANCE.images` include the same text. These generation instructions use existing purpose strings and do not change validation, upload, Google Drive import, CTA, conversion or publishing behavior. The optional defaultAssets wire field is documented above.
+The site and MCP keep identical instruction text in `lib/blog/image-generation-guidance.ts` / `src/image-generation-guidance.ts`. The site exposes all six rules through the existing `image-1.purpose` string and the body-image rule through all four image slots. Both workflow instructions and `EDITORIAL_GUIDANCE.images` include the same text. These generation instructions use existing purpose strings and do not change validation, upload, Google Drive import, CTA, conversion or publishing behavior. The savedReferences wire field is documented above.
 
-- **Featured portrait:** the official portrait is an identity reference only. Preserve the exact recognizable person and official logo, but vary pose, expression, head/body angle, framing, placement and composition for the article. Technical topics should look focused/confident/thoughtful; growth positive/energetic/confident; problems serious/attentive/concerned; education approachable/professional; operations decisive/engaged/professional. Avoid repeated crossed arms, straight-on headshots, neutral expressions, position and crop. Keep gestures realistic; no exaggeration, caricature, theatrical expressions or unnatural poses. This variation rule applies only to the featured cover.
+- **Featured portrait:** the `Cleiton Carvalho` saved reference is an IDENTITY REFERENCE ONLY; never copy the original crossed-arms pose. Preserve the exact recognizable person and official logo, but vary pose, expression, head angle, body angle, hand position, framing, placement and composition for the article. Technical topics should look focused/confident/thoughtful; growth positive/energetic/confident; problems serious/attentive/concerned; education approachable/professional; operations decisive/engaged/professional. Avoid repeated crossed arms, straight-on headshots, neutral expressions, position and crop. Keep gestures realistic; no exaggeration, caricature, theatrical expressions or unnatural poses. This variation rule applies only to the featured cover.
+- **Visual review before presentation:** visually inspect every cover against the saved references and article context. Reject and regenerate wrong person/logo, copied crossed-arms pose, context-inappropriate pose/expression or invented/distorted/substituted logo. Inspect every regenerated result and never present a failed cover as valid.
 - **Body visuals:** each of the four images is exactly 16:9, standalone and generated in its own native operation, waiting for each result. They are natural editorial/supporting visuals, never thumbnails or covers. No headline, title, subtitle, CTA, text overlay, large typography, logo, Automa Soluct branding or founder portrait. No collage, multi-panel layout, screenshot montage or article mockup. Text is allowed only when inherent in a real UI/system screenshot supplied by the user; never invent decorative text.
 - **Real screenshots:** prioritize relevant supplied software/dashboard/Jobber/n8n/CRM/workflow/spreadsheet/browser/app/terminal screenshots. Keep UI and data faithful. Only subtle dark backgrounds, minimal frames, spacing/crop/zoom, readable perspective, shadow and breathing room are allowed; pad to a 16:9 canvas without stretching the UI. No excessive graphics, arrows everywhere, colorful decorations, fake dashboards, redrawn UI, invented elements, altered data, thumbnail treatment, large text or visual noise.
 - **Privacy before use:** inspect every supplied screenshot before generation, upload or article use. Redact emails, phone numbers, customer names/addresses, API keys, tokens, passwords, secrets/credentials, account IDs, invoice/customer identifiers, private financial data, credential-bearing private URLs and other private information. Use opaque redaction or strong flattened blur so values cannot be read or recovered. Keep surrounding UI clean/useful, do not fabricate replacements, and do not unnecessarily blur public UI labels, public company names or non-sensitive elements.
@@ -38,7 +38,7 @@ The site and MCP keep identical instruction text in `lib/blog/image-generation-g
 
 The existing exactly-one-cover/four-body-images requirement and exactly-16:9 rule remain permanent. Screenshot inspection and redaction are host image-preparation instructions; existing server verification and media handling remain intact.
 
-Required flow: template → draft → native ChatGPT cover with the official reference assets plus four generated/user-supplied body files → five confirmed uploads → exact returned references → associate → reread saved draft → confirm 5/5 associations → validate 5/5 persisted files → preview → publish only on explicit request.
+Required MCP flow: template → select Cleiton Carvalho and Automa Soluct saved references → article in conversation → native 16:9 cover → inspect/reject/regenerate before presentation → four body files → user visual review/approval → obtain real files → five confirmed uploads → create/update draft → exact returned references → associate → reread saved draft → confirm 5/5 associations → validate 5/5 persisted files → preview → publish only on explicit request.
 
 `lib/blog/media-verification.ts` requires registered media for policy posts, matching id/URL/role, a readable file, matching byte count and a complete image decode matching its stored dimensions and MIME. Named placeholders, one-pixel stand-ins and exact official portrait/logo bytes used as a finished cover are rejected. It never generates or repairs an image. Legacy unmarked posts retain their previous filesystem-reference compatibility.
 
@@ -46,14 +46,14 @@ Validation returns `imageStatus` with expected/associated/verified counts, verif
 
 The server can verify bytes, registry entries and explicit placeholder indicators. It cannot recognize every semantic fake image or independently prove that a file was generated by the native ChatGPT tool. Visual composition and content remain review steps.
 
-## Image workflow validation results, 2026-11-09
+## Saved-reference workflow validation results, 2026-11-09
 
-- Site: `npm run lint`, `tsc --noEmit` (local binary), `npm run build` and `npm test` passed: **118 passed, zero failures, zero skips**.
-- MCP: lint, typecheck, build and tests with both real-site integrations passed: **137 passed, one optional remote smoke skipped, zero failures** out of 138 tests.
-- Added 13 site tests, 11 MCP image-workflow tests and one SDK stop/incomplete-draft regression. Coverage includes five valid stored files, missing cover/body images, unregistered references/orphan files, unconfirmed upload, placeholders, one-pixel files, raw cover source assets, missing/truncated files and saved-association readback.
-- Shared-source synchronization and diff whitespace checks passed. The automatic `next-env.d.ts` build change was removed.
-- A read-only remote template query still reports v3 without `imageWorkflowVersion`; the local site now reports v4/workflow v1. This does not establish why native generation differed between prior sessions.
-- No generation API, dependency, migration, CSS, form or official asset changes. No production mutation, commit, push or deployment.
+- Site: `npm run lint`, `./node_modules/.bin/tsc --noEmit`, `npm run build` and `npm test` passed: **149 passed, zero failures, zero skips**. The build-generated `next-env.d.ts` change was restored.
+- MCP: lint, typecheck (`tsc --noEmit`), build and full tests with real-site integrations passed: **231 passed, one optional remote smoke skipped, zero failures** out of 232 tests.
+- Additional authorized real GET route → strict wire schema → MCP SDK HTTP → strict output schema roundtrip passed. It exposes both exact saved-reference names, ten tools and no old cover metadata/resources. `list_blog_posts` and `get_blog_post` compatibility tests passed.
+- Regressions cover required saved-reference names/absence instructions, identity-only pose variation, all five visual rejection conditions, review before presentation, strict schemas/legacy metadata filtering and clean removal of the old tool/resources. Existing 16:9, body/privacy, storage and publishing tests remain.
+- Shared-source synchronization and whitespace checks passed. Upload/Drive-import, OAuth, CTA/conversion, article validators and publishing code remain unchanged; the editorial validator only renames the internal provenance registry.
+- These tests verify instructions/contracts, not native generator behavior or availability of references inside a ChatGPT session. No production mutation, image generation, commit, push or deployment.
 
 ## Permanent CTA rule (unchanged)
 

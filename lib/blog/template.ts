@@ -1,7 +1,7 @@
-import { DEFAULT_ASSETS } from "./cover-asset-metadata.ts";
+import { SAVED_COVER_REFERENCES } from "./saved-cover-references.ts";
 import { CTA_BUTTON_RULES } from "./cta-policy.ts";
 import { BLOG_CONVERSION_RULES } from "./conversion.ts";
-import { BODY_IMAGE_GENERATION_INSTRUCTION, BODY_IMAGE_SELECTION_INSTRUCTION, FEATURED_IMAGE_GENERATION_INSTRUCTION, SCREENSHOT_IMAGE_GENERATION_INSTRUCTION, SCREENSHOT_REDACTION_INSTRUCTION } from "./image-generation-guidance.ts";
+import { BODY_IMAGE_GENERATION_INSTRUCTION, BODY_IMAGE_SELECTION_INSTRUCTION, FEATURED_IMAGE_GENERATION_INSTRUCTION, FEATURED_IMAGE_REVIEW_INSTRUCTION, SCREENSHOT_IMAGE_GENERATION_INSTRUCTION, SCREENSHOT_REDACTION_INSTRUCTION } from "./image-generation-guidance.ts";
 import type { BlogBlock } from "./types.ts";
 
 export type BlogTemplateSlot = {
@@ -62,13 +62,13 @@ export const LEGACY_BLOG_TEMPLATE: {
 export const BLOG_TEMPLATE = {
   ...LEGACY_BLOG_TEMPLATE, version: 4, imageWorkflowVersion: 1, editorialPolicyVersion: 1,
   ctaButtonRules: CTA_BUTTON_RULES,
-  defaultAssets: DEFAULT_ASSETS,
+  savedReferences: SAVED_COVER_REFERENCES,
   conversionRules: BLOG_CONVERSION_RULES,
   fieldsOutsideSequence: [...LEGACY_BLOG_TEMPLATE.fieldsOutsideSequence, "editorial"],
   requirements: { ...LEGACY_BLOG_TEMPLATE.requirements, videos: 0 },
   slots: LEGACY_BLOG_TEMPLATE.slots.map(slot => {
     // Existing purpose strings carry generation rules without adding wire fields.
-    if (slot.type === "image") return { ...slot, purpose: `${slot.purpose}. ${slot.id === "image-1" ? `${[FEATURED_IMAGE_GENERATION_INSTRUCTION, SCREENSHOT_IMAGE_GENERATION_INSTRUCTION, SCREENSHOT_REDACTION_INSTRUCTION, BODY_IMAGE_SELECTION_INSTRUCTION].join(" ")} ` : ""}${BODY_IMAGE_GENERATION_INSTRUCTION}` };
+    if (slot.type === "image") return { ...slot, purpose: `${slot.purpose}. ${slot.id === "image-1" ? `${[FEATURED_IMAGE_GENERATION_INSTRUCTION, FEATURED_IMAGE_REVIEW_INSTRUCTION, SCREENSHOT_IMAGE_GENERATION_INSTRUCTION, SCREENSHOT_REDACTION_INSTRUCTION, BODY_IMAGE_SELECTION_INSTRUCTION].join(" ")} ` : ""}${BODY_IMAGE_GENERATION_INSTRUCTION}` };
     if (slot.type === "video") return { ...slot, optional: true, purpose: "Vídeo somente com pedido explícito do usuário" };
     if (slot.id === "heading-6") return { ...slot, purpose: "24. Título curto da ponte para a avaliação (H3)" };
     if (slot.id === "closing-text") return { ...slot, purpose: "25. Ponte de conversão para o formulário: até 2 parágrafos de até 280 caracteres, sem seção educativa longa ou repetição" };

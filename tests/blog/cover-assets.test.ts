@@ -1,29 +1,34 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { test } from "node:test";
-import { DEFAULT_ASSETS, officialCoverAssetIds } from "../../lib/blog/cover-asset-metadata.ts";
+import { officialCoverAssetIds } from "../../lib/blog/cover-asset-metadata.ts";
+import { SAVED_COVER_REFERENCES } from "../../lib/blog/saved-cover-references.ts";
 import { BLOG_TEMPLATE, LEGACY_BLOG_TEMPLATE } from "../../lib/blog/template.ts";
 import { blogJson } from "../../lib/blog/http.ts";
 import { BlogError } from "../../lib/blog/errors.ts";
 import { createStoredImageVerifier } from "../../lib/blog/media-verification.ts";
 
-test("authoritative template exposes both canonical public Google Drive cover files", async () => {
+test("authoritative template exposes exact ChatGPT saved references without downloadable cover metadata", async () => {
   const response = blogJson({ data: BLOG_TEMPLATE });
   const { data } = await response.json();
-  assert.deepEqual(data.defaultAssets, DEFAULT_ASSETS);
-  assert.equal(data.defaultAssets.default_cover_portrait.url, "https://drive.google.com/file/d/16E9m_oWHJxr54ST_NddqMYevefB9Zvn_/view");
-  assert.equal(data.defaultAssets.default_cover_logo.url, "https://drive.google.com/file/d/1hrYGGW0M1h3PEQdFby3HuouIQPWNzwB7/view");
-  assert.deepEqual(Object.values(DEFAULT_ASSETS).map(asset => asset.mimeType), ["image/png", "image/png"]);
-  assert.ok(Object.values(DEFAULT_ASSETS).every(asset => asset.usage === "cover_only"));
-  assert.ok(!JSON.stringify(data.defaultAssets).includes("automasoluct.com"));
-  assert.equal(Object.hasOwn(LEGACY_BLOG_TEMPLATE, "defaultAssets"), false);
-  assert.match(data.slots.find((slot: { id: string }) => slot.id === "image-1").purpose, /STOP featured generation/);
+  assert.deepEqual(data.savedReferences, SAVED_COVER_REFERENCES);
+  assert.equal(data.savedReferences.founder.name, "Cleiton Carvalho");
+  assert.equal(data.savedReferences.founder.identityReferenceOnly, true);
+  assert.equal(data.savedReferences.logo.name, "Automa Soluct");
+  assert.equal(data.savedReferences.logo.preserveExactly, true);
+  assert.equal(Object.hasOwn(data, "defaultAssets"), false);
+  assert.doesNotMatch(JSON.stringify(data), /drive\.google|sha256|get_blog_cover_assets|blog:\/\/assets/);
+  assert.equal(Object.hasOwn(LEGACY_BLOG_TEMPLATE, "savedReferences"), false);
+  const featured = data.slots.find((slot: { id: string }) => slot.id === "image-1").purpose;
+  assert.match(featured, /If either saved reference is unavailable.*DO NOT generate the featured image/);
+  assert.match(featured, /naming the missing reference/);
+  assert.match(featured, /Never invent or substitute a person or logo/);
 });
 
-test("new canonical and historical portrait hashes remain recognized without delivery fallback", () => {
-  assert.deepEqual(officialCoverAssetIds(DEFAULT_ASSETS.default_cover_portrait.sha256), ["default_cover_portrait"]);
+test("historical portrait and logo hashes remain recognized for validation only", () => {
+  assert.deepEqual(officialCoverAssetIds("402a8a19611ca23af8916dac731cf1203da0389695b319a89545d78c85ac2d97"), ["default_cover_portrait"]);
   assert.deepEqual(officialCoverAssetIds("ca591ab564082f74572ec0885f5582e59632eeca20e5c900ba5ed3e54fb24871"), ["default_cover_portrait"]);
-  assert.deepEqual(officialCoverAssetIds(DEFAULT_ASSETS.default_cover_logo.sha256), ["default_cover_logo"]);
+  assert.deepEqual(officialCoverAssetIds("8fe8c3315cd917bd1077e36bc6d67fce57aae8299c48d4010de819b8d8cc439d"), ["default_cover_logo"]);
   assert.deepEqual(officialCoverAssetIds("0".repeat(64)), []);
 });
 

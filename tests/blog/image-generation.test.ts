@@ -20,8 +20,8 @@ test("template HTTP payload requires exactly 16:9 for the featured cover and all
   const response = blogJson({ data: BLOG_TEMPLATE });
   assert.equal(response.status, 200);
   const { data } = await response.json() as { data: typeof BLOG_TEMPLATE };
-  // Keep the existing HTTP contract: generation instructions live in purpose strings.
-  assert.deepEqual(Object.keys(data).sort(), ["id", "version", "approval", "fieldsOutsideSequence", "requirements", "slots", "imageWorkflowVersion", "editorialPolicyVersion", "ctaButtonRules", "conversionRules", "defaultAssets"].sort());
+  // Generation instructions stay in purpose strings; savedReferences replaces downloadable defaultAssets metadata.
+  assert.deepEqual(Object.keys(data).sort(), ["id", "version", "approval", "fieldsOutsideSequence", "requirements", "slots", "imageWorkflowVersion", "editorialPolicyVersion", "ctaButtonRules", "conversionRules", "savedReferences"].sort());
   const images = data.slots.filter(slot => slot.type === "image");
   assert.equal(images.length, 4);
   assert.deepEqual(images.map(slot => slot.id), ["image-1", "image-2", "image-3", "image-4"]);
@@ -53,7 +53,7 @@ test("featured and body workflow instructions explicitly require 16:9 in each na
   assert.ok(featured); assert.ok(body);
   requiredRatio(featured); requiredRatio(body);
   assert.match(featured, /Explicitly request 16:9/);
-  assert.match(featured, /default_cover_portrait and default_cover_logo/);
+  assert.match(featured, /Saved Reference Images named exactly "Cleiton Carvalho".*"Automa Soluct"/);
   assert.match(body, /Explicitly request 16:9 in every native image-generation operation/);
   assert.match(body, /separate native image-generation operation/);
   assert.match(body, /one standalone image/);
@@ -80,13 +80,13 @@ function rule(prefix: string) {
 
 test("featured portrait is an identity-only reference with contextual, professional variation", () => {
   const featured = rule("Featured image:");
-  assert.match(featured, /IDENTITY reference only/);
-  assert.match(featured, /preserve the exact person, recognizable facial features and facial identity/);
+  assert.match(featured, /IDENTITY REFERENCE ONLY/);
+  assert.match(featured, /preserve the exact facial identity, recognizable facial features, beard, hair and person identity/);
   assert.match(featured, /Preserve the official Automa Soluct logo exactly/);
-  assert.match(featured, /Do NOT simply reproduce the reference pose/);
-  for (const variation of ["pose", "facial expression", "head/body angle", "camera framing", "subject placement", "composition"]) assert.ok(featured.includes(variation));
+  assert.match(featured, /Do NOT copy the reference pose/);
+  for (const variation of ["pose", "facial expression", "head angle", "body angle", "hand position", "camera framing", "subject placement", "composition"]) assert.ok(featured.includes(variation));
   for (const context of ["Analytical/technical", "Growth/opportunity", "Warning/problem", "Educational", "Automation/operations"]) assert.ok(featured.includes(context));
-  for (const repeated of ["crossed arms", "straight-on headshot", "same neutral expression", "same subject position", "same crop"]) assert.ok(featured.includes(repeated));
+  for (const repeated of ["crossed arms", "straight-on passport/headshot pose", "same neutral facial expression", "same subject placement", "same crop"]) assert.ok(featured.includes(repeated));
   for (const prohibited of ["exaggerated gestures", "caricature", "theatrical expressions", "unnatural body positions"]) assert.ok(featured.toLowerCase().includes(`no ${prohibited}`));
   assert.match(featured, /ONLY to the featured image/);
   assert.ok(!rule("For ALL four body images:").includes("crossed arms"));
@@ -119,7 +119,7 @@ test("screenshot privacy requires effective redaction before use and preserves p
 test("authoritative HTTP template and editorial guidance expose all rules and the section-specific priority", async () => {
   const { data } = await blogJson({ data: BLOG_TEMPLATE }).json() as { data: typeof BLOG_TEMPLATE };
   const firstImage = data.slots.find(slot => slot.id === "image-1")!;
-  for (const marker of ["Featured image:", "For ALL four body images:", "User-supplied screenshots:", "Screenshot privacy:", "Body image selection priority"]) {
+  for (const marker of ["Featured image:", "Featured image post-generation check:", "For ALL four body images:", "User-supplied screenshots:", "Screenshot privacy:", "Body image selection priority"]) {
     const instruction = rule(marker);
     assert.ok(firstImage.purpose.includes(instruction));
     assert.ok(EDITORIAL_GUIDANCE.images.includes(instruction));
@@ -128,4 +128,19 @@ test("authoritative HTTP template and editorial guidance expose all rules and th
   assert.match(priority, /1\. A user-supplied screenshot.*2\. A clean diagram\/system visualization.*3\. A realistic editorial image/);
   assert.match(priority, /Do not force screenshots into unrelated sections/);
   assert.match(priority, /Do not force diagrams when a realistic image is more appropriate/);
+});
+
+test("featured saved references must be available and every cover must pass visual review before presentation", () => {
+  const featured = rule("Featured image:");
+  assert.match(featured, /Select both saved references in the ChatGPT image generator/);
+  assert.match(featured, /If either saved reference is unavailable.*DO NOT generate the featured image/);
+  assert.match(featured, /naming the missing reference/);
+  assert.match(featured, /Never invent or substitute a person or logo/);
+  const review = rule("Featured image post-generation check:");
+  assert.match(review, /Before presenting.*visually inspect/);
+  assert.match(review, /Reject and regenerate/);
+  for (const failure of ["person does not match Cleiton Carvalho", "logo does not match Automa Soluct", "copies the original crossed-arms pose", "pose/expression does not fit the article context", "logo was invented, distorted or substituted"]) assert.ok(review.includes(failure));
+  assert.match(review, /visually inspect every regenerated result/);
+  assert.match(review, /Do not present a failed generation as a valid cover/);
+  assert.ok(IMAGE_WORKFLOW_STEPS.indexOf(review) < IMAGE_WORKFLOW_STEPS.findIndex(step => step.includes("upload_blog_image once per file")));
 });

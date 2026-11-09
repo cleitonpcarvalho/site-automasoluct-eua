@@ -2,9 +2,16 @@
 // It does not generate, edit, inspect, upload or validate image files.
 export const FEATURED_IMAGE_GENERATION_INSTRUCTION = [
     'Featured image: REQUIRED aspect ratio exactly 16:9, landscape only. Explicitly request 16:9 in the native image-generation operation. Never 1:1, never 4:3, never portrait orientation, never 9:16.',
-    'Generate one new cover using the actual default_cover_portrait and default_cover_logo image contents as references. The official professional portrait is an IDENTITY reference only: preserve the exact person, recognizable facial features and facial identity. Preserve the official Automa Soluct logo exactly. Do NOT simply reproduce the reference pose. Both official references MUST come from the canonical public Google Drive files through get_blog_cover_assets as actual ImageContent before featured generation. If either download, image verification or image block delivery fails, STOP featured generation. Never fall back to site/local copies or substitute references. Do not upload a source asset as the finished cover.',
-    'Vary pose, facial expression, head/body angle, camera framing, subject placement and composition naturally for the article context. Analytical/technical: focused, confident, thoughtful. Growth/opportunity: positive, energetic, confident. Warning/problem: serious, attentive, concerned. Educational: approachable and professional. Automation/operations: decisive, engaged, professional.',
-    'Avoid repetitive covers across posts. Do not repeatedly use crossed arms, a straight-on headshot, the same neutral expression, the same subject position or the same crop. Keep expressions and gestures realistic and professional. No exaggerated gestures, no caricature, no theatrical expressions, no unnatural body positions. This pose/expression variation rule applies ONLY to the featured image.',
+    'Use the ChatGPT Saved Reference Images named exactly "Cleiton Carvalho" as the founder identity reference and "Automa Soluct" as the official logo reference. Select both saved references in the ChatGPT image generator. If either saved reference is unavailable to the ChatGPT image generator, DO NOT generate the featured image: report that the required saved reference is unavailable, naming the missing reference. Never invent or substitute a person or logo. Do not replace a missing saved reference with a downloaded file, URL or MCP image block.',
+    'The "Cleiton Carvalho" saved image is an IDENTITY REFERENCE ONLY: preserve the exact facial identity, recognizable facial features, beard, hair and person identity. Preserve the official Automa Soluct logo exactly using its saved reference. Do NOT copy the reference pose. The original saved reference has crossed arms; it is not a pose or composition template. Do not upload a source reference as the finished cover.',
+    'Adapt pose, facial expression, head angle, body angle, hand position, camera framing, subject placement and composition naturally to the article context. Analytical/technical: focused, confident, thoughtful. Growth/opportunity: positive, energetic, confident. Warning/problem: serious, attentive, concerned. Educational: approachable and professional. Automation/operations: decisive, engaged, professional.',
+    'Avoid repetitive covers across posts. Do not repeatedly reproduce crossed arms, a straight-on passport/headshot pose, the same body posture, the same neutral facial expression, the same crop or the same subject placement. Keep expressions and gestures realistic and professional. No exaggerated gestures, no caricature, no theatrical expressions, no unnatural body positions. This pose/expression variation rule applies ONLY to the featured image.',
+].join(' ');
+
+export const FEATURED_IMAGE_REVIEW_INSTRUCTION = [
+    'Featured image post-generation check: Before presenting the featured image to the user, visually inspect the result against the saved references and article context.',
+    'Reject and regenerate it if the person does not match Cleiton Carvalho, the logo does not match Automa Soluct, the result simply copies the original crossed-arms pose, the pose/expression does not fit the article context, or the logo was invented, distorted or substituted.',
+    'Use the correct saved references again and visually inspect every regenerated result. Do not present a failed generation as a valid cover. If a required saved reference is unavailable, stop and report the missing reference instead of regenerating with an invented substitute.',
 ].join(' ');
 
 export const BODY_IMAGE_GENERATION_INSTRUCTION = [
@@ -33,6 +40,7 @@ export const BODY_IMAGE_SELECTION_INSTRUCTION = [
 
 export const IMAGE_GENERATION_INSTRUCTIONS = [
     FEATURED_IMAGE_GENERATION_INSTRUCTION,
+    FEATURED_IMAGE_REVIEW_INSTRUCTION,
     BODY_IMAGE_GENERATION_INSTRUCTION,
     SCREENSHOT_IMAGE_GENERATION_INSTRUCTION,
     SCREENSHOT_REDACTION_INSTRUCTION,
