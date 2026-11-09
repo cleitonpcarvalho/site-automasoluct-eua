@@ -1,4 +1,5 @@
 import { CTA_BUTTON_RULES } from "./cta-policy.ts";
+import { BLOG_CONVERSION_RULES } from "./conversion.ts";
 import type { BlogBlock } from "./types.ts";
 
 export type BlogTemplateSlot = {
@@ -59,7 +60,13 @@ export const LEGACY_BLOG_TEMPLATE: {
 export const BLOG_TEMPLATE = {
   ...LEGACY_BLOG_TEMPLATE, version: 4, imageWorkflowVersion: 1, editorialPolicyVersion: 1,
   ctaButtonRules: CTA_BUTTON_RULES,
+  conversionRules: BLOG_CONVERSION_RULES,
   fieldsOutsideSequence: [...LEGACY_BLOG_TEMPLATE.fieldsOutsideSequence, "editorial"],
   requirements: { ...LEGACY_BLOG_TEMPLATE.requirements, videos: 0 },
-  slots: LEGACY_BLOG_TEMPLATE.slots.map(slot => slot.type === "video" ? { ...slot, optional: true, purpose: "Vídeo somente com pedido explícito do usuário" } : slot),
+  slots: LEGACY_BLOG_TEMPLATE.slots.map(slot => {
+    if (slot.type === "video") return { ...slot, optional: true, purpose: "Vídeo somente com pedido explícito do usuário" };
+    if (slot.id === "heading-6") return { ...slot, purpose: "24. Título curto da ponte para a avaliação (H3)" };
+    if (slot.id === "closing-text") return { ...slot, purpose: "25. Ponte de conversão para o formulário: até 2 parágrafos de até 280 caracteres, sem seção educativa longa ou repetição" };
+    return slot;
+  }),
 };

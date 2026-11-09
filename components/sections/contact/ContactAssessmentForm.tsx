@@ -6,9 +6,10 @@ import {
   TurnstileWidget,
   type TurnstileWidgetHandle,
 } from "@/components/forms/TurnstileWidget";
-import { submitAssessment } from "@/lib/assessment-webhook";
+import { createAssessmentPayload, submitAssessment, type AssessmentPayload } from "@/lib/assessment-webhook";
 
 import { ContactIcon } from "./ContactIcon";
+import styles from "./ContactAssessmentForm.module.css";
 
 const budgetOptions = [
   "$1,000 – $2,500",
@@ -17,21 +18,8 @@ const budgetOptions = [
   "$10,000+",
 ] as const;
 
-const systemOptions = [
-  "Jobber",
-  "Xero",
-  "QuickBooks",
-  "Google Workspace",
-  "CompanyCam",
-  "HighLevel",
-  "CRM",
-  "Custom API",
-  "Internal System",
-  "Other",
-] as const;
-
 const fieldClassName =
-  "h-10 w-full rounded border border-transparent bg-surface-2 px-4 text-sm text-white outline-none transition-colors placeholder:text-text-low focus:border-primary focus:ring-1 focus:ring-primary md:h-11 md:border-border-subtle md:bg-[#08080A]";
+  "h-11 w-full rounded-lg border border-border-subtle bg-[#08080A] px-3.5 text-base text-white outline-none transition-colors placeholder:text-text-low focus:border-primary focus:ring-1 focus:ring-primary";
 
 type TextFieldProps = {
   autoComplete?: string;
@@ -66,9 +54,8 @@ function TextField({
   );
 }
 
-export function ContactAssessmentForm({ compactVerification = false }: { compactVerification?: boolean }) {
+export function ContactAssessmentForm({ compactVerification = false, sourcePage = "/contact" }: { compactVerification?: boolean; sourcePage?: AssessmentPayload["sourcePage"] }) {
   const [selectedBudget, setSelectedBudget] = useState<string>("");
-  const [selectedSystems, setSelectedSystems] = useState<string[]>([]);
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
@@ -81,14 +68,6 @@ export function ContactAssessmentForm({ compactVerification = false }: { compact
       successRef.current?.focus();
     }
   }, [submitted]);
-
-  function toggleSystem(system: string) {
-    setSelectedSystems((current) =>
-      current.includes(system)
-        ? current.filter((item) => item !== system)
-        : [...current, system],
-    );
-  }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -103,22 +82,7 @@ export function ContactAssessmentForm({ compactVerification = false }: { compact
     setIsSubmitting(true);
 
     try {
-      await submitAssessment({
-        fullName: String(formData.get("fullName") ?? "").trim(),
-        businessName: String(formData.get("businessName") ?? "").trim(),
-        businessEmail: String(formData.get("businessEmail") ?? "").trim(),
-        phoneNumber: String(formData.get("phoneNumber") ?? ""),
-        businessDescription: String(
-          formData.get("businessActivity") ?? "",
-        ).trim(),
-        estimatedProjectBudget: selectedBudget,
-        systemsInvolved: selectedSystems,
-        jobberWorkflowRequest: String(
-          formData.get("workflow") ?? "",
-        ).trim(),
-        sourcePage: "/contact",
-        turnstileToken,
-      });
+      await submitAssessment(createAssessmentPayload(formData, sourcePage, turnstileToken));
       turnstileRef.current?.reset();
       setSubmitted(true);
     } catch {
@@ -130,19 +94,7 @@ export function ContactAssessmentForm({ compactVerification = false }: { compact
   }
 
   return (
-    <div className="flex flex-col gap-6 md:rounded-lg md:border md:border-border-subtle md:bg-surface-1 md:p-8 lg:p-12">
-      <div className="flex flex-col gap-1.5 md:mb-0 md:border-b md:border-border-subtle md:pb-8">
-        <h2
-          className="font-heading text-[22px] font-semibold leading-[30px] tracking-[-0.015em] text-white md:text-2xl md:font-bold"
-          id="contact-assessment-heading"
-        >
-          Tell us about your workflow.
-        </h2>
-        <p className="text-xs leading-[18px] text-text-medium md:text-sm md:text-text-low">
-          Complete technical scope request. Direct engineer evaluation.
-        </p>
-      </div>
-
+    <div className={styles.container}>
       {submitted ? (
         <div
           aria-atomic="true"
@@ -164,11 +116,11 @@ export function ContactAssessmentForm({ compactVerification = false }: { compact
         </div>
       ) : (
         <form
-          aria-labelledby="contact-assessment-heading"
-          className="flex flex-col gap-4 md:gap-7"
+          aria-label="Request a free assessment"
+          className="flex flex-col gap-4"
           onSubmit={handleSubmit}
         >
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <TextField
               autoComplete="name"
               id="fullName"
@@ -183,7 +135,7 @@ export function ContactAssessmentForm({ compactVerification = false }: { compact
             />
           </div>
 
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <TextField
               autoComplete="email"
               id="businessEmail"
@@ -200,28 +152,21 @@ export function ContactAssessmentForm({ compactVerification = false }: { compact
             />
           </div>
 
-          <TextField
-            autoComplete="organization-title"
-            id="businessActivity"
-            label="What does your business do?"
-            placeholder="HVAC, cleaning, landscaping, plumbing, roofing, electrical, etc."
-          />
-
           <fieldset className="flex flex-col gap-2.5">
             <legend className="text-sm font-semibold text-white md:font-medium">
               Estimated Project Budget <span className="text-primary-soft">*</span>
             </legend>
-            <div className="mt-2 grid grid-cols-2 gap-2 md:mt-0 md:grid-cols-4 md:gap-3">
+            <div className="mt-2 grid grid-cols-2 gap-2 md:grid-cols-4">
               {budgetOptions.map((budget) => {
                 const selected = selectedBudget === budget;
 
                 return (
                   <label
                     className={[
-                      "flex min-h-12 cursor-pointer items-center justify-between gap-2 rounded border p-2 transition-colors has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-primary-soft md:p-3.5",
+                      "flex min-h-11 cursor-pointer items-center justify-between gap-2 rounded-lg border p-2.5 transition-colors has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-primary-soft",
                       selected
                         ? "border-primary bg-primary/10"
-                        : "border-transparent bg-surface-2 hover:border-border-strong md:border-border-subtle",
+                        : "border-border-subtle bg-surface-2 hover:border-border-strong",
                     ].join(" ")}
                     key={budget}
                   >
@@ -234,7 +179,7 @@ export function ContactAssessmentForm({ compactVerification = false }: { compact
                       type="radio"
                       value={budget}
                     />
-                    <span className="text-xs font-semibold leading-4 text-text-medium md:text-sm md:font-medium">
+                    <span className="text-xs font-semibold leading-4 text-text-medium">
                       {budget}
                     </span>
                     <span
@@ -254,56 +199,18 @@ export function ContactAssessmentForm({ compactVerification = false }: { compact
             </div>
           </fieldset>
 
-          <fieldset
-            aria-describedby="systems-help"
-            className="relative flex flex-col gap-2"
-          >
-            <legend className="text-sm font-semibold text-white md:font-medium">
-              Which systems are involved?{" "}
-              <span className="text-xs font-normal text-text-low">(Optional)</span>
-            </legend>
-            <span
-              className="text-xs text-text-low sm:absolute sm:right-0 sm:top-0"
-              id="systems-help"
-            >
-              Select any that apply to your current workflow.
-            </span>
-            <div className="flex flex-wrap gap-1 pt-1 md:gap-2">
-              {systemOptions.map((system) => {
-                const selected = selectedSystems.includes(system);
-
-                return (
-                  <button
-                    aria-pressed={selected}
-                    className={[
-                      "rounded border px-2 py-1 font-mono text-xs transition-colors md:px-3.5 md:py-1.5",
-                      selected
-                        ? "border-primary bg-primary text-white"
-                        : "border-transparent bg-surface-2 text-text-medium hover:border-border-strong md:border-border-subtle",
-                    ].join(" ")}
-                    key={system}
-                    onClick={() => toggleSystem(system)}
-                    type="button"
-                  >
-                    {system}
-                  </button>
-                );
-              })}
-            </div>
-          </fieldset>
-
           <div className="flex flex-col gap-1.5 md:gap-2">
             <label className="text-sm font-semibold leading-5 text-white md:font-medium" htmlFor="workflow">
               What would you like to automate, integrate, or improve in your Jobber workflow?{" "}
               <span className="text-primary-soft">*</span>
             </label>
             <textarea
-              className="min-h-36 w-full resize-y rounded border border-transparent bg-surface-2 p-4 text-sm leading-[22px] text-white outline-none transition-colors placeholder:text-text-low focus:border-primary focus:ring-1 focus:ring-primary md:min-h-40 md:border-border-subtle md:bg-[#08080A]"
+              className="min-h-28 w-full resize-y rounded-lg border border-border-subtle bg-[#08080A] p-3.5 text-base leading-6 text-white outline-none transition-colors placeholder:text-text-low focus:border-primary focus:ring-1 focus:ring-primary"
               id="workflow"
               name="workflow"
               placeholder="Tell us what happens today, what your team is doing manually, what systems are involved, and what you would like to happen instead."
               required
-              rows={5}
+              rows={4}
             />
           </div>
 
@@ -313,7 +220,7 @@ export function ContactAssessmentForm({ compactVerification = false }: { compact
             size={compactVerification ? "compact" : undefined}
           />
 
-          <div className="flex flex-col items-center justify-between gap-2 pt-2 md:flex-row md:gap-4 md:border-t md:border-border-subtle md:pt-4">
+          <div className="flex flex-col items-center justify-between gap-3 md:flex-row md:gap-4">
             <button
               className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-lg bg-primary px-8 text-sm font-semibold text-white transition-colors hover:bg-primary-hover active:bg-primary-active disabled:bg-primary-active md:w-auto md:rounded"
               disabled={isSubmitting || !turnstileToken}

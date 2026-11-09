@@ -2,14 +2,17 @@ import Link from "next/link";
 
 import { Container } from "@/components/layout/Container";
 import type { BlogPost } from "@/lib/blog/types";
+import { getBlogService } from "@/lib/blog/service";
 
 import { BlogBlocks } from "./BlogBlocks";
 import { BlogImage } from "./BlogImage";
 import { PostMeta } from "./PostMeta";
+import { RecentPosts } from "./RecentPosts";
 
 export function BlogArticle({ post }: { post: BlogPost }) {
-  return <Container className="max-w-4xl py-8 sm:py-14 lg:py-20">
-    <article className="flex min-w-0 flex-col gap-8 [overflow-wrap:anywhere] sm:gap-10">
+  const recentPosts = getBlogService().listRecentPublished(post.id);
+  return <Container className="flex max-w-7xl flex-col gap-10 py-8 sm:py-14 lg:py-20">
+    <article className="mx-auto flex w-full min-w-0 max-w-4xl flex-col gap-8 [overflow-wrap:anywhere] sm:gap-10">
       <header className="flex min-w-0 flex-col gap-5">
         <Link className="inline-flex min-h-11 w-fit items-center gap-2 text-sm font-semibold text-primary-soft hover:text-white" href="/blog">← All articles</Link>
         <PostMeta date={post.publishedAt ?? post.updatedAt} tags={post.tags} />
@@ -19,5 +22,6 @@ export function BlogArticle({ post }: { post: BlogPost }) {
       </header>
       <BlogBlocks post={post} />
     </article>
+    <RecentPosts posts={recentPosts} />
   </Container>;
 }

@@ -24,6 +24,9 @@ export function createBlogService(repository: PostRepository, checkImage: (image
     list(query: PostQuery) { return repository.list(query); },
     get(id: string) { return repository.get(parsePostId(id)); },
     listPublished(page = 1, pageSize = 10) { return repository.list({ status: "published", page, pageSize }); },
+    listRecentPublished(excludeId: string) {
+      return repository.list({ status: "published", page: 1, pageSize: 9 }).items.filter(post => post.id !== excludeId).slice(0, 8);
+    },
     getPublished(slug: string) {
       try { return repository.getPublishedBySlug(parseSlug(slug)); }
       catch (error) { if (error instanceof BlogError && error.status === 400) return null; throw error; }

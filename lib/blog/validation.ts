@@ -1,5 +1,6 @@
 import type { BlogBlock, BlogEditorial, ImageProvenance, BlogImage, BlogPostFields, BlogValidationIssue, BlogVideo, PostQuery, PostUpdate } from "./types.ts";
 import { countCtaCharacters } from "./cta-policy.ts";
+import { BLOG_ASSESSMENT_HREF } from "./conversion.ts";
 import { BlogError, invalid } from "./errors.ts";
 
 export const BLOG_IMAGE_FILENAME = /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}\.(?:avif|webp|png|jpe?g)$/;
@@ -69,7 +70,9 @@ function ctaLabel(value: unknown): string {
 
 function ctaHref(value: unknown): string {
   const href = text(value, "cta.href", 1000, true);
-  // Only site paths or HTTPS. No javascript:, data:, protocol-relative URLs or backslashes.
+  if (href === BLOG_ASSESSMENT_HREF) return href;
+  // Also accept existing site paths and HTTPS destinations for saved articles.
+  // No javascript:, data:, protocol-relative URLs or backslashes.
   if (href.startsWith("/") && !href.startsWith("//") && !/[\\\s\u0000-\u001f]/.test(href)) return href;
   try {
     const url = new URL(href);

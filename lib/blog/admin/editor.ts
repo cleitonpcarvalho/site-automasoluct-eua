@@ -1,5 +1,6 @@
 import { BlogError, invalid } from "../errors.ts";
 import { BLOG_TEMPLATE } from "../template.ts";
+import { BLOG_ASSESSMENT_HREF } from "../conversion.ts";
 import type { ImageProvenance, BlogBlock, BlogImage, BlogPost, BlogPostFields, BlogVideo } from "../types.ts";
 import { BLOG_IMAGE_FILENAME, parseCreateDraft, parseEditorial, parseProvenance, record } from "../validation.ts";
 
@@ -18,7 +19,7 @@ export function emptyAdminBlocks(): BlogBlock[] {
     switch (slot.type) {
       case "text": return { id: slot.id, type: "text", content: "" };
       case "heading": return { id: slot.id, type: "heading", level: 3, content: "" };
-      case "cta": return { id: slot.id, type: "cta", text: "", label: "Get a Free Assessment", href: "/contact" };
+      case "cta": return { id: slot.id, type: "cta", text: "", label: "Get a Free Assessment", href: BLOG_ASSESSMENT_HREF };
       case "image": return { id: slot.id, type: "image", image: null, caption: "" };
       case "video": return { id: slot.id, type: "video" };
       case "form": return { id: slot.id, type: "form", formId: "assessment" };

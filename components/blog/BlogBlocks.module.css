@@ -1,8 +1,4 @@
 /* The shared contact form sits inside a narrower article column here. */
-.form :global(#systems-help) {
-  position: static;
-}
-
 .form button,
 .form input:not([type="radio"]) {
   min-height: 44px;
