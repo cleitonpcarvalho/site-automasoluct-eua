@@ -225,7 +225,7 @@ export function ContactAssessmentForm({ compactVerification = false }: { compact
           <TurnstileWidget
             onTokenChange={setTurnstileToken}
             ref={turnstileRef}
-            size={compactVerification ? "compact" : undefined}
+            size={compactVerification ? "normal" : undefined}
           />
 
           <div className="flex flex-col items-center justify-between gap-3 md:flex-row md:gap-4">

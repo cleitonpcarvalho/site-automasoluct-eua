@@ -72,7 +72,7 @@ async function fillForm() {
 }
 
 describe.each([
-  ["blog article", BlogPage, "https://automasoluct.com/blog/jobber-quote-follow-up-automation", "compact"],
+  ["blog article", BlogPage, "https://automasoluct.com/blog/jobber-quote-follow-up-automation", "normal"],
   ["contact", ContactPageContent, "https://automasoluct.com/contact", undefined],
   ["Jobber", JobberAutomationContent, "https://automasoluct.com/jobber-automation", undefined],
 ] as const)("shared form on %s", (_name, Page, sourcePage, size) => {

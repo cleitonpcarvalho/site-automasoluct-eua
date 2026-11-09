@@ -14,7 +14,7 @@ import {
 type TurnstileRenderOptions = {
   sitekey: string;
   theme: "dark";
-  size?: "compact";
+  size?: "normal" | "compact";
   callback: (token: string) => void;
   "error-callback": (code: string) => void;
   "expired-callback": () => void;
@@ -42,7 +42,7 @@ export type TurnstileWidgetHandle = {
 
 type TurnstileWidgetProps = {
   onTokenChange: (token: string) => void;
-  size?: "compact";
+  size?: "normal" | "compact";
   siteKey?: string;
 };
 
