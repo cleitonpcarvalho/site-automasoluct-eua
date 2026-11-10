@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { Container } from "@/components/layout/Container";
+import type { BlogPostSummary } from "@/lib/blog/types";
 
 import { HomeIcon, type HomeIconName } from "./HomeIcon";
 import { HeroAsciiBackground } from "./HeroAsciiBackground";
@@ -10,6 +11,11 @@ import { HomeMotionController } from "./HomeMotionController";
 import { FounderProfileCard } from "./FounderProfileCard";
 import { IntegrationShowcase, StaticIntegrationShowcase } from "./IntegrationShowcase";
 import { SolutionsShowcase, StaticSolutionsShowcase } from "./SolutionsShowcase";
+import { LatestBlogSection } from "./LatestBlogSection";
+
+type HomePageContentProps = {
+  recentPosts: BlogPostSummary[];
+};
 
 const trades = [
   "HVAC",
@@ -152,7 +158,7 @@ function SectionHeading({
   );
 }
 
-function MobileHomeContent() {
+function MobileHomeContent({ recentPosts }: HomePageContentProps) {
   return (
     <div className="flex flex-1 flex-col bg-canvas md:hidden">
       <section className="relative isolate">
@@ -355,6 +361,8 @@ function MobileHomeContent() {
           <StaticSolutionsShowcase mobile />
         </Container>
       </section>
+
+      <LatestBlogSection posts={recentPosts} />
 
       <section>
         <Container className="flex max-w-7xl flex-col gap-5 py-8 md:gap-6 md:py-14 lg:gap-10 lg:py-20">
@@ -605,7 +613,7 @@ function DesktopSectionHeading({
   );
 }
 
-function DesktopHomeContent() {
+function DesktopHomeContent({ recentPosts }: HomePageContentProps) {
   return (
     <div className="hidden flex-1 flex-col bg-canvas md:flex">
       <section className="relative isolate overflow-hidden" data-desktop-home-hero>
@@ -745,6 +753,8 @@ function DesktopHomeContent() {
           <SolutionsShowcase />
         </Container>
       </section>
+
+      <LatestBlogSection posts={recentPosts} />
 
       <section>
         <Container className="flex max-w-7xl flex-col gap-14 py-20 lg:py-24">
@@ -905,12 +915,12 @@ function DesktopHomeContent() {
   );
 }
 
-export function HomePageContent() {
+export function HomePageContent({ recentPosts }: HomePageContentProps) {
   return (
     <>
-      <MobileHomeContent />
+      <MobileHomeContent recentPosts={recentPosts} />
       <HomeMotionController>
-        <DesktopHomeContent />
+        <DesktopHomeContent recentPosts={recentPosts} />
       </HomeMotionController>
     </>
   );

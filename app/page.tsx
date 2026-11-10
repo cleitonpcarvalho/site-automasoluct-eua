@@ -1,4 +1,7 @@
+import { connection } from "next/server";
+
 import { HomePageContent } from "@/components/sections/home/HomePageContent";
+import { getBlogService } from "@/lib/blog/service";
 import { createPageMetadata } from "@/lib/seo";
 
 export const metadata = createPageMetadata({
@@ -8,6 +11,9 @@ export const metadata = createPageMetadata({
   path: "/",
 });
 
-export default function HomePage() {
-  return <HomePageContent />;
+export default async function HomePage() {
+  await connection();
+  const posts = getBlogService().listPublished(1, 4).items;
+
+  return <HomePageContent recentPosts={posts} />;
 }
