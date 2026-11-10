@@ -19,6 +19,7 @@ interface ProfileCardProps {
   name?: string;
   title?: string;
   handle?: string;
+  handleHref?: string;
   status?: string;
   statusColor?: string;
   contactText?: string;
@@ -237,6 +238,7 @@ const ProfileCard = ({
   name = 'Javi A. Torres',
   title = 'Software Engineer',
   handle = 'javicodes',
+  handleHref,
   status = 'Online',
   statusColor = '#22c55e',
   contactText = 'Contact',
@@ -552,7 +554,17 @@ const ProfileCard = ({
               </span>
             )}
             <div className={META}>
-              {handle && <span className={HANDLE}>@{handle}</span>}
+              {handle && (handleHref ? (
+                <a
+                  className={`${HANDLE} w-fit max-w-full rounded-sm transition-colors hover:text-primary-soft`}
+                  href={handleHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`@${handle} profile (opens in a new tab)`}
+                >
+                  @{handle}
+                </a>
+              ) : <span className={HANDLE}>@{handle}</span>)}
               {status && <span className={STATUS}>{status}</span>}
             </div>
             {contactText && (

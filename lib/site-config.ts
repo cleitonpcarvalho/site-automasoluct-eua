@@ -7,4 +7,9 @@ export const siteConfig = {
   phoneDisplay: "+1 (307) 622-4973",
   phoneHref: "tel:+13076224973",
   logo: "/assets/automasoluct/logo-automasoluct.png",
+  social: {
+    instagram: "https://www.instagram.com/automasoluct/",
+    youtube: "https://www.youtube.com/@automasoluct",
+    facebook: "https://www.facebook.com/profile.php?id=61566874359733",
+  },
 } as const;

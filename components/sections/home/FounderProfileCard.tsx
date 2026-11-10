@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 
 import ProfileCard from "@/components/react-bits/ProfileCard";
+import { siteConfig } from "@/lib/site-config";
 
 export function FounderProfileCard() {
   const router = useRouter();
@@ -11,7 +12,8 @@ export function FounderProfileCard() {
     <ProfileCard
       name="Cleiton Carvalho"
       title="Founder & Software Engineer"
-      handle="cleitoncarvalho"
+      handle="automasoluct"
+      handleHref={siteConfig.social.instagram}
       status="Available"
       contactText="Contact"
       avatarUrl="/images/team/cleiton-profile.png"

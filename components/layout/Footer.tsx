@@ -6,6 +6,39 @@ import { siteConfig } from "@/lib/site-config";
 
 import { Container } from "./Container";
 
+const socialLinks = [
+  {
+    name: "Instagram",
+    href: siteConfig.social.instagram,
+    icon: (
+      <svg aria-hidden="true" className="size-5" fill="none" focusable="false" stroke="currentColor" strokeWidth="1.75" viewBox="0 0 24 24">
+        <rect height="18" rx="5" width="18" x="3" y="3" />
+        <circle cx="12" cy="12" r="4" />
+        <circle cx="17.5" cy="6.5" fill="currentColor" r="1" stroke="none" />
+      </svg>
+    ),
+  },
+  {
+    name: "YouTube",
+    href: siteConfig.social.youtube,
+    icon: (
+      <svg aria-hidden="true" className="size-5" fill="none" focusable="false" stroke="currentColor" strokeWidth="1.75" viewBox="0 0 24 24">
+        <rect height="14" rx="4" width="20" x="2" y="5" />
+        <path d="m10 8.5 6 3.5-6 3.5z" fill="currentColor" stroke="none" />
+      </svg>
+    ),
+  },
+  {
+    name: "Facebook",
+    href: siteConfig.social.facebook,
+    icon: (
+      <svg aria-hidden="true" className="size-5" fill="currentColor" focusable="false" viewBox="0 0 24 24">
+        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+      </svg>
+    ),
+  },
+];
+
 export function Footer() {
   return (
     <footer className="border-t border-border-subtle bg-surface-1 py-10 lg:py-16">
@@ -35,6 +68,20 @@ export function Footer() {
               Engineering enterprise workflows &amp; custom software around
               Jobber for trade businesses.
             </p>
+            <nav aria-label="Social media" className="mt-4 flex items-center gap-2">
+              {socialLinks.map((social) => (
+                <a
+                  aria-label={`Automa Soluct on ${social.name} (opens in a new tab)`}
+                  className="inline-flex size-11 items-center justify-center rounded-lg border border-border-subtle bg-surface-2 text-text-medium transition-colors hover:border-primary/50 hover:bg-primary/10 hover:text-primary-soft focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary-soft"
+                  href={social.href}
+                  key={social.name}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  {social.icon}
+                </a>
+              ))}
+            </nav>
           </div>
 
           <nav
