@@ -1,3 +1,4 @@
+import { RecentBlogPosts } from "@/components/blog/RecentBlogPosts";
 import { IntegrationsPageContent } from "@/components/sections/integrations/IntegrationsPageContent";
 import { createPageMetadata } from "@/lib/seo";
 
@@ -9,5 +10,8 @@ export const metadata = createPageMetadata({
 });
 
 export default function IntegrationsPage() {
-  return <IntegrationsPageContent />;
+  return <>
+    <IntegrationsPageContent />
+    <RecentBlogPosts />
+  </>;
 }

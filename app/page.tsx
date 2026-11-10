@@ -1,7 +1,5 @@
-import { connection } from "next/server";
-
+import { RecentBlogPosts } from "@/components/blog/RecentBlogPosts";
 import { HomePageContent } from "@/components/sections/home/HomePageContent";
-import { getBlogService } from "@/lib/blog/service";
 import { createPageMetadata } from "@/lib/seo";
 
 export const metadata = createPageMetadata({
@@ -11,9 +9,14 @@ export const metadata = createPageMetadata({
   path: "/",
 });
 
-export default async function HomePage() {
-  await connection();
-  const posts = getBlogService().listPublished(1, 4).items;
-
-  return <HomePageContent recentPosts={posts} />;
+export default function HomePage() {
+  return (
+    <HomePageContent recentBlogPosts={
+      <RecentBlogPosts
+        count={4}
+        layout="full"
+        subtitle="Practical insights on Jobber, integrations and business automation."
+      />
+    } />
+  );
 }

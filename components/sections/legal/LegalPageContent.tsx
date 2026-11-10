@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 
+import { RecentBlogPosts } from "@/components/blog/RecentBlogPosts";
 import { Container } from "@/components/layout/Container";
 
 type LegalPageContentProps = {
@@ -39,6 +40,7 @@ export function LegalPageContent({
       <Container className="max-w-4xl py-10 md:py-14 lg:py-16">
         <article className="flex flex-col gap-10 md:gap-12">{children}</article>
       </Container>
+      <RecentBlogPosts />
     </div>
   );
 }

@@ -1,8 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
+import type { ReactNode } from "react";
 
 import { Container } from "@/components/layout/Container";
-import type { BlogPostSummary } from "@/lib/blog/types";
 
 import { HomeIcon, type HomeIconName } from "./HomeIcon";
 import { HeroAsciiBackground } from "./HeroAsciiBackground";
@@ -11,10 +11,9 @@ import { HomeMotionController } from "./HomeMotionController";
 import { FounderProfileCard } from "./FounderProfileCard";
 import { IntegrationShowcase, StaticIntegrationShowcase } from "./IntegrationShowcase";
 import { SolutionsShowcase, StaticSolutionsShowcase } from "./SolutionsShowcase";
-import { LatestBlogSection } from "./LatestBlogSection";
 
 type HomePageContentProps = {
-  recentPosts: BlogPostSummary[];
+  recentBlogPosts: ReactNode;
 };
 
 const trades = [
@@ -158,7 +157,7 @@ function SectionHeading({
   );
 }
 
-function MobileHomeContent({ recentPosts }: HomePageContentProps) {
+function MobileHomeContent({ recentBlogPosts }: HomePageContentProps) {
   return (
     <div className="flex flex-1 flex-col bg-canvas md:hidden">
       <section className="relative isolate">
@@ -362,7 +361,7 @@ function MobileHomeContent({ recentPosts }: HomePageContentProps) {
         </Container>
       </section>
 
-      <LatestBlogSection posts={recentPosts} />
+      {recentBlogPosts}
 
       <section>
         <Container className="flex max-w-7xl flex-col gap-5 py-8 md:gap-6 md:py-14 lg:gap-10 lg:py-20">
@@ -613,7 +612,7 @@ function DesktopSectionHeading({
   );
 }
 
-function DesktopHomeContent({ recentPosts }: HomePageContentProps) {
+function DesktopHomeContent({ recentBlogPosts }: HomePageContentProps) {
   return (
     <div className="hidden flex-1 flex-col bg-canvas md:flex">
       <section className="relative isolate overflow-hidden" data-desktop-home-hero>
@@ -754,7 +753,7 @@ function DesktopHomeContent({ recentPosts }: HomePageContentProps) {
         </Container>
       </section>
 
-      <LatestBlogSection posts={recentPosts} />
+      {recentBlogPosts}
 
       <section>
         <Container className="flex max-w-7xl flex-col gap-14 py-20 lg:py-24">
@@ -915,12 +914,12 @@ function DesktopHomeContent({ recentPosts }: HomePageContentProps) {
   );
 }
 
-export function HomePageContent({ recentPosts }: HomePageContentProps) {
+export function HomePageContent({ recentBlogPosts }: HomePageContentProps) {
   return (
     <>
-      <MobileHomeContent recentPosts={recentPosts} />
+      <MobileHomeContent recentBlogPosts={recentBlogPosts} />
       <HomeMotionController>
-        <DesktopHomeContent recentPosts={recentPosts} />
+        <DesktopHomeContent recentBlogPosts={recentBlogPosts} />
       </HomeMotionController>
     </>
   );

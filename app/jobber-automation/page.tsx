@@ -1,3 +1,4 @@
+import { RecentBlogPosts } from "@/components/blog/RecentBlogPosts";
 import { JobberAutomationContent } from "@/components/sections/jobber/JobberAutomationContent";
 import { createPageMetadata } from "@/lib/seo";
 
@@ -9,5 +10,8 @@ export const metadata = createPageMetadata({
 });
 
 export default function JobberAutomationPage() {
-  return <JobberAutomationContent />;
+  return <>
+    <JobberAutomationContent />
+    <RecentBlogPosts />
+  </>;
 }
