@@ -10,11 +10,15 @@ The original foundation stage added persistent posts, an internal HTTP API and p
 - `lib/blog/database.ts` / `migrations.ts` / `repository.ts`: SQLite, transactional schema migrations and parameterized persistence.
 - `lib/blog/service.ts`: shared application operations, independent of HTTP. Public pages call its published-only methods; internal controllers call its mutation methods.
 - `lib/blog/auth.ts` / `http.ts` / `handlers.ts`: service authentication, permissions, bounded JSON bodies and consistent responses. The human panel uses a separate session adapter over the same blog service; the service-token boundary is unchanged.
-- `components/blog/`: public block, card, image and metadata rendering. Text is plain text escaped by React; arbitrary HTML, iframe markup and executable blocks are not accepted.
+- `components/blog/`: public block, card, image and metadata rendering. `BlogMarkdown` renders CommonMark and GitHub Flavored Markdown through `react-markdown` and `remark-gfm`; arbitrary HTML remains escaped and fenced code is displayed as text, never executed.
+
+Public articles and saved admin previews share `BlogArticle` → `BlogBlocks` → `BlogMarkdown`. Complete text blocks are parsed together so tables, code fences and lists retain their structure. `InlineLinks` delegates to the same parser in inline mode for headings, CTA text and captions. The existing `safeHref` allowlist and external-link attributes remain in effect; Markdown images do not bypass registered image blocks. No raw-HTML plugin or syntax-highlighting dependency is enabled.
+
+Tables use a keyboard-focusable horizontal scroll container with a dark background, subtle borders, padded cells and a blue header divider. Code blocks preserve whitespace in scrollable, rounded dark containers; inline code uses the site's monospace font and a subtle background. Styles are scoped in `BlogBlocks.module.css`. Existing content needs no migration, rewrite or republication when this renderer is deployed. Regression tests include the unchanged table and JSON from published Jobber/Xero revision 5 and compare public and preview article markup.
 
 ## Runtime and persistence
 
-Requires **Node 24+**. Uses built-in `node:sqlite`, without an ORM or native npm driver. The only added runtime package is the React `server-only` marker, which prevents importing storage/authentication into browser code.
+Requires **Node 24+**. Uses built-in `node:sqlite`, without an ORM or native npm driver. The React `server-only` marker prevents importing storage/authentication into browser code; Markdown parsing also stays in the article's server component tree.
 
 | Setting | Local default | Docker runtime |
 | --- | --- | --- |
